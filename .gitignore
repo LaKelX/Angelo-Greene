@@ -1,0 +1,46 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+.env
+
+# Sensitive data
+*.env
+secrets/
+credentials/
+api_keys/
+*.pem
+*.key
+
+# Logs
+*.log
+logs/
+
+# Build
+dist/
+build/
+*.egg-info/
+
+# Data (too large for git)
+data/
+*.csv
+*.xlsx
+*.parquet
+
+# Personal notes (keep local)
+PERSONAL_NOTES.md
+private/
