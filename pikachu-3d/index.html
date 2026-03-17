@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>3D Pikachu - Interactive Model</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            overflow: hidden;
+            height: 100vh;
+        }
+
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        canvas {
+            display: block;
+        }
+
+        /* Controls UI */
+        .controls-panel {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px 30px;
+            border-radius: 15px;
+            color: white;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .controls-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: #ffcb05;
+            text-shadow: 0 0 10px rgba(255, 203, 5, 0.5);
+        }
+
+        .keys-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 50px);
+            grid-template-rows: repeat(2, 50px);
+            gap: 5px;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .key {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(145deg, #3a3a4a, #2a2a3a);
+            border: 2px solid #4a4a5a;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #fff;
+            transition: all 0.1s ease;
+        }
+
+        .key.active {
+            background: linear-gradient(145deg, #ffcb05, #cc9900);
+            color: #000;
+            transform: scale(0.95);
+            box-shadow: 0 0 15px rgba(255, 203, 5, 0.6);
+        }
+
+        .key.space {
+            grid-column: span 3;
+            width: 100%;
+        }
+
+        .key-label {
+            font-size: 0.75rem;
+            color: #888;
+            margin-top: 10px;
+        }
+
+        /* Title */
+        .title {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            font-weight: bold;
+            color: #ffcb05;
+            text-shadow:
+                0 0 10px rgba(255, 203, 5, 0.8),
+                0 0 20px rgba(255, 203, 5, 0.6),
+                0 0 30px rgba(255, 203, 5, 0.4);
+            letter-spacing: 3px;
+        }
+
+        /* Action indicator */
+        .action-indicator {
+            position: fixed;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 1.2rem;
+            color: #fff;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 8px 20px;
+            border-radius: 20px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-indicator.show {
+            opacity: 1;
+        }
+
+        /* Loading */
+        .loading {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #ffcb05;
+            font-size: 1.5rem;
+            text-align: center;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid rgba(255, 203, 5, 0.3);
+            border-top-color: #ffcb05;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="title">PIKACHU 3D</div>
+    <div class="action-indicator" id="actionIndicator">Walking Forward</div>
+
+    <div id="canvas-container"></div>
+
+    <div class="controls-panel">
+        <div class="controls-title">CONTROLS</div>
+        <div class="keys-grid">
+            <div class="key" style="visibility: hidden;"></div>
+            <div class="key" id="key-w">W</div>
+            <div class="key" style="visibility: hidden;"></div>
+            <div class="key" id="key-a">A</div>
+            <div class="key" id="key-s">S</div>
+            <div class="key" id="key-d">D</div>
+        </div>
+        <div class="key space" id="key-space">SPACE - JUMP</div>
+        <div class="key-label">Use WASD to move, SPACE to jump</div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        // ═══════════════════════════════════════════════════════════════════
+        // PIKACHU 3D - Interactive Model
+        // ═══════════════════════════════════════════════════════════════════
+
+        let scene, camera, renderer, pikachu;
+        let isJumping = false;
+        let jumpVelocity = 0;
+        let walkCycle = 0;
+        let currentAction = '';
+
+        const keys = {
+            w: false,
+            a: false,
+            s: false,
+            d: false,
+            space: false
+        };
+
+        // Pikachu body parts for animation
+        let body, head, leftArm, rightArm, leftLeg, rightLeg, tail;
+        let leftEar, rightEar, leftCheek, rightCheek;
+
+        init();
+        animate();
+
+        function init() {
+            // Scene
+            scene = new THREE.Scene();
+            scene.background = new THREE.Color(0x87CEEB);
+            scene.fog = new THREE.Fog(0x87CEEB, 50, 200);
+
+            // Camera
+            camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 5, 12);
+            camera.lookAt(0, 2, 0);
+
+            // Renderer
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.shadowMap.enabled = true;
+            renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+            document.getElementById('canvas-container').appendChild(renderer.domElement);
+
+            // Lights
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+            directionalLight.position.set(10, 20, 10);
+            directionalLight.castShadow = true;
+            directionalLight.shadow.mapSize.width = 2048;
+            directionalLight.shadow.mapSize.height = 2048;
+            scene.add(directionalLight);
+
+            // Ground
+            const groundGeometry = new THREE.PlaneGeometry(100, 100);
+            const groundMaterial = new THREE.MeshStandardMaterial({
+                color: 0x7cba5f,
+                roughness: 0.8
+            });
+            const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+            ground.rotation.x = -Math.PI / 2;
+            ground.receiveShadow = true;
+            scene.add(ground);
+
+            // Add some grass patches
+            for (let i = 0; i < 50; i++) {
+                const grassGeometry = new THREE.ConeGeometry(0.1, 0.3, 4);
+                const grassMaterial = new THREE.MeshStandardMaterial({ color: 0x4a8f3c });
+                const grass = new THREE.Mesh(grassGeometry, grassMaterial);
+                grass.position.set(
+                    (Math.random() - 0.5) * 40,
+                    0.15,
+                    (Math.random() - 0.5) * 40
+                );
+                scene.add(grass);
+            }
+
+            // Create Pikachu
+            createPikachu();
+
+            // Event listeners
+            window.addEventListener('resize', onWindowResize);
+            window.addEventListener('keydown', onKeyDown);
+            window.addEventListener('keyup', onKeyUp);
+        }
+
+        function createPikachu() {
+            pikachu = new THREE.Group();
+
+            // Materials
+            const yellowMat = new THREE.MeshStandardMaterial({ color: 0xffcb05 });
+            const darkYellowMat = new THREE.MeshStandardMaterial({ color: 0xcc9900 });
+            const blackMat = new THREE.MeshStandardMaterial({ color: 0x1a1a1a });
+            const redMat = new THREE.MeshStandardMaterial({ color: 0xff3333 });
+            const whiteMat = new THREE.MeshStandardMaterial({ color: 0xffffff });
+            const brownMat = new THREE.MeshStandardMaterial({ color: 0x8b4513 });
+            const pinkMat = new THREE.MeshStandardMaterial({ color: 0xff6b6b });
+
+            // Body
+            const bodyGeometry = new THREE.SphereGeometry(1.2, 32, 32);
+            bodyGeometry.scale(1, 0.9, 0.8);
+            body = new THREE.Mesh(bodyGeometry, yellowMat);
+            body.position.y = 1.5;
+            body.castShadow = true;
+            pikachu.add(body);
+
+            // Head
+            const headGeometry = new THREE.SphereGeometry(1, 32, 32);
+            head = new THREE.Mesh(headGeometry, yellowMat);
+            head.position.y = 3;
+            head.castShadow = true;
+            pikachu.add(head);
+
+            // Eyes
+            const eyeGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+            const leftEye = new THREE.Mesh(eyeGeometry, blackMat);
+            leftEye.position.set(-0.35, 3.1, 0.8);
+            pikachu.add(leftEye);
+
+            const rightEye = new THREE.Mesh(eyeGeometry, blackMat);
+            rightEye.position.set(0.35, 3.1, 0.8);
+            pikachu.add(rightEye);
+
+            // Eye highlights
+            const highlightGeometry = new THREE.SphereGeometry(0.07, 8, 8);
+            const leftHighlight = new THREE.Mesh(highlightGeometry, whiteMat);
+            leftHighlight.position.set(-0.3, 3.2, 0.95);
+            pikachu.add(leftHighlight);
+
+            const rightHighlight = new THREE.Mesh(highlightGeometry, whiteMat);
+            rightHighlight.position.set(0.4, 3.2, 0.95);
+            pikachu.add(rightHighlight);
+
+            // Nose
+            const noseGeometry = new THREE.SphereGeometry(0.08, 8, 8);
+            const nose = new THREE.Mesh(noseGeometry, blackMat);
+            nose.position.set(0, 2.9, 0.95);
+            pikachu.add(nose);
+
+            // Mouth (smile)
+            const mouthGeometry = new THREE.TorusGeometry(0.15, 0.03, 8, 16, Math.PI);
+            const mouth = new THREE.Mesh(mouthGeometry, blackMat);
+            mouth.position.set(0, 2.75, 0.9);
+            mouth.rotation.x = Math.PI;
+            pikachu.add(mouth);
+
+            // Cheeks
+            const cheekGeometry = new THREE.CircleGeometry(0.25, 16);
+            leftCheek = new THREE.Mesh(cheekGeometry, redMat);
+            leftCheek.position.set(-0.75, 2.85, 0.7);
+            leftCheek.rotation.y = 0.3;
+            pikachu.add(leftCheek);
+
+            rightCheek = new THREE.Mesh(cheekGeometry, redMat);
+            rightCheek.position.set(0.75, 2.85, 0.7);
+            rightCheek.rotation.y = -0.3;
+            pikachu.add(rightCheek);
+
+            // Ears
+            const earGeometry = new THREE.ConeGeometry(0.3, 1.2, 16);
+
+            leftEar = new THREE.Group();
+            const leftEarBase = new THREE.Mesh(earGeometry, yellowMat);
+            leftEarBase.castShadow = true;
+            leftEar.add(leftEarBase);
+
+            // Black ear tips
+            const earTipGeometry = new THREE.ConeGeometry(0.25, 0.4, 16);
+            const leftEarTip = new THREE.Mesh(earTipGeometry, blackMat);
+            leftEarTip.position.y = 0.5;
+            leftEar.add(leftEarTip);
+
+            leftEar.position.set(-0.5, 4.2, 0);
+            leftEar.rotation.z = 0.4;
+            pikachu.add(leftEar);
+
+            rightEar = new THREE.Group();
+            const rightEarBase = new THREE.Mesh(earGeometry, yellowMat);
+            rightEarBase.castShadow = true;
+            rightEar.add(rightEarBase);
+
+            const rightEarTip = new THREE.Mesh(earTipGeometry, blackMat);
+            rightEarTip.position.y = 0.5;
+            rightEar.add(rightEarTip);
+
+            rightEar.position.set(0.5, 4.2, 0);
+            rightEar.rotation.z = -0.4;
+            pikachu.add(rightEar);
+
+            // Arms
+            const armGeometry = new THREE.CapsuleGeometry(0.2, 0.6, 8, 16);
+
+            leftArm = new THREE.Mesh(armGeometry, yellowMat);
+            leftArm.position.set(-1.2, 1.8, 0);
+            leftArm.rotation.z = 0.5;
+            leftArm.castShadow = true;
+            pikachu.add(leftArm);
+
+            rightArm = new THREE.Mesh(armGeometry, yellowMat);
+            rightArm.position.set(1.2, 1.8, 0);
+            rightArm.rotation.z = -0.5;
+            rightArm.castShadow = true;
+            pikachu.add(rightArm);
+
+            // Legs
+            const legGeometry = new THREE.CapsuleGeometry(0.25, 0.4, 8, 16);
+
+            leftLeg = new THREE.Mesh(legGeometry, yellowMat);
+            leftLeg.position.set(-0.5, 0.5, 0);
+            leftLeg.castShadow = true;
+            pikachu.add(leftLeg);
+
+            rightLeg = new THREE.Mesh(legGeometry, yellowMat);
+            rightLeg.position.set(0.5, 0.5, 0);
+            rightLeg.castShadow = true;
+            pikachu.add(rightLeg);
+
+            // Feet
+            const footGeometry = new THREE.SphereGeometry(0.3, 16, 16);
+            footGeometry.scale(1.2, 0.5, 1.5);
+
+            const leftFoot = new THREE.Mesh(footGeometry, yellowMat);
+            leftFoot.position.set(-0.5, 0.15, 0.1);
+            leftFoot.castShadow = true;
+            pikachu.add(leftFoot);
+
+            const rightFoot = new THREE.Mesh(footGeometry, yellowMat);
+            rightFoot.position.set(0.5, 0.15, 0.1);
+            rightFoot.castShadow = true;
+            pikachu.add(rightFoot);
+
+            // Tail (lightning bolt shape)
+            tail = new THREE.Group();
+
+            const tailSegment1 = new THREE.BoxGeometry(0.3, 0.8, 0.1);
+            const tailMesh1 = new THREE.Mesh(tailSegment1, yellowMat);
+            tailMesh1.position.set(0, 0.4, 0);
+            tail.add(tailMesh1);
+
+            const tailSegment2 = new THREE.BoxGeometry(0.5, 0.3, 0.1);
+            const tailMesh2 = new THREE.Mesh(tailSegment2, yellowMat);
+            tailMesh2.position.set(0.2, 0.9, 0);
+            tail.add(tailMesh2);
+
+            const tailSegment3 = new THREE.BoxGeometry(0.3, 0.8, 0.1);
+            const tailMesh3 = new THREE.Mesh(tailSegment3, yellowMat);
+            tailMesh3.position.set(0.35, 1.4, 0);
+            tail.add(tailMesh3);
+
+            const tailSegment4 = new THREE.BoxGeometry(0.5, 0.3, 0.1);
+            const tailMesh4 = new THREE.Mesh(tailSegment4, yellowMat);
+            tailMesh4.position.set(0.55, 1.9, 0);
+            tail.add(tailMesh4);
+
+            const tailSegment5 = new THREE.BoxGeometry(0.3, 0.6, 0.1);
+            const tailMesh5 = new THREE.Mesh(tailSegment5, yellowMat);
+            tailMesh5.position.set(0.7, 2.3, 0);
+            tail.add(tailMesh5);
+
+            // Brown base of tail
+            const tailBaseGeometry = new THREE.BoxGeometry(0.4, 0.5, 0.15);
+            const tailBase = new THREE.Mesh(tailBaseGeometry, brownMat);
+            tailBase.position.set(0, 0, 0);
+            tail.add(tailBase);
+
+            tail.position.set(0, 1.2, -1);
+            tail.rotation.x = -0.3;
+            tail.castShadow = true;
+            pikachu.add(tail);
+
+            // Back stripes
+            const stripeGeometry = new THREE.BoxGeometry(0.8, 0.15, 0.05);
+            for (let i = 0; i < 2; i++) {
+                const stripe = new THREE.Mesh(stripeGeometry, brownMat);
+                stripe.position.set(0, 1.8 - i * 0.3, -0.75);
+                pikachu.add(stripe);
+            }
+
+            scene.add(pikachu);
+        }
+
+        function onWindowResize() {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        }
+
+        function onKeyDown(event) {
+            const key = event.key.toLowerCase();
+            if (keys.hasOwnProperty(key)) {
+                keys[key] = true;
+                document.getElementById(`key-${key}`)?.classList.add('active');
+            }
+            if (event.code === 'Space') {
+                keys.space = true;
+                document.getElementById('key-space')?.classList.add('active');
+                event.preventDefault();
+            }
+        }
+
+        function onKeyUp(event) {
+            const key = event.key.toLowerCase();
+            if (keys.hasOwnProperty(key)) {
+                keys[key] = false;
+                document.getElementById(`key-${key}`)?.classList.remove('active');
+            }
+            if (event.code === 'Space') {
+                keys.space = false;
+                document.getElementById('key-space')?.classList.remove('active');
+            }
+        }
+
+        function showAction(action) {
+            if (action !== currentAction) {
+                currentAction = action;
+                const indicator = document.getElementById('actionIndicator');
+                indicator.textContent = action;
+                indicator.classList.add('show');
+
+                clearTimeout(indicator.hideTimeout);
+                indicator.hideTimeout = setTimeout(() => {
+                    indicator.classList.remove('show');
+                }, 1000);
+            }
+        }
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            const moveSpeed = 0.08;
+            const rotateSpeed = 0.05;
+            let isMoving = false;
+
+            // Movement
+            if (keys.w) {
+                pikachu.position.z -= Math.cos(pikachu.rotation.y) * moveSpeed;
+                pikachu.position.x -= Math.sin(pikachu.rotation.y) * moveSpeed;
+                isMoving = true;
+                showAction('Walking Forward');
+            }
+            if (keys.s) {
+                pikachu.position.z += Math.cos(pikachu.rotation.y) * moveSpeed;
+                pikachu.position.x += Math.sin(pikachu.rotation.y) * moveSpeed;
+                isMoving = true;
+                showAction('Walking Backward');
+            }
+            if (keys.a) {
+                pikachu.rotation.y += rotateSpeed;
+                isMoving = true;
+                showAction('Turning Left');
+            }
+            if (keys.d) {
+                pikachu.rotation.y -= rotateSpeed;
+                isMoving = true;
+                showAction('Turning Right');
+            }
+
+            // Jump
+            if (keys.space && !isJumping) {
+                isJumping = true;
+                jumpVelocity = 0.25;
+                showAction('Jumping!');
+            }
+
+            if (isJumping) {
+                pikachu.position.y += jumpVelocity;
+                jumpVelocity -= 0.012; // Gravity
+
+                if (pikachu.position.y <= 0) {
+                    pikachu.position.y = 0;
+                    isJumping = false;
+                    jumpVelocity = 0;
+                }
+            }
+
+            // Walk animation
+            if (isMoving && !isJumping) {
+                walkCycle += 0.15;
+
+                // Leg animation
+                leftLeg.rotation.x = Math.sin(walkCycle) * 0.4;
+                rightLeg.rotation.x = Math.sin(walkCycle + Math.PI) * 0.4;
+
+                // Arm swing
+                leftArm.rotation.x = Math.sin(walkCycle + Math.PI) * 0.3;
+                rightArm.rotation.x = Math.sin(walkCycle) * 0.3;
+
+                // Body bob
+                body.position.y = 1.5 + Math.abs(Math.sin(walkCycle * 2)) * 0.1;
+                head.position.y = 3 + Math.abs(Math.sin(walkCycle * 2)) * 0.1;
+
+                // Ear bounce
+                leftEar.rotation.z = 0.4 + Math.sin(walkCycle * 2) * 0.1;
+                rightEar.rotation.z = -0.4 + Math.sin(walkCycle * 2) * 0.1;
+
+                // Tail wag
+                tail.rotation.y = Math.sin(walkCycle * 1.5) * 0.3;
+            } else if (!isJumping) {
+                // Idle animation
+                walkCycle += 0.02;
+
+                // Gentle breathing
+                body.scale.y = 0.9 + Math.sin(walkCycle) * 0.02;
+                body.scale.x = 1 + Math.sin(walkCycle) * 0.01;
+
+                // Ear twitch
+                if (Math.random() < 0.005) {
+                    leftEar.rotation.z = 0.4 + (Math.random() - 0.5) * 0.2;
+                }
+                if (Math.random() < 0.005) {
+                    rightEar.rotation.z = -0.4 + (Math.random() - 0.5) * 0.2;
+                }
+
+                // Reset pose gradually
+                leftLeg.rotation.x *= 0.9;
+                rightLeg.rotation.x *= 0.9;
+                leftArm.rotation.x *= 0.9;
+                rightArm.rotation.x *= 0.9;
+            }
+
+            // Jump animation
+            if (isJumping) {
+                // Arms up
+                leftArm.rotation.z = 0.5 + jumpVelocity * 2;
+                rightArm.rotation.z = -0.5 - jumpVelocity * 2;
+
+                // Legs tucked
+                leftLeg.rotation.x = -0.5;
+                rightLeg.rotation.x = -0.5;
+
+                // Ears back
+                leftEar.rotation.x = -jumpVelocity * 2;
+                rightEar.rotation.x = -jumpVelocity * 2;
+            }
+
+            // Camera follow
+            camera.position.x += (pikachu.position.x - camera.position.x) * 0.05;
+            camera.position.z += (pikachu.position.z + 12 - camera.position.z) * 0.05;
+            camera.lookAt(pikachu.position.x, 2, pikachu.position.z);
+
+            renderer.render(scene, camera);
+        }
+    </script>
+</body>
+</html>
