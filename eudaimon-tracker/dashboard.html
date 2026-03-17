@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EUDAIMON LIVE TRACKER</title>
+    <style>
+        :root {
+            --bg-dark: #0a0a0f;
+            --bg-card: #12121a;
+            --bg-card-hover: #1a1a25;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --red: #ff3b3b;
+            --red-glow: rgba(255, 59, 59, 0.4);
+            --yellow: #ffc107;
+            --yellow-glow: rgba(255, 193, 7, 0.4);
+            --green: #00e676;
+            --green-glow: rgba(0, 230, 118, 0.4);
+            --accent: #ff1744;
+            --border: #2a2a3a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 300;
+            letter-spacing: 8px;
+            color: var(--accent);
+            text-shadow: 0 0 30px var(--red-glow);
+        }
+
+        .header .subtitle {
+            color: var(--text-secondary);
+            margin-top: 10px;
+            font-size: 0.9rem;
+            letter-spacing: 3px;
+        }
+
+        .header .consciousness {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: var(--green);
+        }
+
+        /* Summary Bar */
+        .summary-bar {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 30px;
+            padding: 15px;
+            background: var(--bg-card);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .summary-sphere {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+        }
+
+        .summary-sphere.green { background: var(--green); box-shadow: 0 0 15px var(--green-glow); }
+        .summary-sphere.yellow { background: var(--yellow); box-shadow: 0 0 15px var(--yellow-glow); }
+        .summary-sphere.red { background: var(--red); box-shadow: 0 0 15px var(--red-glow); }
+
+        /* Category Filter */
+        .category-filter {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 16px;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        /* Asset Grid */
+        .asset-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* Asset Card */
+        .asset-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .asset-card:hover {
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .asset-card.green { border-left: 4px solid var(--green); }
+        .asset-card.yellow { border-left: 4px solid var(--yellow); }
+        .asset-card.red { border-left: 4px solid var(--red); }
+
+        /* Signal Sphere */
+        .signal-sphere {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 0.7rem;
+            animation: pulse 2s infinite;
+        }
+
+        .signal-sphere.green {
+            background: var(--green);
+            box-shadow: 0 0 20px var(--green-glow), 0 0 40px var(--green-glow);
+            color: #000;
+        }
+
+        .signal-sphere.yellow {
+            background: var(--yellow);
+            box-shadow: 0 0 20px var(--yellow-glow), 0 0 40px var(--yellow-glow);
+            color: #000;
+        }
+
+        .signal-sphere.red {
+            background: var(--red);
+            box-shadow: 0 0 20px var(--red-glow), 0 0 40px var(--red-glow);
+            color: #fff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        /* Card Content */
+        .asset-header {
+            margin-bottom: 15px;
+        }
+
+        .asset-symbol {
+            font-size: 1.5rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .asset-name {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 2px;
+        }
+
+        .asset-category {
+            display: inline-block;
+            padding: 3px 10px;
+            background: rgba(255, 23, 68, 0.2);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            margin-top: 8px;
+        }
+
+        /* Price Section */
+        .price-section {
+            display: flex;
+            align-items: baseline;
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .price {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+
+        .change {
+            font-size: 1rem;
+            padding: 3px 8px;
+            border-radius: 4px;
+        }
+
+        .change.positive { background: rgba(0, 230, 118, 0.2); color: var(--green); }
+        .change.negative { background: rgba(255, 59, 59, 0.2); color: var(--red); }
+
+        /* Metrics */
+        .metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin: 15px 0;
+            padding: 15px 0;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .metric {
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .metric-value {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        /* Thesis */
+        .thesis {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-style: italic;
+            margin: 12px 0;
+            line-height: 1.4;
+        }
+
+        /* Signal Label */
+        .signal-label {
+            text-align: center;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-top: 15px;
+        }
+
+        .signal-label.green { background: rgba(0, 230, 118, 0.15); color: var(--green); }
+        .signal-label.yellow { background: rgba(255, 193, 7, 0.15); color: var(--yellow); }
+        .signal-label.red { background: rgba(255, 59, 59, 0.15); color: var(--red); }
+
+        /* News Section */
+        .news-section {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .news-header {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+        }
+
+        .news-item {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            margin: 5px 0;
+            padding-left: 10px;
+            border-left: 2px solid var(--border);
+            line-height: 1.3;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 20px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .last-update {
+            color: var(--green);
+            margin-top: 10px;
+        }
+
+        /* Loading State */
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: var(--text-secondary);
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 1.5rem;
+                letter-spacing: 4px;
+            }
+
+            .summary-bar {
+                flex-direction: column;
+                align-items: center;
+                gap: 15px;
+            }
+
+            .asset-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>EUDAIMON LIVE TRACKER</h1>
+        <div class="subtitle">24/7 RESOURCE & STOCK SIGNAL SYSTEM</div>
+        <div class="consciousness">CONSCIOUSNESS LEVEL: 1,943.15 | PHASE 1: PROVE MASTERY</div>
+    </div>
+
+    <div class="summary-bar" id="summaryBar">
+        <div class="summary-item">
+            <div class="summary-sphere green"></div>
+            <span><span id="greenCount">0</span> BUY ZONE</span>
+        </div>
+        <div class="summary-item">
+            <div class="summary-sphere yellow"></div>
+            <span><span id="yellowCount">0</span> HOLD/WATCH</span>
+        </div>
+        <div class="summary-item">
+            <div class="summary-sphere red"></div>
+            <span><span id="redCount">0</span> AVOID</span>
+        </div>
+    </div>
+
+    <div class="category-filter" id="categoryFilter">
+        <button class="filter-btn active" data-category="all">All</button>
+        <button class="filter-btn" data-category="Fertilizer">Fertilizer</button>
+        <button class="filter-btn" data-category="Uranium/Nuclear">Nuclear</button>
+        <button class="filter-btn" data-category="Copper">Copper</button>
+        <button class="filter-btn" data-category="Rare Earths">Rare Earths</button>
+        <button class="filter-btn" data-category="Gold">Gold</button>
+        <button class="filter-btn" data-category="Silver">Silver</button>
+        <button class="filter-btn" data-category="Defense/Drones">Defense</button>
+        <button class="filter-btn" data-category="Natural Gas">Nat Gas</button>
+        <button class="filter-btn" data-category="Data Center">Data Center</button>
+    </div>
+
+    <div class="asset-grid" id="assetGrid">
+        <div class="loading">
+            <div class="loading-spinner"></div>
+            <div>Loading market data...</div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <div>EUDAIMON CONSCIOUSNESS FRAMEWORK | SOVEREIGN ARCHITECT</div>
+        <div class="last-update">Last Update: <span id="lastUpdate">--</span></div>
+    </div>
+
+    <script>
+        // Data will be loaded from signals.json
+        let signalsData = {};
+        let currentFilter = 'all';
+
+        async function loadData() {
+            try {
+                const response = await fetch('signals.json');
+                signalsData = await response.json();
+                renderDashboard();
+            } catch (error) {
+                console.error('Error loading data:', error);
+                // Use demo data for testing
+                loadDemoData();
+            }
+        }
+
+        function loadDemoData() {
+            // Demo data for visual testing
+            signalsData = {
+                "NTR": {
+                    "symbol": "NTR",
+                    "name": "Nutrien Ltd",
+                    "category": "Fertilizer",
+                    "thesis": "Potash bottleneck, food security forced buyer",
+                    "signal": "GREEN",
+                    "score": 78,
+                    "price": 52.34,
+                    "change_1d": 2.4,
+                    "rsi": 32,
+                    "news": [{"title": "Fertilizer demand surges amid global food concerns"}]
+                },
+                "LEU": {
+                    "symbol": "LEU",
+                    "name": "Centrus Energy",
+                    "category": "Uranium/Nuclear",
+                    "thesis": "HALEU monopoly, only US enricher",
+                    "signal": "GREEN",
+                    "score": 85,
+                    "price": 78.50,
+                    "change_1d": 3.2,
+                    "rsi": 45,
+                    "news": [{"title": "DOE announces new HALEU contracts"}]
+                },
+                "CCJ": {
+                    "symbol": "CCJ",
+                    "name": "Cameco Corp",
+                    "category": "Uranium/Nuclear",
+                    "thesis": "Largest Western uranium miner, supply deficit",
+                    "signal": "YELLOW",
+                    "score": 62,
+                    "price": 54.20,
+                    "change_1d": -0.8,
+                    "rsi": 55,
+                    "news": [{"title": "Uranium prices stabilize near highs"}]
+                },
+                "FCX": {
+                    "symbol": "FCX",
+                    "name": "Freeport-McMoRan",
+                    "category": "Copper",
+                    "thesis": "Largest copper producer, electrification demand",
+                    "signal": "GREEN",
+                    "score": 72,
+                    "price": 45.80,
+                    "change_1d": 1.5,
+                    "rsi": 38,
+                    "news": [{"title": "Copper demand from data centers accelerating"}]
+                },
+                "MP": {
+                    "symbol": "MP",
+                    "name": "MP Materials",
+                    "category": "Rare Earths",
+                    "thesis": "Only US rare earth mine, DoD forced buyer",
+                    "signal": "YELLOW",
+                    "score": 58,
+                    "price": 18.75,
+                    "change_1d": -1.2,
+                    "rsi": 48,
+                    "news": [{"title": "Pentagon increases rare earth stockpile"}]
+                },
+                "AVAV": {
+                    "symbol": "AVAV",
+                    "name": "AeroVironment",
+                    "category": "Defense/Drones",
+                    "thesis": "Switchblade drones, modern warfare shift",
+                    "signal": "GREEN",
+                    "score": 75,
+                    "price": 185.30,
+                    "change_1d": 2.8,
+                    "rsi": 42,
+                    "news": [{"title": "New drone contract awarded"}]
+                },
+                "GLD": {
+                    "symbol": "GLD",
+                    "name": "SPDR Gold Trust",
+                    "category": "Gold",
+                    "thesis": "Dollar debasement hedge, central bank buying",
+                    "signal": "YELLOW",
+                    "score": 55,
+                    "price": 245.60,
+                    "change_1d": 0.3,
+                    "rsi": 62,
+                    "news": [{"title": "Gold holds near record highs"}]
+                },
+                "VRT": {
+                    "symbol": "VRT",
+                    "name": "Vertiv Holdings",
+                    "category": "Data Center",
+                    "thesis": "Data center cooling, AI power infrastructure",
+                    "signal": "RED",
+                    "score": 35,
+                    "price": 92.40,
+                    "change_1d": -3.5,
+                    "rsi": 72,
+                    "news": [{"title": "Tech sector faces profit-taking"}]
+                }
+            };
+            renderDashboard();
+        }
+
+        function renderDashboard() {
+            const grid = document.getElementById('assetGrid');
+            grid.innerHTML = '';
+
+            let greenCount = 0, yellowCount = 0, redCount = 0;
+
+            Object.values(signalsData).forEach(asset => {
+                if (currentFilter !== 'all' && asset.category !== currentFilter) {
+                    return;
+                }
+
+                // Count signals
+                if (asset.signal === 'GREEN') greenCount++;
+                else if (asset.signal === 'YELLOW') yellowCount++;
+                else redCount++;
+
+                const card = createAssetCard(asset);
+                grid.appendChild(card);
+            });
+
+            // Update summary counts
+            document.getElementById('greenCount').textContent = greenCount;
+            document.getElementById('yellowCount').textContent = yellowCount;
+            document.getElementById('redCount').textContent = redCount;
+
+            // Update timestamp
+            document.getElementById('lastUpdate').textContent = new Date().toLocaleString();
+        }
+
+        function createAssetCard(asset) {
+            const signalClass = asset.signal.toLowerCase();
+            const changeClass = asset.change_1d >= 0 ? 'positive' : 'negative';
+            const changePrefix = asset.change_1d >= 0 ? '+' : '';
+
+            const signalLabels = {
+                'GREEN': 'BUY ZONE',
+                'YELLOW': 'HOLD / WATCH',
+                'RED': 'AVOID / CAUTION'
+            };
+
+            const card = document.createElement('div');
+            card.className = `asset-card ${signalClass}`;
+            card.innerHTML = `
+                <div class="signal-sphere ${signalClass}">${asset.score}</div>
+
+                <div class="asset-header">
+                    <div class="asset-symbol">${asset.symbol}</div>
+                    <div class="asset-name">${asset.name}</div>
+                    <div class="asset-category">${asset.category}</div>
+                </div>
+
+                <div class="price-section">
+                    <span class="price">$${asset.price.toFixed(2)}</span>
+                    <span class="change ${changeClass}">${changePrefix}${asset.change_1d.toFixed(1)}%</span>
+                </div>
+
+                <div class="metrics">
+                    <div class="metric">
+                        <div class="metric-label">RSI</div>
+                        <div class="metric-value">${asset.rsi}</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Score</div>
+                        <div class="metric-value">${asset.score}/100</div>
+                    </div>
+                    <div class="metric">
+                        <div class="metric-label">Signal</div>
+                        <div class="metric-value">${asset.signal}</div>
+                    </div>
+                </div>
+
+                <div class="thesis">"${asset.thesis}"</div>
+
+                <div class="signal-label ${signalClass}">${signalLabels[asset.signal]}</div>
+
+                ${asset.news && asset.news.length > 0 ? `
+                    <div class="news-section">
+                        <div class="news-header">Latest News</div>
+                        ${asset.news.slice(0, 2).map(n => `
+                            <div class="news-item">${n.title}</div>
+                        `).join('')}
+                    </div>
+                ` : ''}
+            `;
+
+            return card;
+        }
+
+        // Category filter
+        document.getElementById('categoryFilter').addEventListener('click', (e) => {
+            if (e.target.classList.contains('filter-btn')) {
+                document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+                e.target.classList.add('active');
+                currentFilter = e.target.dataset.category;
+                renderDashboard();
+            }
+        });
+
+        // Auto-refresh every 60 seconds
+        setInterval(loadData, 60000);
+
+        // Initial load
+        loadData();
+    </script>
+</body>
+</html>
