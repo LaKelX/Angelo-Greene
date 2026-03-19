@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LaKel Portfolio Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="tracker-container">
+        <header class="tracker-header">
+            <h1>LaKel</h1>
+            <span class="subtitle">Portfolio Signals</span>
+            <div class="last-updated" id="lastUpdated"></div>
+        </header>
+
+        <section class="legend">
+            <div class="legend-item">
+                <span class="signal-dot green"></span>
+                <span>BUY</span>
+            </div>
+            <div class="legend-item">
+                <span class="signal-dot yellow"></span>
+                <span>HOLD</span>
+            </div>
+            <div class="legend-item">
+                <span class="signal-dot red"></span>
+                <span>SELL/AVOID</span>
+            </div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>Current Holdings</h2>
+            <div class="stock-list" id="holdingsList"></div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>Watchlist</h2>
+            <div class="stock-list" id="watchList"></div>
+        </section>
+
+        <section class="portfolio-section">
+            <h2>Buy Opportunities</h2>
+            <div class="stock-list" id="buyList"></div>
+        </section>
+
+        <footer class="tracker-footer">
+            <p>LaKel Capital • Hardware-Focused Investment Fund</p>
+        </footer>
+    </div>
+
+    <script src="config.js"></script>
+    <script src="tracker.js"></script>
+</body>
+</html>
