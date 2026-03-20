@@ -2281,7 +2281,12 @@
         // INITIALIZATION
         // ═══════════════════════════════════════════════════════════════════════════════
 
-        init();
+        // Wait for DOM to be ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
 
         function init() {
             initCanvases();
@@ -2310,6 +2315,9 @@
                 }
             });
             resizeCanvases();
+            // Resize again after a delay to catch any layout changes
+            setTimeout(resizeCanvases, 500);
+            setTimeout(resizeCanvases, 1500);
         }
 
         function resizeCanvases() {
@@ -5243,7 +5251,11 @@
 
                 if (progress >= 100) {
                     clearInterval(interval);
-                    setTimeout(() => document.getElementById('loading').classList.add('hidden'), 800);
+                    setTimeout(() => {
+                        document.getElementById('loading').classList.add('hidden');
+                        // Resize canvases after loading overlay is hidden
+                        setTimeout(resizeCanvases, 100);
+                    }, 800);
                 }
             }, 100);
         }
