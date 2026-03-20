@@ -2278,7 +2278,7 @@
         }
 
         function initCanvases() {
-            ['minds', 'game', 'war', 'laws', 'eudaimon', 'predict', 'memory', 'layers'].forEach(id => {
+            ['minds', 'game', 'war', 'econ', 'laws', 'eudaimon', 'predict', 'memory', 'layers'].forEach(id => {
                 const canvas = document.getElementById(`${id}-canvas`);
                 if (canvas) {
                     canvases[id] = canvas;
@@ -2292,12 +2292,15 @@
             Object.keys(canvases).forEach(id => {
                 const canvas = canvases[id];
                 const parent = canvas.parentElement;
-                canvas.width = parent.offsetWidth;
-                canvas.height = parent.offsetHeight;
+                // Only resize if the parent has dimensions (is visible)
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                }
             });
 
             // Reposition minds
-            if (canvases.minds) {
+            if (canvases.minds && canvases.minds.width > 0) {
                 const cx = canvases.minds.width / 2;
                 const cy = canvases.minds.height / 2;
                 GREAT_MINDS.forEach((mind, i) => {
@@ -2458,6 +2461,17 @@
             const ctx = contexts.minds;
             const canvas = canvases.minds;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,0,0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -2701,6 +2715,17 @@
             const canvas = canvases.game;
             if (!ctx || !canvas) return;
 
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
+
             ctx.fillStyle = 'rgba(0,0,5,0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -2937,6 +2962,17 @@
             const ctx = contexts.war;
             const canvas = canvases.war;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,5,0.15)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -3266,6 +3302,17 @@
             const mainCanvas = canvases.econ;
 
             if (mainCtx && mainCanvas) {
+                // Ensure canvas has dimensions
+                if (mainCanvas.width === 0 || mainCanvas.height === 0) {
+                    const parent = mainCanvas.parentElement;
+                    if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                        mainCanvas.width = parent.offsetWidth;
+                        mainCanvas.height = parent.offsetHeight;
+                    } else {
+                        return;
+                    }
+                }
+
                 mainCtx.fillStyle = 'rgba(0,5,0,0.05)';
                 mainCtx.fillRect(0, 0, mainCanvas.width, mainCanvas.height);
 
@@ -3468,6 +3515,17 @@
             const ctx = contexts.laws;
             const canvas = canvases.laws;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,0,0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -4316,6 +4374,17 @@
             const ctx = contexts.eudaimon;
             const canvas = canvases.eudaimon;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,0,0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -5246,6 +5315,17 @@
             const canvas = canvases.predict;
             if (!ctx || !canvas) return;
 
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return; // Can't draw on 0-sized canvas
+                }
+            }
+
             ctx.fillStyle = 'rgba(0,0,0,0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -5578,6 +5658,17 @@
             const ctx = contexts.memory;
             const canvas = canvases.memory;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,0,0.06)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
@@ -5955,6 +6046,17 @@
             const ctx = contexts.layers;
             const canvas = canvases.layers;
             if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
 
             ctx.fillStyle = 'rgba(0,0,0,0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
