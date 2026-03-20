@@ -2222,7 +2222,7 @@
         };
 
         // PREDICTION ENGINE DATA
-        const PREDICTIONS = [
+        const PREDICTION_TRACKER = [
             { id: 'P-2026-047', ticker: 'LEU', statement: 'LEU reaches $75 on HALEU contract expansion', confidence: 0.75, date: '2026-03-15', status: 'pending' },
             { id: 'P-2026-046', ticker: 'CCJ', statement: 'CCJ breaks $60 resistance on uranium demand', confidence: 0.70, date: '2026-03-12', status: 'pending' },
             { id: 'P-2026-045', ticker: 'VRT', statement: 'VRT +30% on data center expansion news', confidence: 0.80, date: '2026-03-10', status: 'correct' },
@@ -3913,7 +3913,7 @@
         function initPredictModule() {
             // Populate prediction list
             const predList = document.getElementById('prediction-list');
-            PREDICTIONS.forEach(pred => {
+            PREDICTION_TRACKER.forEach(pred => {
                 const div = document.createElement('div');
                 div.className = `prediction-card ${pred.status}`;
                 div.innerHTML = `
