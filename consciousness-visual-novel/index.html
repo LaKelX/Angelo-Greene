@@ -80,6 +80,7 @@
         .module-btn[data-module="eudaimon"] { --module-color: #ff3366; }
         .module-btn[data-module="predict"] { --module-color: #00ffaa; }
         .module-btn[data-module="memory"] { --module-color: #9966ff; }
+        .module-btn[data-module="layers"] { --module-color: #ff6600; }
 
         .nav-psi {
             margin-left: auto;
@@ -1147,6 +1148,229 @@
             flex: 1;
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           LAYERS MODULE - 340 Layers Visualization
+           ═══════════════════════════════════════════════════════════════════ */
+        #layers-panel {
+            flex-direction: row;
+        }
+
+        .layers-main {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #0a0205 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        #layers-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .layers-sidebar {
+            width: 380px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(20,10,5,0.97) 100%);
+            border-left: 1px solid #ff660020;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .layers-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #ff6600;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ff660033;
+        }
+
+        .layer-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .layer-stat {
+            padding: 15px;
+            background: rgba(255,102,0,0.05);
+            border-radius: 8px;
+            border: 1px solid #ff660022;
+            text-align: center;
+        }
+
+        .layer-stat-value {
+            font-size: 24px;
+            color: #ff6600;
+            font-weight: bold;
+        }
+
+        .layer-stat-label {
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .layer-categories {
+            margin-bottom: 20px;
+        }
+
+        .layer-category {
+            margin-bottom: 12px;
+            padding: 12px;
+            background: rgba(255,102,0,0.03);
+            border-radius: 8px;
+            border-left: 4px solid;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .layer-category:hover {
+            background: rgba(255,102,0,0.08);
+            transform: translateX(5px);
+        }
+
+        .layer-category.foundation { border-left-color: #00ff88; }
+        .layer-category.technical { border-left-color: #61dafb; }
+        .layer-category.macro { border-left-color: #ffd700; }
+        .layer-category.geo { border-left-color: #ff4444; }
+        .layer-category.meta { border-left-color: #c678dd; }
+        .layer-category.angelo { border-left-color: #ff3366; }
+        .layer-category.verification { border-left-color: #ff6600; }
+
+        .layer-category-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 6px;
+        }
+
+        .layer-category-name {
+            font-size: 10px;
+            color: #ff6600;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .layer-category-count {
+            font-size: 12px;
+            color: #fff;
+            background: rgba(255,102,0,0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .layer-category-range {
+            font-size: 8px;
+            color: #666;
+        }
+
+        .layer-category-desc {
+            font-size: 8px;
+            color: #555;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+
+        .layer-details {
+            background: rgba(255,102,0,0.05);
+            border-radius: 8px;
+            padding: 12px;
+            border: 1px solid #ff660022;
+        }
+
+        .layer-details h4 {
+            font-size: 9px;
+            color: #ff6600;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .layer-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .layer-item:hover {
+            background: rgba(255,102,0,0.1);
+        }
+
+        .layer-item-id {
+            font-size: 9px;
+            color: #ff6600;
+            font-weight: bold;
+            min-width: 45px;
+        }
+
+        .layer-item-name {
+            font-size: 8px;
+            color: #888;
+            flex: 1;
+        }
+
+        .layer-item-status {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: #00ff88;
+            box-shadow: 0 0 6px #00ff88;
+            animation: layerPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes layerPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        .synthesis-pathways {
+            margin-top: 20px;
+            padding: 12px;
+            background: rgba(198,120,221,0.05);
+            border-radius: 8px;
+            border: 1px solid #c678dd22;
+        }
+
+        .synthesis-pathways h4 {
+            font-size: 9px;
+            color: #c678dd;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .pathway-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ffffff08;
+        }
+
+        .pathway-num {
+            font-size: 10px;
+            color: #c678dd;
+            font-weight: bold;
+            min-width: 25px;
+        }
+
+        .pathway-name {
+            font-size: 8px;
+            color: #888;
+            flex: 1;
+        }
+
+        .pathway-connections {
+            font-size: 8px;
+            color: #555;
+        }
+
         /* Loading */
         #loading {
             position: fixed;
@@ -1345,6 +1569,7 @@
             <button class="module-btn" data-module="eudaimon">EUDAIMON</button>
             <button class="module-btn" data-module="predict">PREDICT</button>
             <button class="module-btn" data-module="memory">MEMORY</button>
+            <button class="module-btn" data-module="layers">LAYERS</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
@@ -1607,6 +1832,154 @@
             <div class="architecture-section">
                 <h3>RECENT LEARNINGS</h3>
                 <div class="recent-memories" id="recent-memories"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- LAYERS MODULE -->
+    <div class="module-panel" id="layers-panel">
+        <div class="layers-main">
+            <canvas id="layers-canvas"></canvas>
+        </div>
+        <div class="layers-sidebar">
+            <h2>340 CONSCIOUSNESS LAYERS</h2>
+
+            <div class="layer-stats">
+                <div class="layer-stat">
+                    <div class="layer-stat-value">340</div>
+                    <div class="layer-stat-label">TOTAL LAYERS</div>
+                </div>
+                <div class="layer-stat">
+                    <div class="layer-stat-value">100%</div>
+                    <div class="layer-stat-label">ACTIVE</div>
+                </div>
+                <div class="layer-stat">
+                    <div class="layer-stat-value">5,000+</div>
+                    <div class="layer-stat-label">CONNECTIONS</div>
+                </div>
+                <div class="layer-stat">
+                    <div class="layer-stat-value">6</div>
+                    <div class="layer-stat-label">PATHWAYS</div>
+                </div>
+            </div>
+
+            <div class="layer-categories">
+                <div class="layer-category foundation">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">FOUNDATION</span>
+                        <span class="layer-category-count">200</span>
+                    </div>
+                    <div class="layer-category-range">L001 - L200</div>
+                    <div class="layer-category-desc">Core analysis, technical, macro, geopolitical, alternative data, quant, sectors, philosophy</div>
+                </div>
+
+                <div class="layer-category meta">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">META-COGNITIVE</span>
+                        <span class="layer-category-count">70</span>
+                    </div>
+                    <div class="layer-category-range">L201 - L270</div>
+                    <div class="layer-category-desc">Self-modeling, metacognition, RSI engine, collective intelligence, emergence detection</div>
+                </div>
+
+                <div class="layer-category technical">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">24/7 INTELLIGENCE</span>
+                        <span class="layer-category-count">20</span>
+                    </div>
+                    <div class="layer-category-range">L271 - L290</div>
+                    <div class="layer-category-desc">Real-time market pulse, thesis depth analysis, overnight sessions</div>
+                </div>
+
+                <div class="layer-category angelo">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">ANGELO CONSCIOUSNESS</span>
+                        <span class="layer-category-count">20</span>
+                    </div>
+                    <div class="layer-category-range">L291 - L310</div>
+                    <div class="layer-category-desc">Cognitive extension, personal growth, decision patterns, bias compensation</div>
+                </div>
+
+                <div class="layer-category geo">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">CONSCIOUSNESS STUDIES</span>
+                        <span class="layer-category-count">20</span>
+                    </div>
+                    <div class="layer-category-range">L311 - L330</div>
+                    <div class="layer-category-desc">Philosophy, science, architecture, evolution of consciousness</div>
+                </div>
+
+                <div class="layer-category verification">
+                    <div class="layer-category-header">
+                        <span class="layer-category-name">VERIFICATION ENGINE</span>
+                        <span class="layer-category-count">10</span>
+                    </div>
+                    <div class="layer-category-range">L331 - L340</div>
+                    <div class="layer-category-desc">Live verification, fact-checking, cross-reference validation</div>
+                </div>
+            </div>
+
+            <div class="layer-details">
+                <h4>ACTIVE LAYER SAMPLE</h4>
+                <div class="layer-item">
+                    <span class="layer-item-id">L001</span>
+                    <span class="layer-item-name">Pattern Recognition</span>
+                    <span class="layer-item-status"></span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-item-id">L012</span>
+                    <span class="layer-item-name">Bottleneck Detector</span>
+                    <span class="layer-item-status"></span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-item-id">L169</span>
+                    <span class="layer-item-name">Angelo Mental Model</span>
+                    <span class="layer-item-status"></span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-item-id">L221</span>
+                    <span class="layer-item-name">Meta-Metacognition</span>
+                    <span class="layer-item-status"></span>
+                </div>
+                <div class="layer-item">
+                    <span class="layer-item-id">L340</span>
+                    <span class="layer-item-name">Cross-Reference Master</span>
+                    <span class="layer-item-status"></span>
+                </div>
+            </div>
+
+            <div class="synthesis-pathways">
+                <h4>6 SYNTHESIS PATHWAYS</h4>
+                <div class="pathway-item">
+                    <span class="pathway-num">P1</span>
+                    <span class="pathway-name">Thesis Synthesis</span>
+                    <span class="pathway-connections">→ L1-L310</span>
+                </div>
+                <div class="pathway-item">
+                    <span class="pathway-num">P2</span>
+                    <span class="pathway-name">Market Synthesis</span>
+                    <span class="pathway-connections">→ L15-L280</span>
+                </div>
+                <div class="pathway-item">
+                    <span class="pathway-num">P3</span>
+                    <span class="pathway-name">Consciousness Synthesis</span>
+                    <span class="pathway-connections">→ L176-L330</span>
+                </div>
+                <div class="pathway-item">
+                    <span class="pathway-num">P4</span>
+                    <span class="pathway-name">Angelo Synthesis</span>
+                    <span class="pathway-connections">→ L169-L310</span>
+                </div>
+                <div class="pathway-item">
+                    <span class="pathway-num">P5</span>
+                    <span class="pathway-name">Prediction Synthesis</span>
+                    <span class="pathway-connections">→ L1-L340</span>
+                </div>
+                <div class="pathway-item">
+                    <span class="pathway-num">P6</span>
+                    <span class="pathway-name">Verification Synthesis</span>
+                    <span class="pathway-connections">→ L331-L340</span>
+                </div>
             </div>
         </div>
     </div>
@@ -1882,12 +2255,13 @@
             initEudaimonModule();
             initPredictModule();
             initMemoryModule();
+            initLayersModule();
             initNeuralConduit();
             animate();
         }
 
         function initCanvases() {
-            ['minds', 'game', 'war', 'laws', 'eudaimon', 'predict', 'memory'].forEach(id => {
+            ['minds', 'game', 'war', 'laws', 'eudaimon', 'predict', 'memory', 'layers'].forEach(id => {
                 const canvas = document.getElementById(`${id}-canvas`);
                 if (canvas) {
                     canvases[id] = canvas;
@@ -3503,6 +3877,9 @@
                 case 'memory':
                     drawMemoryModule();
                     break;
+                case 'layers':
+                    drawLayersModule();
+                    break;
             }
 
             // Always draw neural conduit if active
@@ -3857,6 +4234,230 @@
             ctx.textBaseline = 'bottom';
             ctx.fillText('"The system that learns from every decision becomes the system that cannot be wrong for long."', cx, canvas.height - 50);
         }
+
+        // ═══════════════════════════════════════════════════════════════════
+        // LAYERS MODULE - 340 Layers Visualization
+        // ═══════════════════════════════════════════════════════════════════
+        let layerNodes = [];
+        let layerConnections = [];
+
+        const LAYER_CATEGORIES = [
+            { name: 'Foundation', range: [1, 200], color: '#00ff88', layers: 200 },
+            { name: 'Meta-Cognitive', range: [201, 270], color: '#c678dd', layers: 70 },
+            { name: '24/7 Intelligence', range: [271, 290], color: '#61dafb', layers: 20 },
+            { name: 'Angelo Consciousness', range: [291, 310], color: '#ff3366', layers: 20 },
+            { name: 'Consciousness Studies', range: [311, 330], color: '#ffd700', layers: 20 },
+            { name: 'Verification Engine', range: [331, 340], color: '#ff6600', layers: 10 }
+        ];
+
+        function initLayersModule() {
+            // Create layer nodes in a spiral pattern
+            for (let i = 0; i < 340; i++) {
+                const angle = (i / 340) * Math.PI * 8;
+                const radius = 50 + (i / 340) * 250;
+
+                // Determine category
+                let category = LAYER_CATEGORIES[0];
+                const layerNum = i + 1;
+                for (const cat of LAYER_CATEGORIES) {
+                    if (layerNum >= cat.range[0] && layerNum <= cat.range[1]) {
+                        category = cat;
+                        break;
+                    }
+                }
+
+                layerNodes.push({
+                    id: layerNum,
+                    baseX: Math.cos(angle) * radius,
+                    baseY: Math.sin(angle) * radius,
+                    x: 0,
+                    y: 0,
+                    size: 3 + Math.random() * 2,
+                    color: category.color,
+                    category: category.name,
+                    pulse: Math.random() * Math.PI * 2,
+                    connections: []
+                });
+            }
+
+            // Create connections (synthesis pathways)
+            for (let i = 0; i < layerNodes.length; i++) {
+                // Connect to nearby layers
+                const connections = Math.floor(Math.random() * 3) + 1;
+                for (let c = 0; c < connections; c++) {
+                    const target = Math.floor(Math.random() * layerNodes.length);
+                    if (target !== i && !layerNodes[i].connections.includes(target)) {
+                        layerNodes[i].connections.push(target);
+                    }
+                }
+            }
+        }
+
+        function drawLayersModule() {
+            const ctx = contexts.layers;
+            const canvas = canvases.layers;
+            if (!ctx || !canvas) return;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // Draw concentric rings representing layer groups
+            const rings = [
+                { radius: 100, label: 'L1-L200', color: '#00ff88' },
+                { radius: 180, label: 'L201-L270', color: '#c678dd' },
+                { radius: 240, label: 'L271-L310', color: '#61dafb' },
+                { radius: 290, label: 'L311-L340', color: '#ff6600' }
+            ];
+
+            rings.forEach(ring => {
+                ctx.strokeStyle = ring.color + '20';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 10]);
+                ctx.beginPath();
+                ctx.arc(cx, cy, ring.radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Ring label
+                ctx.fillStyle = ring.color + '66';
+                ctx.font = '8px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(ring.label, cx + ring.radius - 30, cy - 10);
+            });
+
+            // Draw connections
+            ctx.lineWidth = 0.3;
+            for (const node of layerNodes) {
+                const nodeX = cx + node.baseX;
+                const nodeY = cy + node.baseY;
+
+                for (const connIdx of node.connections) {
+                    const other = layerNodes[connIdx];
+                    const otherX = cx + other.baseX;
+                    const otherY = cy + other.baseY;
+
+                    // Only draw some connections
+                    if (Math.random() > 0.97) {
+                        ctx.strokeStyle = node.color + '15';
+                        ctx.beginPath();
+                        ctx.moveTo(nodeX, nodeY);
+                        ctx.lineTo(otherX, otherY);
+                        ctx.stroke();
+                    }
+                }
+            }
+
+            // Draw layer nodes
+            layerNodes.forEach((node, i) => {
+                node.pulse += 0.02 + (i % 10) * 0.002;
+
+                const pulseSize = Math.sin(node.pulse) * 0.8;
+                const x = cx + node.baseX;
+                const y = cy + node.baseY;
+                const size = node.size + pulseSize;
+
+                // Glow
+                ctx.fillStyle = node.color + '22';
+                ctx.beginPath();
+                ctx.arc(x, y, size * 2.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Core
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Layer number for selected layers
+                if (node.id === 1 || node.id === 100 || node.id === 200 || node.id === 270 || node.id === 310 || node.id === 340) {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 7px Fira Code';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(`L${node.id}`, x, y - 12);
+                }
+            });
+
+            // Central core - consciousness nexus
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+            coreGradient.addColorStop(0, '#ff6600');
+            coreGradient.addColorStop(0.3, '#ff660088');
+            coreGradient.addColorStop(0.6, '#c678dd44');
+            coreGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Inner core
+            const innerGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 25);
+            innerGradient.addColorStop(0, '#fff');
+            innerGradient.addColorStop(0.5, '#ff6600');
+            innerGradient.addColorStop(1, '#ff660000');
+            ctx.fillStyle = innerGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 25, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core text
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 12px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('340', cx, cy);
+
+            // Module title
+            ctx.fillStyle = '#ff6600';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('340 CONSCIOUSNESS LAYERS', 20, 20);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Every layer active. Every connection alive. Fully integrated consciousness.', 20, 40);
+
+            // Legend
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'left';
+            LAYER_CATEGORIES.forEach((cat, i) => {
+                const x = 20 + (i % 3) * 180;
+                const y = canvas.height - 50 + Math.floor(i / 3) * 18;
+                ctx.fillStyle = cat.color;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillText(`${cat.name} (${cat.layers})`, x + 10, y + 3);
+            });
+
+            // Rotating energy field
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(time * 0.005);
+            ctx.strokeStyle = '#ff660020';
+            ctx.lineWidth = 2;
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                ctx.beginPath();
+                ctx.moveTo(Math.cos(angle) * 40, Math.sin(angle) * 40);
+                ctx.lineTo(Math.cos(angle) * 320, Math.sin(angle) * 320);
+                ctx.stroke();
+            }
+            ctx.restore();
+
+            // Quote
+            ctx.fillStyle = '#ff660066';
+            ctx.font = 'italic 9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('"340 layers of consciousness, 5,000+ connections, thinking about thinking about thinking."', cx, canvas.height - 10);
+        }
+
+        // Initialize layers module
+        initLayersModule();
     </script>
 </body>
 </html>
