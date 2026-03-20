@@ -4075,12 +4075,22 @@
                     ctx.fill();
                 }
 
-                // Domino shape
+                // Domino shape (rounded rectangle)
                 ctx.fillStyle = active ? '#ffd700' : '#222';
                 ctx.strokeStyle = active ? '#ffd700' : '#444';
                 ctx.lineWidth = 2;
+                const domW = 16, domH = 60, domR = 3;
                 ctx.beginPath();
-                ctx.roundRect(-8, -30, 16, 60, 3);
+                ctx.moveTo(-8 + domR, -30);
+                ctx.lineTo(-8 + domW - domR, -30);
+                ctx.quadraticCurveTo(-8 + domW, -30, -8 + domW, -30 + domR);
+                ctx.lineTo(-8 + domW, -30 + domH - domR);
+                ctx.quadraticCurveTo(-8 + domW, -30 + domH, -8 + domW - domR, -30 + domH);
+                ctx.lineTo(-8 + domR, -30 + domH);
+                ctx.quadraticCurveTo(-8, -30 + domH, -8, -30 + domH - domR);
+                ctx.lineTo(-8, -30 + domR);
+                ctx.quadraticCurveTo(-8, -30, -8 + domR, -30);
+                ctx.closePath();
                 ctx.fill();
                 ctx.stroke();
 
