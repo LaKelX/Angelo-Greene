@@ -44,19 +44,36 @@
         .nav-modules {
             display: flex;
             gap: 5px;
+            overflow-x: auto;
+            flex-wrap: nowrap;
+            max-width: calc(100vw - 300px);
+        }
+
+        .nav-modules::-webkit-scrollbar {
+            height: 3px;
+        }
+
+        .nav-modules::-webkit-scrollbar-track {
+            background: #111;
+        }
+
+        .nav-modules::-webkit-scrollbar-thumb {
+            background: #333;
         }
 
         .module-btn {
-            padding: 12px 25px;
+            padding: 10px 16px;
             background: transparent;
             border: 1px solid #333;
             color: #555;
             font-family: 'Fira Code', monospace;
-            font-size: 11px;
-            letter-spacing: 2px;
+            font-size: 10px;
+            letter-spacing: 1px;
             cursor: pointer;
             transition: all 0.3s;
             border-radius: 3px;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .module-btn:hover {
