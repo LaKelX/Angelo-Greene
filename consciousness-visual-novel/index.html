@@ -2462,21 +2462,120 @@
             ctx.fillStyle = 'rgba(0,0,0,0.1)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw connections between minds
-            ctx.strokeStyle = 'rgba(255,215,0,0.08)';
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // ═══════════════════════════════════════════════════════════════
+            // COLLECTIVE BRAIN VISUALIZATION - Central neural structure
+            // ═══════════════════════════════════════════════════════════════
+
+            // Brain outline - stylized cerebrum shape
+            ctx.save();
+            ctx.translate(cx, cy - 20);
+
+            // Brain glow
+            const brainGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, 120);
+            brainGlow.addColorStop(0, '#ffd70033');
+            brainGlow.addColorStop(0.5, '#c678dd15');
+            brainGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = brainGlow;
+            ctx.beginPath();
+            ctx.arc(0, 0, 120, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Left hemisphere
+            ctx.beginPath();
+            ctx.moveTo(-5, -60);
+            ctx.bezierCurveTo(-70, -70, -90, -20, -85, 20);
+            ctx.bezierCurveTo(-80, 50, -50, 70, -5, 60);
+            ctx.strokeStyle = '#ffd70044';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Right hemisphere
+            ctx.beginPath();
+            ctx.moveTo(5, -60);
+            ctx.bezierCurveTo(70, -70, 90, -20, 85, 20);
+            ctx.bezierCurveTo(80, 50, 50, 70, 5, 60);
+            ctx.stroke();
+
+            // Corpus callosum (center connection)
+            ctx.beginPath();
+            ctx.moveTo(-5, -60);
+            ctx.lineTo(5, -60);
+            ctx.moveTo(-5, 60);
+            ctx.lineTo(5, 60);
+            ctx.strokeStyle = '#ffd70066';
+            ctx.stroke();
+
+            // Brain folds (gyri)
+            ctx.strokeStyle = '#ffd70022';
             ctx.lineWidth = 1;
+            for (let i = 0; i < 6; i++) {
+                const y = -50 + i * 18;
+                const wave = Math.sin(time * 2 + i) * 5;
+                // Left side folds
+                ctx.beginPath();
+                ctx.moveTo(-20, y);
+                ctx.quadraticCurveTo(-50 + wave, y + 5, -70, y + Math.sin(i) * 10);
+                ctx.stroke();
+                // Right side folds
+                ctx.beginPath();
+                ctx.moveTo(20, y);
+                ctx.quadraticCurveTo(50 - wave, y + 5, 70, y + Math.sin(i) * 10);
+                ctx.stroke();
+            }
+
+            // Neural pulses inside brain
+            for (let i = 0; i < 15; i++) {
+                const px = (Math.sin(time * 3 + i * 1.3) * 60);
+                const py = (Math.cos(time * 2 + i * 0.9) * 40);
+                const pSize = 2 + Math.sin(time * 4 + i) * 1;
+                const pAlpha = 0.4 + Math.sin(time * 2 + i) * 0.3;
+
+                ctx.fillStyle = `rgba(255,215,0,${pAlpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, pSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+
+            // ═══════════════════════════════════════════════════════════════
+            // NEURAL CONNECTIONS - Enhanced synaptic links
+            // ═══════════════════════════════════════════════════════════════
+
+            // Draw connections between minds with gradient and pulse
             GREAT_MINDS.forEach((mind, i) => {
                 GREAT_MINDS.forEach((other, j) => {
                     if (i < j) {
+                        // Connection gradient
+                        const connGrad = ctx.createLinearGradient(mind.x, mind.y, other.x, other.y);
+                        connGrad.addColorStop(0, mind.color + '25');
+                        connGrad.addColorStop(0.5, '#ffd70015');
+                        connGrad.addColorStop(1, other.color + '25');
+
+                        ctx.strokeStyle = connGrad;
+                        ctx.lineWidth = 1.5;
                         ctx.beginPath();
                         ctx.moveTo(mind.x, mind.y);
                         ctx.lineTo(other.x, other.y);
                         ctx.stroke();
+
+                        // Synapse pulse traveling along connection
+                        const pulseT = (time * 0.3 + (i + j) * 0.15) % 1;
+                        const pulseX = mind.x + (other.x - mind.x) * pulseT;
+                        const pulseY = mind.y + (other.y - mind.y) * pulseT;
+
+                        ctx.fillStyle = '#ffd700';
+                        ctx.beginPath();
+                        ctx.arc(pulseX, pulseY, 2.5, 0, Math.PI * 2);
+                        ctx.fill();
                     }
                 });
             });
 
-            // Draw and update idea balls
+            // Draw and update idea balls with enhanced trails
             ideaBalls.forEach(ball => {
                 const fromMind = GREAT_MINDS[ball.from];
                 const toMind = GREAT_MINDS[ball.to];
@@ -2487,44 +2586,80 @@
                 const dist = Math.sqrt(dx * dx + dy * dy);
 
                 if (dist > 30) {
-                    ball.x += (dx / dist) * 2;
-                    ball.y += (dy / dist) * 2;
+                    ball.x += (dx / dist) * 2.5;
+                    ball.y += (dy / dist) * 2.5;
                 } else {
-                    // Reached target, pick new source/target
                     ball.from = ball.to;
                     ball.to = Math.floor(Math.random() * GREAT_MINDS.length);
                     if (ball.to === ball.from) ball.to = (ball.to + 1) % GREAT_MINDS.length;
                     ball.color = GREAT_MINDS[ball.from].color;
                 }
 
-                // Draw ball
+                // Enhanced glow trail
+                const trailGrad = ctx.createRadialGradient(ball.x, ball.y, 0, ball.x, ball.y, ball.size * 4);
+                trailGrad.addColorStop(0, ball.color + '88');
+                trailGrad.addColorStop(0.5, ball.color + '33');
+                trailGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = trailGrad;
+                ctx.beginPath();
+                ctx.arc(ball.x, ball.y, ball.size * 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Draw ball with inner highlight
                 ctx.fillStyle = ball.color;
-                ctx.globalAlpha = 0.6;
                 ctx.beginPath();
                 ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Trail
-                ctx.globalAlpha = 0.2;
+                ctx.fillStyle = '#ffffff66';
                 ctx.beginPath();
-                ctx.arc(ball.x - ball.vx * 3, ball.y - ball.vy * 3, ball.size * 0.7, 0, Math.PI * 2);
+                ctx.arc(ball.x - ball.size * 0.3, ball.y - ball.size * 0.3, ball.size * 0.35, 0, Math.PI * 2);
                 ctx.fill();
-                ctx.globalAlpha = 1;
             });
 
-            // Draw minds
-            GREAT_MINDS.forEach(mind => {
-                // Glow
-                const gradient = ctx.createRadialGradient(mind.x, mind.y, 0, mind.x, mind.y, 50);
-                gradient.addColorStop(0, mind.color + '44');
-                gradient.addColorStop(1, 'transparent');
-                ctx.fillStyle = gradient;
-                ctx.beginPath();
-                ctx.arc(mind.x, mind.y, 50, 0, Math.PI * 2);
-                ctx.fill();
+            // ═══════════════════════════════════════════════════════════════
+            // GREAT MINDS - Enhanced nodes with auras
+            // ═══════════════════════════════════════════════════════════════
 
-                // Circle
-                ctx.fillStyle = '#000';
+            GREAT_MINDS.forEach((mind, idx) => {
+                // Multi-layer glow
+                for (let g = 3; g > 0; g--) {
+                    const glowRadius = 40 + g * 15 + Math.sin(time * 2 + idx) * 5;
+                    const gradient = ctx.createRadialGradient(mind.x, mind.y, 0, mind.x, mind.y, glowRadius);
+                    gradient.addColorStop(0, mind.color + Math.floor(60 / g).toString(16).padStart(2, '0'));
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(mind.x, mind.y, glowRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Orbiting particles
+                for (let p = 0; p < 3; p++) {
+                    const orbitAngle = time * 2 + (p / 3) * Math.PI * 2 + idx;
+                    const orbitRadius = 35 + Math.sin(time + p) * 5;
+                    const px = mind.x + Math.cos(orbitAngle) * orbitRadius;
+                    const py = mind.y + Math.sin(orbitAngle) * orbitRadius;
+
+                    ctx.fillStyle = mind.color;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Pulsing ring
+                const ringSize = 30 + Math.sin(time * 3 + idx) * 3;
+                ctx.strokeStyle = mind.color + '66';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.arc(mind.x, mind.y, ringSize, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Circle with gradient fill
+                const nodeGrad = ctx.createRadialGradient(mind.x - 8, mind.y - 8, 0, mind.x, mind.y, 25);
+                nodeGrad.addColorStop(0, '#333');
+                nodeGrad.addColorStop(1, '#000');
+                ctx.fillStyle = nodeGrad;
                 ctx.strokeStyle = mind.color;
                 ctx.lineWidth = 2;
                 ctx.beginPath();
@@ -2534,15 +2669,25 @@
 
                 // Name
                 ctx.fillStyle = mind.color;
-                ctx.font = '9px Fira Code';
+                ctx.font = 'bold 9px Fira Code';
                 ctx.textAlign = 'center';
                 ctx.fillText(mind.name, mind.x, mind.y + 3);
 
-                // Domain
-                ctx.fillStyle = '#555';
-                ctx.font = '6px Fira Code';
-                ctx.fillText(mind.domain, mind.x, mind.y + 40);
+                // Domain with glow
+                ctx.fillStyle = mind.color + '88';
+                ctx.font = '7px Fira Code';
+                ctx.fillText(mind.domain, mind.x, mind.y + 42);
             });
+
+            // Title
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.fillText('COLLECTIVE INTELLIGENCE NETWORK', 20, 30);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Ideas flowing between the greatest minds in history', 20, 48);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -2562,72 +2707,224 @@
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
 
-            // Draw prediction lines radiating from center
+            // ═══════════════════════════════════════════════════════════════
+            // CHESS BOARD BACKGROUND - Strategic grid
+            // ═══════════════════════════════════════════════════════════════
+
+            const boardSize = Math.min(canvas.width, canvas.height) * 0.7;
+            const squareSize = boardSize / 8;
+            const boardX = cx - boardSize / 2;
+            const boardY = cy - boardSize / 2;
+
+            // Draw chessboard with perspective
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.scale(1, 0.6); // Slight perspective
+            ctx.translate(-cx, -cy);
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const x = boardX + col * squareSize;
+                    const y = boardY + row * squareSize;
+                    const isLight = (row + col) % 2 === 0;
+
+                    ctx.fillStyle = isLight ? '#61dafb08' : '#61dafb15';
+                    ctx.fillRect(x, y, squareSize, squareSize);
+
+                    // Subtle border
+                    ctx.strokeStyle = '#61dafb10';
+                    ctx.lineWidth = 0.5;
+                    ctx.strokeRect(x, y, squareSize, squareSize);
+                }
+            }
+
+            ctx.restore();
+
+            // ═══════════════════════════════════════════════════════════════
+            // STRATEGIC MOVE ARROWS - Showing game theory paths
+            // ═══════════════════════════════════════════════════════════════
+
+            const moves = [
+                { from: [2, 6], to: [4, 4], color: '#00ff88' },
+                { from: [5, 7], to: [3, 5], color: '#ffd700' },
+                { from: [1, 0], to: [2, 2], color: '#61dafb' },
+                { from: [6, 1], to: [5, 3], color: '#c678dd' }
+            ];
+
+            moves.forEach((move, idx) => {
+                const fromX = boardX + move.from[0] * squareSize + squareSize / 2;
+                const fromY = (boardY + move.from[1] * squareSize + squareSize / 2) * 0.6 + cy * 0.4;
+                const toX = boardX + move.to[0] * squareSize + squareSize / 2;
+                const toY = (boardY + move.to[1] * squareSize + squareSize / 2) * 0.6 + cy * 0.4;
+
+                // Arrow path with animation
+                const progress = (Math.sin(time * 2 + idx) + 1) / 2;
+
+                const arrowGrad = ctx.createLinearGradient(fromX, fromY, toX, toY);
+                arrowGrad.addColorStop(0, move.color + '00');
+                arrowGrad.addColorStop(progress * 0.5, move.color + '88');
+                arrowGrad.addColorStop(Math.min(progress, 0.95), move.color);
+                arrowGrad.addColorStop(1, move.color + '00');
+
+                ctx.strokeStyle = arrowGrad;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(toX, toY);
+                ctx.stroke();
+
+                // Arrow head
+                const angle = Math.atan2(toY - fromY, toX - fromX);
+                const headLen = 12;
+                ctx.fillStyle = move.color;
+                ctx.beginPath();
+                ctx.moveTo(toX, toY);
+                ctx.lineTo(toX - Math.cos(angle - 0.4) * headLen, toY - Math.sin(angle - 0.4) * headLen);
+                ctx.lineTo(toX - Math.cos(angle + 0.4) * headLen, toY - Math.sin(angle + 0.4) * headLen);
+                ctx.closePath();
+                ctx.fill();
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // PREDICTION RAYS - Enhanced with glow
+            // ═══════════════════════════════════════════════════════════════
+
             PREDICTIONS.forEach((pred, i) => {
                 const angle = (i / PREDICTIONS.length) * Math.PI * 2 - Math.PI / 2;
-                const maxLen = Math.min(canvas.width, canvas.height) * 0.4;
+                const maxLen = Math.min(canvas.width, canvas.height) * 0.42;
                 const len = maxLen * (pred.probability / 100);
 
                 const endX = cx + Math.cos(angle) * len;
                 const endY = cy + Math.sin(angle) * len;
 
-                // Prediction line
-                const gradient = ctx.createLinearGradient(cx, cy, endX, endY);
-                gradient.addColorStop(0, '#61dafb22');
-                gradient.addColorStop(1, pred.trend === 'BULLISH' ? '#00ff8888' : '#ffd70088');
-
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 3;
+                // Outer glow
+                ctx.strokeStyle = pred.trend === 'BULLISH' ? '#00ff8822' : '#ffd70022';
+                ctx.lineWidth = 12;
                 ctx.beginPath();
                 ctx.moveTo(cx, cy);
                 ctx.lineTo(endX, endY);
                 ctx.stroke();
 
-                // Animated pulse along line
-                const pulsePos = (time * 0.3 + i * 0.5) % 1;
-                const pulseX = cx + Math.cos(angle) * len * pulsePos;
-                const pulseY = cy + Math.sin(angle) * len * pulsePos;
+                // Main prediction line
+                const gradient = ctx.createLinearGradient(cx, cy, endX, endY);
+                gradient.addColorStop(0, '#61dafb33');
+                gradient.addColorStop(0.5, pred.trend === 'BULLISH' ? '#00ff88aa' : '#ffd700aa');
+                gradient.addColorStop(1, pred.trend === 'BULLISH' ? '#00ff88' : '#ffd700');
 
-                ctx.fillStyle = '#61dafb';
+                ctx.strokeStyle = gradient;
+                ctx.lineWidth = 4;
                 ctx.beginPath();
-                ctx.arc(pulseX, pulseY, 4, 0, Math.PI * 2);
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(endX, endY);
+                ctx.stroke();
+
+                // Multiple pulses
+                for (let p = 0; p < 3; p++) {
+                    const pulsePos = (time * 0.4 + i * 0.3 + p * 0.33) % 1;
+                    const pulseX = cx + Math.cos(angle) * len * pulsePos;
+                    const pulseY = cy + Math.sin(angle) * len * pulsePos;
+                    const pulseAlpha = 1 - pulsePos;
+
+                    ctx.fillStyle = `rgba(97,218,251,${pulseAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(pulseX, pulseY, 4 - p, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // End node
+                const endGlow = ctx.createRadialGradient(endX, endY, 0, endX, endY, 20);
+                endGlow.addColorStop(0, pred.trend === 'BULLISH' ? '#00ff88' : '#ffd700');
+                endGlow.addColorStop(0.5, pred.trend === 'BULLISH' ? '#00ff8844' : '#ffd70044');
+                endGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = endGlow;
+                ctx.beginPath();
+                ctx.arc(endX, endY, 20, 0, Math.PI * 2);
                 ctx.fill();
 
                 // Label
-                const labelX = cx + Math.cos(angle) * (len + 30);
-                const labelY = cy + Math.sin(angle) * (len + 30);
+                const labelX = cx + Math.cos(angle) * (len + 35);
+                const labelY = cy + Math.sin(angle) * (len + 35);
 
                 ctx.fillStyle = '#61dafb';
-                ctx.font = '8px Fira Code';
+                ctx.font = '9px Fira Code';
                 ctx.textAlign = 'center';
                 ctx.fillText(pred.title, labelX, labelY);
                 ctx.fillStyle = '#fff';
-                ctx.font = '12px Fira Code';
-                ctx.fillText(pred.probability + '%', labelX, labelY + 15);
+                ctx.font = 'bold 13px Fira Code';
+                ctx.fillText(pred.probability + '%', labelX, labelY + 16);
             });
 
-            // Central node
-            ctx.fillStyle = '#000';
-            ctx.strokeStyle = '#61dafb';
+            // ═══════════════════════════════════════════════════════════════
+            // CENTRAL NASH EQUILIBRIUM - Enhanced core
+            // ═══════════════════════════════════════════════════════════════
+
+            // Rotating hexagon
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(time * 0.3);
+
+            ctx.strokeStyle = '#61dafb33';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(cx, cy, 30, 0, Math.PI * 2);
-            ctx.fill();
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2;
+                const x = Math.cos(angle) * 50;
+                const y = Math.sin(angle) * 50;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.closePath();
             ctx.stroke();
 
-            ctx.fillStyle = '#61dafb';
-            ctx.font = '10px Fira Code';
+            ctx.restore();
+
+            // Equilibrium rings with pulse
+            for (let i = 1; i <= 4; i++) {
+                const ringRadius = 35 * i + Math.sin(time * 2 + i) * 5;
+                ctx.strokeStyle = `rgba(97,218,251,${0.15 / i})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Central node with gradient
+            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 35);
+            coreGrad.addColorStop(0, '#ffffff');
+            coreGrad.addColorStop(0.2, '#61dafb');
+            coreGrad.addColorStop(0.6, '#3a8db5');
+            coreGrad.addColorStop(1, '#1a3d4d');
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 35, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Inner pulse
+            const innerPulse = 20 + Math.sin(time * 3) * 3;
+            ctx.fillStyle = 'rgba(255,255,255,0.3)';
+            ctx.beginPath();
+            ctx.arc(cx, cy, innerPulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Nash label
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 12px Fira Code';
             ctx.textAlign = 'center';
             ctx.fillText('NASH', cx, cy + 4);
 
-            // Equilibrium rings
-            for (let i = 1; i <= 3; i++) {
-                ctx.strokeStyle = `rgba(97,218,251,${0.1 / i})`;
-                ctx.lineWidth = 1;
-                ctx.beginPath();
-                ctx.arc(cx, cy, 50 * i + Math.sin(time + i) * 5, 0, Math.PI * 2);
-                ctx.stroke();
-            }
+            // Title
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.fillText('GAME THEORY EQUILIBRIUM', 20, 30);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Strategic outcome probabilities converging to optimal play', 20, 48);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -2644,21 +2941,69 @@
             ctx.fillStyle = 'rgba(0,0,5,0.15)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            // Draw world map grid
-            ctx.strokeStyle = '#1a1a2a';
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // ═══════════════════════════════════════════════════════════════
+            // RADAR SWEEP EFFECT
+            // ═══════════════════════════════════════════════════════════════
+
+            // Radar sweep line
+            const sweepAngle = time * 0.8;
+            const sweepLength = Math.max(canvas.width, canvas.height);
+
+            // Sweep glow trail
+            ctx.save();
+            ctx.translate(cx, cy);
+            for (let i = 0; i < 30; i++) {
+                const trailAngle = sweepAngle - i * 0.03;
+                const alpha = (1 - i / 30) * 0.15;
+                ctx.strokeStyle = `rgba(255,68,68,${alpha})`;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.lineTo(Math.cos(trailAngle) * sweepLength, Math.sin(trailAngle) * sweepLength);
+                ctx.stroke();
+            }
+
+            // Main sweep line
+            ctx.strokeStyle = '#ff444488';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, 0);
+            ctx.lineTo(Math.cos(sweepAngle) * sweepLength, Math.sin(sweepAngle) * sweepLength);
+            ctx.stroke();
+            ctx.restore();
+
+            // Radar rings
+            for (let i = 1; i <= 5; i++) {
+                const ringRadius = Math.min(canvas.width, canvas.height) * 0.08 * i;
+                ctx.strokeStyle = `rgba(255,68,68,${0.1 / i * 2})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // ENHANCED WORLD MAP
+            // ═══════════════════════════════════════════════════════════════
+
+            // Draw world map grid with glow
+            ctx.strokeStyle = '#ff444410';
             ctx.lineWidth = 0.5;
 
             // Longitude lines
             for (let lng = -180; lng <= 180; lng += 30) {
                 const x = ((lng + 180) / 360) * canvas.width;
                 ctx.beginPath();
-                ctx.moveTo(x, 0);
-                ctx.lineTo(x, canvas.height);
+                ctx.moveTo(x, 60);
+                ctx.lineTo(x, canvas.height - 20);
                 ctx.stroke();
             }
 
             // Latitude lines
-            for (let lat = -90; lat <= 90; lat += 30) {
+            for (let lat = -60; lat <= 60; lat += 30) {
                 const y = ((90 - lat) / 180) * canvas.height;
                 ctx.beginPath();
                 ctx.moveTo(0, y);
@@ -2669,7 +3014,45 @@
             // Draw simplified continent outlines
             drawContinentOutlines(ctx, canvas);
 
-            // Draw conflict zones
+            // ═══════════════════════════════════════════════════════════════
+            // THREAT CONNECTIONS - Lines between conflict zones
+            // ═══════════════════════════════════════════════════════════════
+
+            // Draw threat network lines
+            for (let i = 0; i < CONFLICTS.length; i++) {
+                for (let j = i + 1; j < CONFLICTS.length; j++) {
+                    const c1 = CONFLICTS[i];
+                    const c2 = CONFLICTS[j];
+                    const x1 = ((c1.lng + 180) / 360) * canvas.width;
+                    const y1 = ((90 - c1.lat) / 180) * canvas.height;
+                    const x2 = ((c2.lng + 180) / 360) * canvas.width;
+                    const y2 = ((90 - c2.lat) / 180) * canvas.height;
+
+                    // Connection line
+                    ctx.strokeStyle = '#ff444415';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([4, 8]);
+                    ctx.beginPath();
+                    ctx.moveTo(x1, y1);
+                    ctx.lineTo(x2, y2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Data pulse traveling
+                    const pulseT = (time * 0.3 + i + j) % 1;
+                    const px = x1 + (x2 - x1) * pulseT;
+                    const py = y1 + (y2 - y1) * pulseT;
+                    ctx.fillStyle = '#ff444466';
+                    ctx.beginPath();
+                    ctx.arc(px, py, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONFLICT ZONES - Enhanced threat markers
+            // ═══════════════════════════════════════════════════════════════
+
             CONFLICTS.forEach((conflict, i) => {
                 const x = ((conflict.lng + 180) / 360) * canvas.width;
                 const y = ((90 - conflict.lat) / 180) * canvas.height;
@@ -2682,48 +3065,147 @@
                 };
 
                 const color = statusColors[conflict.status];
-                const pulseSize = 20 + Math.sin(time * 3 + i) * 10;
 
-                // Outer pulse
-                ctx.fillStyle = color + '22';
+                // Threat level rings
+                for (let r = 4; r > 0; r--) {
+                    const ringRadius = 15 + r * 10 + Math.sin(time * 3 + i + r) * 5;
+                    ctx.strokeStyle = color + Math.floor(30 / r).toString(16).padStart(2, '0');
+                    ctx.lineWidth = 1.5;
+                    ctx.beginPath();
+                    ctx.arc(x, y, ringRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Pulsing threat indicator
+                const pulseSize = 25 + Math.sin(time * 4 + i) * 8;
+
+                // Outer danger zone
+                const dangerGrad = ctx.createRadialGradient(x, y, 0, x, y, pulseSize + 20);
+                dangerGrad.addColorStop(0, color + '44');
+                dangerGrad.addColorStop(0.5, color + '22');
+                dangerGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = dangerGrad;
                 ctx.beginPath();
-                ctx.arc(x, y, pulseSize + 15, 0, Math.PI * 2);
+                ctx.arc(x, y, pulseSize + 20, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Inner pulse
-                ctx.fillStyle = color + '44';
-                ctx.beginPath();
-                ctx.arc(x, y, pulseSize, 0, Math.PI * 2);
-                ctx.fill();
+                // Warning triangle
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(Math.sin(time * 2 + i) * 0.1);
 
-                // Core
+                ctx.strokeStyle = color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(0, -12);
+                ctx.lineTo(10, 8);
+                ctx.lineTo(-10, 8);
+                ctx.closePath();
+                ctx.stroke();
+
+                // Exclamation mark
                 ctx.fillStyle = color;
-                ctx.beginPath();
-                ctx.arc(x, y, 6, 0, Math.PI * 2);
-                ctx.fill();
-
-                // Label
-                ctx.fillStyle = color;
-                ctx.font = '9px Fira Code';
+                ctx.font = 'bold 10px Fira Code';
                 ctx.textAlign = 'center';
-                ctx.fillText(conflict.name, x, y - 25);
+                ctx.textBaseline = 'middle';
+                ctx.fillText('!', 0, 0);
 
-                // Status
-                ctx.fillStyle = '#666';
+                ctx.restore();
+
+                // Core threat point
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Status flash for critical
+                if (conflict.status === 'critical' && Math.sin(time * 8) > 0.5) {
+                    ctx.fillStyle = '#ff000033';
+                    ctx.beginPath();
+                    ctx.arc(x, y, 40, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Label with background
+                ctx.fillStyle = '#00000088';
+                ctx.fillRect(x - 35, y - 38, 70, 14);
+                ctx.fillStyle = color;
+                ctx.font = 'bold 9px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(conflict.name, x, y - 28);
+
+                // Status badge
+                const badgeWidth = conflict.status.length * 5 + 10;
+                ctx.fillStyle = color + '44';
+                ctx.fillRect(x - badgeWidth / 2, y + 28, badgeWidth, 12);
+                ctx.fillStyle = color;
                 ctx.font = '7px Fira Code';
-                ctx.fillText(conflict.status.toUpperCase(), x, y + 35);
+                ctx.fillText(conflict.status.toUpperCase(), x, y + 37);
             });
+
+            // ═══════════════════════════════════════════════════════════════
+            // COMMAND CENTER HUD
+            // ═══════════════════════════════════════════════════════════════
+
+            // Corner brackets (tactical HUD style)
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 2;
+            const cornerLen = 20;
+
+            // Top-left
+            ctx.beginPath();
+            ctx.moveTo(10, 60);
+            ctx.lineTo(10, 60 - cornerLen);
+            ctx.moveTo(10, 60);
+            ctx.lineTo(10 + cornerLen, 60);
+            ctx.stroke();
+
+            // Top-right
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 10, 60);
+            ctx.lineTo(canvas.width - 10, 60 - cornerLen);
+            ctx.moveTo(canvas.width - 10, 60);
+            ctx.lineTo(canvas.width - 10 - cornerLen, 60);
+            ctx.stroke();
+
+            // Bottom-left
+            ctx.beginPath();
+            ctx.moveTo(10, canvas.height - 10);
+            ctx.lineTo(10, canvas.height - 10 - cornerLen);
+            ctx.moveTo(10, canvas.height - 10);
+            ctx.lineTo(10 + cornerLen, canvas.height - 10);
+            ctx.stroke();
+
+            // Bottom-right
+            ctx.beginPath();
+            ctx.moveTo(canvas.width - 10, canvas.height - 10);
+            ctx.lineTo(canvas.width - 10, canvas.height - 10 - cornerLen);
+            ctx.moveTo(canvas.width - 10, canvas.height - 10);
+            ctx.lineTo(canvas.width - 10 - cornerLen, canvas.height - 10);
+            ctx.stroke();
 
             // Title
             ctx.fillStyle = '#ff4444';
-            ctx.font = '12px Fira Code';
+            ctx.font = '14px Cinzel';
             ctx.textAlign = 'left';
-            ctx.fillText('GEOPOLITICAL AWARENESS SYSTEM', 20, 30);
+            ctx.fillText('GEOPOLITICAL THREAT MATRIX', 20, 30);
 
-            // Time
-            ctx.fillStyle = '#666';
-            ctx.font = '8px Fira Code';
-            ctx.fillText(new Date().toUTCString(), 20, 45);
+            // Time with military format
+            const now = new Date();
+            const milTime = now.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+            ctx.fillStyle = '#ff444488';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('TIMESTAMP: ' + milTime, 20, 48);
+
+            // Active threats counter
+            ctx.fillStyle = '#ff4444';
+            ctx.textAlign = 'right';
+            ctx.fillText('ACTIVE THREATS: ' + CONFLICTS.length, canvas.width - 20, 30);
+
+            // Threat level indicator
+            const threatLevel = Math.floor((Math.sin(time * 0.5) + 1) * 2) + 3; // 3-7
+            ctx.fillStyle = threatLevel > 5 ? '#ff0000' : '#ffaa00';
+            ctx.fillText('DEFCON ' + threatLevel, canvas.width - 20, 48);
         }
 
         function drawContinentOutlines(ctx, canvas) {
@@ -2779,6 +3261,46 @@
         }
 
         function drawEconModule() {
+            // Draw main canvas background effects first
+            const mainCtx = contexts.econ;
+            const mainCanvas = canvases.econ;
+
+            if (mainCtx && mainCanvas) {
+                mainCtx.fillStyle = 'rgba(0,5,0,0.05)';
+                mainCtx.fillRect(0, 0, mainCanvas.width, mainCanvas.height);
+
+                const mcx = mainCanvas.width / 2;
+                const mcy = mainCanvas.height / 2;
+
+                // Background dollar sign watermark
+                mainCtx.save();
+                mainCtx.translate(mcx, mcy);
+                mainCtx.rotate(Math.sin(time * 0.2) * 0.05);
+
+                mainCtx.fillStyle = '#00ff8808';
+                mainCtx.font = 'bold 200px Fira Code';
+                mainCtx.textAlign = 'center';
+                mainCtx.textBaseline = 'middle';
+                mainCtx.fillText('$', 0, 0);
+
+                mainCtx.restore();
+
+                // Market pulse waves
+                for (let w = 0; w < 3; w++) {
+                    const waveY = mcy + Math.sin(time * 2 + w) * 50;
+                    mainCtx.strokeStyle = `rgba(0,255,136,${0.05 - w * 0.015})`;
+                    mainCtx.lineWidth = 2;
+                    mainCtx.beginPath();
+                    for (let x = 0; x < mainCanvas.width; x += 5) {
+                        const y = waveY + Math.sin(x * 0.02 + time * 3 + w) * 20;
+                        if (x === 0) mainCtx.moveTo(x, y);
+                        else mainCtx.lineTo(x, y);
+                    }
+                    mainCtx.stroke();
+                }
+            }
+
+            // Draw individual ticker charts with enhanced visuals
             MARKET_TICKERS.forEach((ticker, i) => {
                 const canvas = document.getElementById(`econ-chart-${i}`);
                 if (!canvas) return;
@@ -2793,9 +3315,28 @@
                     return;
                 }
 
-                // Clear
-                ctx.fillStyle = 'rgba(5,10,5,0.3)';
+                // Clear with gradient
+                const bgGrad = ctx.createLinearGradient(0, 0, 0, h);
+                bgGrad.addColorStop(0, 'rgba(0,20,0,0.4)');
+                bgGrad.addColorStop(1, 'rgba(0,5,0,0.4)');
+                ctx.fillStyle = bgGrad;
                 ctx.fillRect(0, 0, w, h);
+
+                // Grid lines
+                ctx.strokeStyle = '#00ff8810';
+                ctx.lineWidth = 0.5;
+                for (let gy = 0; gy < h; gy += 20) {
+                    ctx.beginPath();
+                    ctx.moveTo(20, gy);
+                    ctx.lineTo(w, gy);
+                    ctx.stroke();
+                }
+                for (let gx = 20; gx < w; gx += 30) {
+                    ctx.beginPath();
+                    ctx.moveTo(gx, 0);
+                    ctx.lineTo(gx, h);
+                    ctx.stroke();
+                }
 
                 // Draw candlesticks
                 const candleCount = 40;
@@ -2804,6 +3345,16 @@
 
                 // Generate price data with trend
                 const trendDir = ticker.change >= 0 ? 1 : -1;
+
+                // Volume bars at bottom
+                for (let j = 0; j < candleCount; j++) {
+                    const x = 20 + j * candleWidth;
+                    const volHeight = (Math.random() * 15 + 5) * (1 + Math.sin(time + j * 0.3) * 0.3);
+                    const volAlpha = 0.2 + Math.sin(time + j) * 0.1;
+
+                    ctx.fillStyle = `rgba(0,255,136,${volAlpha})`;
+                    ctx.fillRect(x + 1, h - volHeight, candleWidth - 2, volHeight);
+                }
 
                 for (let j = 0; j < candleCount; j++) {
                     const x = 20 + j * candleWidth;
@@ -2815,8 +3366,17 @@
                     const low = Math.max(open, close) + Math.random() * 8;
 
                     const bullish = close < open;
+
+                    // Candle glow
+                    const glowColor = bullish ? '#00ff8833' : '#ff444433';
+                    ctx.fillStyle = glowColor;
+                    ctx.beginPath();
+                    ctx.arc(x + candleWidth / 2, (open + close) / 2, 8, 0, Math.PI * 2);
+                    ctx.fill();
+
                     ctx.strokeStyle = bullish ? '#00ff88' : '#ff4444';
-                    ctx.fillStyle = bullish ? '#00ff8866' : '#ff444466';
+                    ctx.fillStyle = bullish ? '#00ff8888' : '#ff444488';
+                    ctx.lineWidth = 1;
 
                     // Wick
                     ctx.beginPath();
@@ -2828,37 +3388,73 @@
                     const bodyTop = Math.min(open, close);
                     const bodyHeight = Math.abs(close - open) || 2;
                     ctx.fillRect(x + 1, bodyTop, candleWidth - 2, bodyHeight);
+                    ctx.strokeRect(x + 1, bodyTop, candleWidth - 2, bodyHeight);
                 }
 
-                // Projection line
-                ctx.setLineDash([4, 4]);
-                ctx.strokeStyle = '#00ff8866';
-                ctx.lineWidth = 1;
-
-                const projY = h * 0.3;
+                // Moving average line
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 1.5;
                 ctx.beginPath();
-                ctx.moveTo(w * 0.7, baseline);
-                ctx.lineTo(w - 20, projY);
+                for (let j = 0; j < candleCount; j++) {
+                    const x = 20 + j * candleWidth + candleWidth / 2;
+                    const trendFactor = (j / candleCount) * trendDir * 30;
+                    const y = baseline - trendFactor + Math.sin(j * 0.15) * 8;
+                    if (j === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
                 ctx.stroke();
 
-                // Projection zone
-                ctx.fillStyle = '#00ff8811';
+                // Projection zone with gradient
+                const projStartX = w * 0.7;
+                const projY = h * (trendDir > 0 ? 0.25 : 0.7);
+
+                const projGrad = ctx.createLinearGradient(projStartX, baseline, w, projY);
+                projGrad.addColorStop(0, '#00ff8800');
+                projGrad.addColorStop(0.5, trendDir > 0 ? '#00ff8833' : '#ff444433');
+                projGrad.addColorStop(1, trendDir > 0 ? '#00ff8866' : '#ff444466');
+
+                ctx.fillStyle = projGrad;
                 ctx.beginPath();
-                ctx.moveTo(w * 0.7, baseline);
-                ctx.lineTo(w - 20, projY - 15);
-                ctx.lineTo(w - 20, projY + 15);
+                ctx.moveTo(projStartX, baseline);
+                ctx.lineTo(w - 10, projY - 20);
+                ctx.lineTo(w - 10, projY + 20);
                 ctx.closePath();
                 ctx.fill();
 
+                // Projection line
+                ctx.setLineDash([4, 4]);
+                ctx.strokeStyle = trendDir > 0 ? '#00ff88' : '#ff4444';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(projStartX, baseline);
+                ctx.lineTo(w - 10, projY);
+                ctx.stroke();
                 ctx.setLineDash([]);
 
-                // Price labels
-                ctx.fillStyle = '#444';
-                ctx.font = '7px Fira Code';
+                // Target marker
+                ctx.fillStyle = trendDir > 0 ? '#00ff88' : '#ff4444';
+                ctx.beginPath();
+                ctx.arc(w - 10, projY, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Price labels with glow
+                ctx.fillStyle = '#00ff8866';
+                ctx.font = 'bold 8px Fira Code';
                 ctx.textAlign = 'right';
-                ctx.fillText('$' + (ticker.price * 1.1).toFixed(0), 18, 20);
+                ctx.fillText('$' + (ticker.price * 1.15).toFixed(0), 18, 15);
                 ctx.fillText('$' + ticker.price.toFixed(0), 18, h / 2);
-                ctx.fillText('$' + (ticker.price * 0.9).toFixed(0), 18, h - 10);
+                ctx.fillText('$' + (ticker.price * 0.85).toFixed(0), 18, h - 8);
+
+                // Current price marker
+                const currentPriceY = baseline;
+                ctx.strokeStyle = '#ffd700';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 2]);
+                ctx.beginPath();
+                ctx.moveTo(20, currentPriceY);
+                ctx.lineTo(w, currentPriceY);
+                ctx.stroke();
+                ctx.setLineDash([]);
             });
         }
 
@@ -2880,37 +3476,75 @@
             const cy = canvas.height / 2;
             const maxRadius = Math.min(cx, cy) * 0.8;
 
+            // ═══════════════════════════════════════════════════════════════
+            // SACRED GEOMETRY BACKGROUND
+            // ═══════════════════════════════════════════════════════════════
+
+            // Flower of Life pattern (background)
+            ctx.strokeStyle = '#ffd70008';
+            ctx.lineWidth = 1;
+            const flowerRadius = 30;
+            for (let row = -3; row <= 3; row++) {
+                for (let col = -5; col <= 5; col++) {
+                    const fx = cx + col * flowerRadius * 1.7 + (row % 2) * flowerRadius * 0.85;
+                    const fy = cy + row * flowerRadius * 1.5;
+                    ctx.beginPath();
+                    ctx.arc(fx, fy, flowerRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+
+            // Outer mystical rings
+            for (let i = 5; i > 0; i--) {
+                const ringRadius = maxRadius * 0.9 + i * 15 + Math.sin(time + i) * 3;
+                ctx.strokeStyle = `rgba(255,215,0,${0.03 / i})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
             // Draw sacred geometry based on active law
             const law = HERMETIC_LAWS[activeLaw];
 
             switch(activeLaw) {
-                case 0: // Mentalism - Mind radiating
-                    drawMentalismVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 1: // Correspondence - Mirror
-                    drawCorrespondenceVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 2: // Vibration - Waves
-                    drawVibrationVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 3: // Polarity - Yin Yang
-                    drawPolarityVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 4: // Rhythm - Pendulum
-                    drawRhythmVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 5: // Cause & Effect - Chain
-                    drawCauseEffectVisualization(ctx, cx, cy, maxRadius);
-                    break;
-                case 6: // Gender - Union
-                    drawGenderVisualization(ctx, cx, cy, maxRadius);
-                    break;
+                case 0: drawMentalismVisualization(ctx, cx, cy, maxRadius); break;
+                case 1: drawCorrespondenceVisualization(ctx, cx, cy, maxRadius); break;
+                case 2: drawVibrationVisualization(ctx, cx, cy, maxRadius); break;
+                case 3: drawPolarityVisualization(ctx, cx, cy, maxRadius); break;
+                case 4: drawRhythmVisualization(ctx, cx, cy, maxRadius); break;
+                case 5: drawCauseEffectVisualization(ctx, cx, cy, maxRadius); break;
+                case 6: drawGenderVisualization(ctx, cx, cy, maxRadius); break;
             }
 
-            // Law title
-            ctx.fillStyle = '#ffd700';
-            ctx.font = '14px Cinzel';
+            // Law number indicator (7 dots)
+            const dotSpacing = 20;
+            const dotsStartX = cx - (6 * dotSpacing) / 2;
+            for (let i = 0; i < 7; i++) {
+                const dotX = dotsStartX + i * dotSpacing;
+                const dotY = canvas.height - 30;
+                const isActive = i === activeLaw;
+
+                ctx.fillStyle = isActive ? '#ffd700' : '#333';
+                ctx.beginPath();
+                ctx.arc(dotX, dotY, isActive ? 6 : 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isActive) {
+                    ctx.strokeStyle = '#ffd70066';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(dotX, dotY, 10 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+
+            // Law title with glow
+            ctx.fillStyle = '#ffd70033';
+            ctx.font = 'bold 16px Cinzel';
             ctx.textAlign = 'center';
+            ctx.fillText(`LAW ${law.number}: ${law.name}`, cx + 1, 41);
+            ctx.fillStyle = '#ffd700';
             ctx.fillText(`LAW ${law.number}: ${law.name}`, cx, 40);
 
             ctx.fillStyle = '#888';
@@ -2919,253 +3553,685 @@
         }
 
         function drawMentalismVisualization(ctx, cx, cy, r) {
-            // Mind at center radiating thoughts
-            for (let i = 0; i < 12; i++) {
-                const angle = (i / 12) * Math.PI * 2 + time * 0.2;
-                const len = r * (0.5 + Math.sin(time * 2 + i) * 0.3);
+            // ═══════════════════════════════════════════════════════════════
+            // THIRD EYE - ALL IS MIND
+            // ═══════════════════════════════════════════════════════════════
 
-                ctx.strokeStyle = `rgba(198,120,221,${0.3 + Math.sin(time + i) * 0.2})`;
-                ctx.lineWidth = 2;
+            // Radiating thought waves
+            for (let wave = 0; wave < 5; wave++) {
+                const waveR = ((time * 30 + wave * 50) % (r * 0.8)) + 50;
+                const waveGrad = ctx.createRadialGradient(cx, cy, waveR - 10, cx, cy, waveR + 10);
+                waveGrad.addColorStop(0, 'transparent');
+                waveGrad.addColorStop(0.5, `rgba(198,120,221,${0.3 - waveR / r / 3})`);
+                waveGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = waveGrad;
                 ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
-                ctx.stroke();
-
-                // Thought particles
-                const px = cx + Math.cos(angle) * len * ((time * 0.5 + i * 0.1) % 1);
-                const py = cy + Math.sin(angle) * len * ((time * 0.5 + i * 0.1) % 1);
-                ctx.fillStyle = '#c678dd';
-                ctx.beginPath();
-                ctx.arc(px, py, 3, 0, Math.PI * 2);
+                ctx.arc(cx, cy, waveR + 10, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // Central mind
-            ctx.fillStyle = '#c678dd';
+            // Mind rays
+            for (let i = 0; i < 16; i++) {
+                const angle = (i / 16) * Math.PI * 2 + time * 0.15;
+                const len = r * (0.6 + Math.sin(time * 2 + i * 0.5) * 0.2);
+
+                const rayGrad = ctx.createLinearGradient(cx, cy, cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+                rayGrad.addColorStop(0, '#c678dd88');
+                rayGrad.addColorStop(0.7, '#c678dd44');
+                rayGrad.addColorStop(1, 'transparent');
+
+                ctx.strokeStyle = rayGrad;
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(angle) * 50, cy + Math.sin(angle) * 50);
+                ctx.lineTo(cx + Math.cos(angle) * len, cy + Math.sin(angle) * len);
+                ctx.stroke();
+
+                // Multiple thought particles
+                for (let p = 0; p < 2; p++) {
+                    const particleT = ((time * 0.6 + i * 0.1 + p * 0.5) % 1);
+                    const px = cx + Math.cos(angle) * (50 + (len - 50) * particleT);
+                    const py = cy + Math.sin(angle) * (50 + (len - 50) * particleT);
+                    const pAlpha = 1 - particleT;
+
+                    ctx.fillStyle = `rgba(198,120,221,${pAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 4 - p, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Third eye (stylized)
+            const eyeWidth = 60;
+            const eyeHeight = 25;
+
+            // Eye glow
+            const eyeGlow = ctx.createRadialGradient(cx, cy, 0, cx, cy, 70);
+            eyeGlow.addColorStop(0, '#c678dd66');
+            eyeGlow.addColorStop(0.5, '#c678dd22');
+            eyeGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = eyeGlow;
             ctx.beginPath();
-            ctx.arc(cx, cy, 30, 0, Math.PI * 2);
+            ctx.arc(cx, cy, 70, 0, Math.PI * 2);
             ctx.fill();
 
+            // Eye shape
+            ctx.fillStyle = '#1a0520';
+            ctx.beginPath();
+            ctx.ellipse(cx, cy, eyeWidth, eyeHeight, 0, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#c678dd';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Iris
+            const irisGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 22);
+            irisGrad.addColorStop(0, '#9933ff');
+            irisGrad.addColorStop(0.6, '#c678dd');
+            irisGrad.addColorStop(1, '#6a0dad');
+            ctx.fillStyle = irisGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Pupil
+            const pupilSize = 10 + Math.sin(time * 2) * 2;
             ctx.fillStyle = '#000';
-            ctx.font = '10px Fira Code';
+            ctx.beginPath();
+            ctx.arc(cx, cy, pupilSize, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Light reflection
+            ctx.fillStyle = '#ffffff88';
+            ctx.beginPath();
+            ctx.arc(cx - 5, cy - 5, 4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // MIND text
+            ctx.fillStyle = '#c678dd';
+            ctx.font = 'bold 10px Fira Code';
             ctx.textAlign = 'center';
-            ctx.fillText('MIND', cx, cy + 4);
+            ctx.fillText('ALL IS MIND', cx, cy + 55);
         }
 
         function drawCorrespondenceVisualization(ctx, cx, cy, r) {
-            // As above, so below - mirrored pattern
+            // ═══════════════════════════════════════════════════════════════
+            // AS ABOVE, SO BELOW - Mirrored sacred geometry
+            // ═══════════════════════════════════════════════════════════════
+
             const midY = cy;
 
-            // Above
-            ctx.strokeStyle = '#ffd70066';
-            ctx.lineWidth = 1;
-            for (let i = 0; i < 8; i++) {
-                const angle = (i / 8) * Math.PI - Math.PI / 2 + Math.sin(time) * 0.1;
-                ctx.beginPath();
-                ctx.moveTo(cx, midY - 20);
-                ctx.lineTo(cx + Math.cos(angle) * r * 0.6, midY - 20 + Math.sin(angle) * r * 0.4);
-                ctx.stroke();
-            }
+            // Rotating outer frame
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(time * 0.1);
 
-            // Below (mirrored)
-            for (let i = 0; i < 8; i++) {
-                const angle = (i / 8) * Math.PI + Math.PI / 2 - Math.sin(time) * 0.1;
-                ctx.beginPath();
-                ctx.moveTo(cx, midY + 20);
-                ctx.lineTo(cx + Math.cos(angle) * r * 0.6, midY + 20 + Math.sin(angle) * r * 0.4);
-                ctx.stroke();
-            }
+            // Outer diamond
+            ctx.strokeStyle = '#ffd70033';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(0, -r * 0.7);
+            ctx.lineTo(r * 0.7, 0);
+            ctx.lineTo(0, r * 0.7);
+            ctx.lineTo(-r * 0.7, 0);
+            ctx.closePath();
+            ctx.stroke();
 
-            // Center line
+            ctx.restore();
+
+            // Above triangle (pointing up)
+            ctx.save();
+            ctx.translate(cx, cy - 40);
+
+            const triangleSize = r * 0.4;
+            const aboveGrad = ctx.createLinearGradient(0, -triangleSize, 0, triangleSize * 0.5);
+            aboveGrad.addColorStop(0, '#ffd700');
+            aboveGrad.addColorStop(1, '#ffd70033');
+
+            ctx.fillStyle = aboveGrad;
             ctx.strokeStyle = '#ffd700';
             ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.moveTo(cx - r * 0.7, midY);
-            ctx.lineTo(cx + r * 0.7, midY);
+            ctx.moveTo(0, -triangleSize * 0.6);
+            ctx.lineTo(triangleSize * 0.5, triangleSize * 0.3);
+            ctx.lineTo(-triangleSize * 0.5, triangleSize * 0.3);
+            ctx.closePath();
+            ctx.fill();
             ctx.stroke();
-        }
 
-        function drawVibrationVisualization(ctx, cx, cy, r) {
-            // Waves emanating
+            // Sun symbol inside
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(0, -5, 12, 0, Math.PI * 2);
+            ctx.fill();
             for (let i = 0; i < 8; i++) {
-                const waveR = ((time * 50 + i * 40) % (r)) + 20;
-                ctx.strokeStyle = `rgba(0,255,255,${1 - waveR / r})`;
-                ctx.lineWidth = 2;
+                const angle = (i / 8) * Math.PI * 2;
                 ctx.beginPath();
-                ctx.arc(cx, cy, waveR, 0, Math.PI * 2);
+                ctx.moveTo(Math.cos(angle) * 15, -5 + Math.sin(angle) * 15);
+                ctx.lineTo(Math.cos(angle) * 25, -5 + Math.sin(angle) * 25);
                 ctx.stroke();
             }
 
-            // Core
-            ctx.fillStyle = '#00ffff';
+            ctx.restore();
+
+            // Below triangle (pointing down) - mirrored
+            ctx.save();
+            ctx.translate(cx, cy + 40);
+
+            const belowGrad = ctx.createLinearGradient(0, triangleSize, 0, -triangleSize * 0.5);
+            belowGrad.addColorStop(0, '#c678dd');
+            belowGrad.addColorStop(1, '#c678dd33');
+
+            ctx.fillStyle = belowGrad;
+            ctx.strokeStyle = '#c678dd';
+            ctx.lineWidth = 2;
             ctx.beginPath();
-            ctx.arc(cx, cy, 15, 0, Math.PI * 2);
+            ctx.moveTo(0, triangleSize * 0.6);
+            ctx.lineTo(triangleSize * 0.5, -triangleSize * 0.3);
+            ctx.lineTo(-triangleSize * 0.5, -triangleSize * 0.3);
+            ctx.closePath();
             ctx.fill();
+            ctx.stroke();
+
+            // Moon symbol inside
+            ctx.fillStyle = '#c678dd';
+            ctx.beginPath();
+            ctx.arc(0, 5, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#1a0520';
+            ctx.beginPath();
+            ctx.arc(5, 2, 8, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.restore();
+
+            // Center line (horizon) with energy pulse
+            const lineGrad = ctx.createLinearGradient(cx - r * 0.6, midY, cx + r * 0.6, midY);
+            lineGrad.addColorStop(0, 'transparent');
+            lineGrad.addColorStop(0.3, '#ffd700');
+            lineGrad.addColorStop(0.7, '#ffd700');
+            lineGrad.addColorStop(1, 'transparent');
+
+            ctx.strokeStyle = lineGrad;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx - r * 0.6, midY);
+            ctx.lineTo(cx + r * 0.6, midY);
+            ctx.stroke();
+
+            // Energy pulses along horizon
+            for (let p = 0; p < 3; p++) {
+                const pulseX = cx + (((time * 0.5 + p * 0.33) % 1) - 0.5) * r * 1.2;
+                ctx.fillStyle = '#ffd700';
+                ctx.beginPath();
+                ctx.arc(pulseX, midY, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Labels
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('ABOVE', cx, cy - r * 0.55);
+            ctx.fillStyle = '#c678dd';
+            ctx.fillText('BELOW', cx, cy + r * 0.6);
+        }
+
+        function drawVibrationVisualization(ctx, cx, cy, r) {
+            // ═══════════════════════════════════════════════════════════════
+            // EVERYTHING VIBRATES - Sound/frequency visualization
+            // ═══════════════════════════════════════════════════════════════
+
+            // Frequency spectrum background
+            const barCount = 32;
+            const barWidth = (r * 1.6) / barCount;
+            for (let i = 0; i < barCount; i++) {
+                const barHeight = (Math.sin(time * 5 + i * 0.4) + 1) * 30 + 10;
+                const barX = cx - r * 0.8 + i * barWidth;
+                const hue = 180 + i * 3;
+
+                ctx.fillStyle = `hsla(${hue}, 100%, 50%, 0.3)`;
+                ctx.fillRect(barX, cy - barHeight / 2, barWidth - 2, barHeight);
+            }
+
+            // Concentric vibration waves
+            for (let i = 0; i < 10; i++) {
+                const waveR = ((time * 60 + i * 35) % (r)) + 30;
+                const waveWidth = 8 - (waveR / r) * 6;
+
+                const waveGrad = ctx.createRadialGradient(cx, cy, waveR - waveWidth, cx, cy, waveR + waveWidth);
+                waveGrad.addColorStop(0, 'transparent');
+                waveGrad.addColorStop(0.5, `rgba(0,255,255,${0.5 - waveR / r / 2})`);
+                waveGrad.addColorStop(1, 'transparent');
+
+                ctx.fillStyle = waveGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, waveR + waveWidth, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Sine wave overlay
+            ctx.strokeStyle = '#00ffff';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let x = cx - r * 0.8; x <= cx + r * 0.8; x += 3) {
+                const freq = 0.05;
+                const amp = 40 + Math.sin(time * 2) * 20;
+                const y = cy + Math.sin((x - cx) * freq + time * 3) * amp;
+                if (x === cx - r * 0.8) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Central tuning fork / vibration core
+            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 35);
+            coreGrad.addColorStop(0, '#ffffff');
+            coreGrad.addColorStop(0.3, '#00ffff');
+            coreGrad.addColorStop(0.7, '#0088aa');
+            coreGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 35, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hz indicator
+            const hz = Math.floor(200 + Math.sin(time) * 100);
+            ctx.fillStyle = '#00ffff';
+            ctx.font = 'bold 14px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText(hz + ' Hz', cx, cy + 5);
         }
 
         function drawPolarityVisualization(ctx, cx, cy, r) {
-            // Yin-Yang style
-            const rot = time * 0.5;
+            // ═══════════════════════════════════════════════════════════════
+            // YIN YANG - Enhanced with energy flow
+            // ═══════════════════════════════════════════════════════════════
+
+            const rot = time * 0.4;
+            const yinYangR = r * 0.45;
+
+            // Outer energy field
+            const fieldGrad = ctx.createRadialGradient(cx, cy, yinYangR * 0.8, cx, cy, yinYangR * 1.5);
+            fieldGrad.addColorStop(0, 'transparent');
+            fieldGrad.addColorStop(0.5, 'rgba(198,120,221,0.1)');
+            fieldGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = fieldGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, yinYangR * 1.5, 0, Math.PI * 2);
+            ctx.fill();
 
             ctx.save();
             ctx.translate(cx, cy);
             ctx.rotate(rot);
 
-            // Main circle
-            ctx.fillStyle = '#fff';
+            // Outer glow ring
+            ctx.strokeStyle = '#c678dd44';
+            ctx.lineWidth = 8;
             ctx.beginPath();
-            ctx.arc(0, 0, r * 0.5, 0, Math.PI * 2);
+            ctx.arc(0, 0, yinYangR + 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Main yin-yang
+            ctx.fillStyle = '#ffffff';
+            ctx.beginPath();
+            ctx.arc(0, 0, yinYangR, 0, Math.PI * 2);
             ctx.fill();
 
-            // Dark half
-            ctx.fillStyle = '#000';
+            ctx.fillStyle = '#1a0520';
             ctx.beginPath();
-            ctx.arc(0, 0, r * 0.5, Math.PI / 2, Math.PI * 1.5);
+            ctx.arc(0, 0, yinYangR, Math.PI / 2, Math.PI * 1.5);
             ctx.fill();
 
-            // Curved dividers
+            // Curved S-dividers
+            ctx.fillStyle = '#1a0520';
             ctx.beginPath();
-            ctx.arc(0, -r * 0.25, r * 0.25, 0, Math.PI * 2);
+            ctx.arc(0, -yinYangR * 0.5, yinYangR * 0.5, 0, Math.PI * 2);
             ctx.fill();
 
-            ctx.fillStyle = '#fff';
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(0, r * 0.25, r * 0.25, 0, Math.PI * 2);
+            ctx.arc(0, yinYangR * 0.5, yinYangR * 0.5, 0, Math.PI * 2);
             ctx.fill();
 
-            // Dots
-            ctx.fillStyle = '#fff';
+            // Enhanced dots with glow
+            // Dark dot
+            ctx.fillStyle = '#ffffff';
             ctx.beginPath();
-            ctx.arc(0, -r * 0.25, 8, 0, Math.PI * 2);
+            ctx.arc(0, -yinYangR * 0.5, 12, 0, Math.PI * 2);
             ctx.fill();
+            ctx.fillStyle = '#00000066';
+            ctx.beginPath();
+            ctx.arc(0, -yinYangR * 0.5, 16, 0, Math.PI * 2);
+            ctx.stroke();
 
-            ctx.fillStyle = '#000';
+            // Light dot
+            ctx.fillStyle = '#1a0520';
             ctx.beginPath();
-            ctx.arc(0, r * 0.25, 8, 0, Math.PI * 2);
+            ctx.arc(0, yinYangR * 0.5, 12, 0, Math.PI * 2);
             ctx.fill();
+            ctx.strokeStyle = '#ffffff66';
+            ctx.beginPath();
+            ctx.arc(0, yinYangR * 0.5, 16, 0, Math.PI * 2);
+            ctx.stroke();
 
             ctx.restore();
+
+            // Energy particles orbiting
+            for (let i = 0; i < 8; i++) {
+                const orbitAngle = rot * 2 + (i / 8) * Math.PI * 2;
+                const orbitR = yinYangR + 25;
+                const px = cx + Math.cos(orbitAngle) * orbitR;
+                const py = cy + Math.sin(orbitAngle) * orbitR;
+
+                ctx.fillStyle = i % 2 === 0 ? '#ffffff' : '#c678dd';
+                ctx.beginPath();
+                ctx.arc(px, py, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('LIGHT ← → DARK', cx, cy + yinYangR + 40);
         }
 
         function drawRhythmVisualization(ctx, cx, cy, r) {
-            // Pendulum swing
-            const swingAngle = Math.sin(time) * 0.6;
+            // ═══════════════════════════════════════════════════════════════
+            // RHYTHM - Cosmic pendulum with wave patterns
+            // ═══════════════════════════════════════════════════════════════
 
-            // Pendulum arm
-            const pendulumLen = r * 0.7;
-            const pendX = cx + Math.sin(swingAngle) * pendulumLen;
-            const pendY = cy - 100 + Math.cos(swingAngle) * pendulumLen;
+            const swingAngle = Math.sin(time * 1.2) * 0.7;
+            const pendulumLen = r * 0.65;
+            const pivotY = cy - 80;
 
-            ctx.strokeStyle = '#c678dd';
-            ctx.lineWidth = 2;
+            // Arc showing swing range
+            ctx.strokeStyle = '#c678dd22';
+            ctx.lineWidth = 30;
             ctx.beginPath();
-            ctx.moveTo(cx, cy - 100);
+            ctx.arc(cx, pivotY, pendulumLen, Math.PI * 0.15, Math.PI * 0.85);
+            ctx.stroke();
+
+            // Tick marks
+            for (let i = -3; i <= 3; i++) {
+                const tickAngle = Math.PI / 2 + i * 0.2;
+                const tickStart = pendulumLen - 10;
+                const tickEnd = pendulumLen + 10;
+
+                ctx.strokeStyle = i === 0 ? '#ffd700' : '#c678dd44';
+                ctx.lineWidth = i === 0 ? 2 : 1;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(tickAngle) * tickStart, pivotY + Math.sin(tickAngle) * tickStart);
+                ctx.lineTo(cx + Math.cos(tickAngle) * tickEnd, pivotY + Math.sin(tickAngle) * tickEnd);
+                ctx.stroke();
+            }
+
+            // Ghost trail
+            for (let i = 15; i > 0; i--) {
+                const trailAngle = Math.sin(time * 1.2 - i * 0.08) * 0.7;
+                const trailX = cx + Math.sin(trailAngle) * pendulumLen;
+                const trailY = pivotY + Math.cos(trailAngle) * pendulumLen;
+                const trailAlpha = (15 - i) / 15 * 0.3;
+
+                ctx.fillStyle = `rgba(198,120,221,${trailAlpha})`;
+                ctx.beginPath();
+                ctx.arc(trailX, trailY, 25 - i, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Pendulum current position
+            const pendX = cx + Math.sin(swingAngle) * pendulumLen;
+            const pendY = pivotY + Math.cos(swingAngle) * pendulumLen;
+
+            // Rod with gradient
+            const rodGrad = ctx.createLinearGradient(cx, pivotY, pendX, pendY);
+            rodGrad.addColorStop(0, '#ffd700');
+            rodGrad.addColorStop(1, '#c678dd');
+            ctx.strokeStyle = rodGrad;
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, pivotY);
             ctx.lineTo(pendX, pendY);
             ctx.stroke();
 
-            // Weight
-            ctx.fillStyle = '#c678dd';
+            // Pivot point
+            ctx.fillStyle = '#ffd700';
             ctx.beginPath();
-            ctx.arc(pendX, pendY, 20, 0, Math.PI * 2);
+            ctx.arc(cx, pivotY, 8, 0, Math.PI * 2);
             ctx.fill();
 
-            // Trail
-            for (let i = 0; i < 10; i++) {
-                const trailAngle = Math.sin(time - i * 0.1) * 0.6;
-                const trailX = cx + Math.sin(trailAngle) * pendulumLen;
-                const trailY = cy - 100 + Math.cos(trailAngle) * pendulumLen;
-                ctx.fillStyle = `rgba(198,120,221,${0.3 - i * 0.03})`;
-                ctx.beginPath();
-                ctx.arc(trailX, trailY, 10 - i, 0, Math.PI * 2);
-                ctx.fill();
+            // Weight with glow
+            const weightGlow = ctx.createRadialGradient(pendX, pendY, 0, pendX, pendY, 40);
+            weightGlow.addColorStop(0, '#c678dd');
+            weightGlow.addColorStop(0.5, '#c678dd66');
+            weightGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = weightGlow;
+            ctx.beginPath();
+            ctx.arc(pendX, pendY, 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.fillStyle = '#c678dd';
+            ctx.beginPath();
+            ctx.arc(pendX, pendY, 22, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Sine wave below showing rhythm pattern
+            ctx.strokeStyle = '#c678dd66';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            const waveY = cy + r * 0.5;
+            for (let x = cx - r * 0.7; x <= cx + r * 0.7; x += 4) {
+                const y = waveY + Math.sin((x - cx) * 0.03 + time * 1.2) * 15;
+                if (x === cx - r * 0.7) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
             }
+            ctx.stroke();
         }
 
         function drawCauseEffectVisualization(ctx, cx, cy, r) {
-            // Chain reaction
+            // ═══════════════════════════════════════════════════════════════
+            // CAUSE & EFFECT - Domino chain reaction
+            // ═══════════════════════════════════════════════════════════════
+
             const nodes = 7;
-            const spacing = r * 1.2 / nodes;
+            const spacing = (r * 1.4) / (nodes - 1);
+            const startX = cx - r * 0.7;
+
+            // Connection path (curved)
+            ctx.strokeStyle = '#ffd70033';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(startX, cy);
+            for (let i = 1; i < nodes; i++) {
+                const x = startX + i * spacing;
+                const cpY = cy + Math.sin(i * 0.5) * 20;
+                ctx.quadraticCurveTo(startX + (i - 0.5) * spacing, cpY, x, cy);
+            }
+            ctx.stroke();
 
             for (let i = 0; i < nodes; i++) {
-                const x = cx - r * 0.6 + i * spacing;
-                const activeTime = (time + i * 0.3) % 3;
-                const active = activeTime < 1;
+                const x = startX + i * spacing;
+                const activePhase = (time * 0.8 + i * 0.4) % (nodes * 0.4);
+                const active = activePhase < 0.4 && activePhase >= 0;
+                const falling = activePhase < 0.4;
 
-                // Connection
-                if (i < nodes - 1) {
-                    ctx.strokeStyle = active ? '#ffd700' : '#333';
-                    ctx.lineWidth = 2;
-                    ctx.beginPath();
-                    ctx.moveTo(x + 15, cy);
-                    ctx.lineTo(x + spacing - 15, cy);
-                    ctx.stroke();
+                // Domino piece
+                ctx.save();
+                ctx.translate(x, cy);
 
-                    // Pulse
-                    if (active) {
-                        const pulseX = x + 15 + (spacing - 30) * activeTime;
-                        ctx.fillStyle = '#ffd700';
-                        ctx.beginPath();
-                        ctx.arc(pulseX, cy, 5, 0, Math.PI * 2);
-                        ctx.fill();
-                    }
+                if (falling && active) {
+                    ctx.rotate(activePhase * Math.PI * 0.4);
                 }
 
-                // Node
-                ctx.fillStyle = active ? '#ffd700' : '#333';
-                ctx.beginPath();
-                ctx.arc(x, cy, 15, 0, Math.PI * 2);
-                ctx.fill();
+                // Domino glow when active
+                if (active) {
+                    const glowGrad = ctx.createRadialGradient(0, 0, 0, 0, 0, 40);
+                    glowGrad.addColorStop(0, '#ffd70066');
+                    glowGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glowGrad;
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 40, 0, Math.PI * 2);
+                    ctx.fill();
+                }
 
-                // Label
+                // Domino shape
+                ctx.fillStyle = active ? '#ffd700' : '#222';
+                ctx.strokeStyle = active ? '#ffd700' : '#444';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.roundRect(-8, -30, 16, 60, 3);
+                ctx.fill();
+                ctx.stroke();
+
+                // Dots on domino
                 ctx.fillStyle = active ? '#000' : '#666';
-                ctx.font = '8px Fira Code';
-                ctx.textAlign = 'center';
-                ctx.fillText(i === 0 ? 'CAUSE' : i === nodes - 1 ? 'EFFECT' : '', x, cy + 4);
+                const dotPositions = i < 3 ? [[0, -15], [0, 15]] : [[0, -15], [0, 0], [0, 15]];
+                dotPositions.forEach(([dx, dy]) => {
+                    ctx.beginPath();
+                    ctx.arc(dx, dy, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                });
+
+                ctx.restore();
+
+                // Energy pulse between dominoes
+                if (i < nodes - 1 && active) {
+                    const pulseProgress = activePhase / 0.4;
+                    const nextX = startX + (i + 1) * spacing;
+                    const pulseX = x + (nextX - x) * pulseProgress;
+
+                    ctx.fillStyle = '#ffd700';
+                    ctx.beginPath();
+                    ctx.arc(pulseX, cy, 6, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Labels
+                if (i === 0) {
+                    ctx.fillStyle = '#ffd700';
+                    ctx.font = 'bold 10px Fira Code';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('CAUSE', x, cy + 50);
+                } else if (i === nodes - 1) {
+                    ctx.fillStyle = '#ffd700';
+                    ctx.font = 'bold 10px Fira Code';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('EFFECT', x, cy + 50);
+                }
             }
         }
 
         function drawGenderVisualization(ctx, cx, cy, r) {
-            // Two circles merging
-            const separation = Math.cos(time * 0.5) * 40 + 30;
+            // ═══════════════════════════════════════════════════════════════
+            // GENDER - Divine union of masculine & feminine
+            // ═══════════════════════════════════════════════════════════════
 
-            // Masculine (left)
-            ctx.strokeStyle = '#61dafb';
-            ctx.lineWidth = 3;
+            const separation = Math.cos(time * 0.4) * 50 + 40;
+            const symbolSize = 45;
+
+            // Background field showing attraction
+            const fieldAlpha = Math.max(0, (60 - separation) / 60) * 0.3;
+            if (fieldAlpha > 0) {
+                const unionGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80);
+                unionGrad.addColorStop(0, `rgba(198,120,221,${fieldAlpha})`);
+                unionGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = unionGrad;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 80, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Masculine symbol (Mars - left)
+            const mascX = cx - separation;
+
+            // Glow
+            ctx.fillStyle = '#61dafb33';
             ctx.beginPath();
-            ctx.arc(cx - separation, cy, 40, 0, Math.PI * 2);
+            ctx.arc(mascX, cy, symbolSize + 15, 0, Math.PI * 2);
+            ctx.fill();
+
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 4;
+            ctx.beginPath();
+            ctx.arc(mascX, cy, symbolSize, 0, Math.PI * 2);
             ctx.stroke();
 
             // Arrow
+            const arrowAngle = -Math.PI / 4;
+            const arrowStart = symbolSize * 0.7;
+            const arrowEnd = symbolSize * 1.3;
             ctx.beginPath();
-            ctx.moveTo(cx - separation + 28, cy - 28);
-            ctx.lineTo(cx - separation + 50, cy - 50);
-            ctx.moveTo(cx - separation + 35, cy - 50);
-            ctx.lineTo(cx - separation + 50, cy - 50);
-            ctx.lineTo(cx - separation + 50, cy - 35);
+            ctx.moveTo(mascX + Math.cos(arrowAngle) * arrowStart, cy + Math.sin(arrowAngle) * arrowStart);
+            ctx.lineTo(mascX + Math.cos(arrowAngle) * arrowEnd, cy + Math.sin(arrowAngle) * arrowEnd);
             ctx.stroke();
 
-            // Feminine (right)
+            // Arrow head
+            const arrowTipX = mascX + Math.cos(arrowAngle) * arrowEnd;
+            const arrowTipY = cy + Math.sin(arrowAngle) * arrowEnd;
+            ctx.beginPath();
+            ctx.moveTo(arrowTipX, arrowTipY);
+            ctx.lineTo(arrowTipX - 12, arrowTipY);
+            ctx.moveTo(arrowTipX, arrowTipY);
+            ctx.lineTo(arrowTipX, arrowTipY + 12);
+            ctx.stroke();
+
+            // Feminine symbol (Venus - right)
+            const femX = cx + separation;
+
+            // Glow
+            ctx.fillStyle = '#ff6b9d33';
+            ctx.beginPath();
+            ctx.arc(femX, cy, symbolSize + 15, 0, Math.PI * 2);
+            ctx.fill();
+
             ctx.strokeStyle = '#ff6b9d';
+            ctx.lineWidth = 4;
             ctx.beginPath();
-            ctx.arc(cx + separation, cy, 40, 0, Math.PI * 2);
+            ctx.arc(femX, cy, symbolSize, 0, Math.PI * 2);
             ctx.stroke();
 
-            // Cross
+            // Cross below
             ctx.beginPath();
-            ctx.moveTo(cx + separation, cy + 40);
-            ctx.lineTo(cx + separation, cy + 70);
-            ctx.moveTo(cx + separation - 15, cy + 55);
-            ctx.lineTo(cx + separation + 15, cy + 55);
+            ctx.moveTo(femX, cy + symbolSize);
+            ctx.lineTo(femX, cy + symbolSize + 35);
+            ctx.moveTo(femX - 18, cy + symbolSize + 20);
+            ctx.lineTo(femX + 18, cy + symbolSize + 20);
             ctx.stroke();
 
-            // Union glow when close
-            if (separation < 40) {
-                const overlap = (40 - separation) / 40;
-                ctx.fillStyle = `rgba(198,120,221,${overlap * 0.3})`;
+            // Energy particles between them
+            const particleCount = 10;
+            for (let i = 0; i < particleCount; i++) {
+                const t = (time * 0.8 + i / particleCount) % 1;
+                const px = mascX + (femX - mascX) * t;
+                const py = cy + Math.sin(t * Math.PI * 2 + time * 3) * 15;
+                const pColor = t < 0.5 ? '#61dafb' : '#ff6b9d';
+                const pAlpha = Math.sin(t * Math.PI);
+
+                ctx.fillStyle = pColor + Math.floor(pAlpha * 200).toString(16).padStart(2, '0');
                 ctx.beginPath();
-                ctx.arc(cx, cy, 50, 0, Math.PI * 2);
+                ctx.arc(px, py, 3, 0, Math.PI * 2);
                 ctx.fill();
             }
+
+            // Union heart when very close
+            if (separation < 50) {
+                const heartAlpha = (50 - separation) / 50;
+                ctx.fillStyle = `rgba(198,120,221,${heartAlpha * 0.5})`;
+                ctx.font = `${30 + heartAlpha * 20}px Arial`;
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('♥', cx, cy);
+            }
+
+            // Labels
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('MASCULINE', mascX, cy + symbolSize + 55);
+
+            ctx.fillStyle = '#ff6b9d';
+            ctx.fillText('FEMININE', femX, cy + symbolSize + 55);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
