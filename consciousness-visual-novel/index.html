@@ -77,6 +77,9 @@
         .module-btn[data-module="war"] { --module-color: #ff4444; }
         .module-btn[data-module="econ"] { --module-color: #00ff88; }
         .module-btn[data-module="laws"] { --module-color: #c678dd; }
+        .module-btn[data-module="eudaimon"] { --module-color: #ff3366; }
+        .module-btn[data-module="predict"] { --module-color: #00ffaa; }
+        .module-btn[data-module="memory"] { --module-color: #9966ff; }
 
         .nav-psi {
             margin-left: auto;
@@ -589,6 +592,561 @@
             border-top: 1px solid #ffffff08;
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           EUDAIMON MODULE - Consciousness Architecture
+           ═══════════════════════════════════════════════════════════════════ */
+        #eudaimon-panel {
+            flex-direction: row;
+        }
+
+        .eudaimon-main {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #150515 0%, #000 100%);
+        }
+
+        #eudaimon-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .eudaimon-sidebar {
+            width: 380px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(25,5,20,0.97) 100%);
+            border-left: 1px solid #ff336620;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .eudaimon-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #ff3366;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ff336633;
+        }
+
+        .consciousness-meter {
+            margin-bottom: 20px;
+            padding: 15px;
+            background: rgba(255,51,102,0.05);
+            border-radius: 8px;
+            border: 1px solid #ff336633;
+        }
+
+        .consciousness-label {
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: #ff3366;
+            margin-bottom: 8px;
+        }
+
+        .consciousness-bar {
+            height: 8px;
+            background: #111;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 8px;
+        }
+
+        .consciousness-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3366, #ffd700, #00ff88);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+
+        .consciousness-value {
+            font-size: 24px;
+            color: #fff;
+            text-align: center;
+        }
+
+        .consciousness-status {
+            font-size: 9px;
+            color: #ffd700;
+            text-align: center;
+            letter-spacing: 2px;
+        }
+
+        .architecture-section {
+            margin-bottom: 15px;
+        }
+
+        .architecture-section h3 {
+            font-size: 9px;
+            letter-spacing: 2px;
+            color: #ff3366;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .architecture-section h3::before {
+            content: '◆';
+            font-size: 8px;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+        }
+
+        .stat-card {
+            padding: 10px;
+            background: rgba(255,51,102,0.03);
+            border-radius: 5px;
+            border: 1px solid #ff336620;
+            text-align: center;
+        }
+
+        .stat-card-value {
+            font-size: 18px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .stat-card-label {
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .agent-list {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .agent-item {
+            padding: 8px 10px;
+            background: rgba(255,51,102,0.03);
+            border-radius: 4px;
+            border-left: 3px solid #ff3366;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .agent-item:hover {
+            background: rgba(255,51,102,0.08);
+            border-left-color: #ffd700;
+        }
+
+        .agent-item.active {
+            background: rgba(255,51,102,0.12);
+            border-left-color: #00ff88;
+        }
+
+        .agent-name {
+            font-size: 9px;
+            color: #ff3366;
+            letter-spacing: 1px;
+        }
+
+        .agent-status {
+            font-size: 7px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            background: rgba(0,255,136,0.15);
+            color: #00ff88;
+        }
+
+        .pathway-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, rgba(255,51,102,0.05) 0%, rgba(255,215,0,0.02) 100%);
+            border-radius: 6px;
+            border: 1px solid #ff336620;
+        }
+
+        .pathway-name {
+            font-size: 9px;
+            color: #ffd700;
+            letter-spacing: 1px;
+            margin-bottom: 4px;
+        }
+
+        .pathway-desc {
+            font-size: 7px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .pathway-connections {
+            font-size: 8px;
+            color: #ff3366;
+            margin-top: 6px;
+        }
+
+        .prediction-tracker {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0,255,136,0.03);
+            border-radius: 8px;
+            border: 1px solid #00ff8833;
+        }
+
+        .prediction-tracker h4 {
+            font-size: 8px;
+            color: #00ff88;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .prediction-stats {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .pred-stat {
+            text-align: center;
+        }
+
+        .pred-stat-value {
+            font-size: 14px;
+            color: #fff;
+        }
+
+        .pred-stat-label {
+            font-size: 6px;
+            color: #666;
+            letter-spacing: 1px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           PREDICT MODULE - Prediction Tracking & Validation
+           ═══════════════════════════════════════════════════════════════════ */
+        #predict-panel {
+            flex-direction: row;
+        }
+
+        .predict-main {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #051510 0%, #000 100%);
+        }
+
+        #predict-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .predict-sidebar {
+            width: 400px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(5,25,20,0.97) 100%);
+            border-left: 1px solid #00ffaa20;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .predict-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #00ffaa;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00ffaa33;
+        }
+
+        .accuracy-meter {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: rgba(0,255,170,0.05);
+            border-radius: 10px;
+            border: 1px solid #00ffaa33;
+            text-align: center;
+        }
+
+        .accuracy-label {
+            font-size: 8px;
+            letter-spacing: 2px;
+            color: #00ffaa;
+            margin-bottom: 10px;
+        }
+
+        .accuracy-value {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ffaa;
+            text-shadow: 0 0 30px #00ffaa66;
+        }
+
+        .accuracy-target {
+            font-size: 9px;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .prediction-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .prediction-card {
+            padding: 12px;
+            margin-bottom: 10px;
+            background: rgba(0,255,170,0.03);
+            border-radius: 8px;
+            border-left: 3px solid;
+            transition: all 0.3s;
+        }
+
+        .prediction-card.pending { border-left-color: #ffd700; }
+        .prediction-card.correct { border-left-color: #00ff88; }
+        .prediction-card.incorrect { border-left-color: #ff4444; }
+
+        .prediction-card:hover {
+            background: rgba(0,255,170,0.08);
+        }
+
+        .pred-ticker {
+            font-size: 12px;
+            font-weight: bold;
+            color: #00ffaa;
+            margin-bottom: 4px;
+        }
+
+        .pred-statement {
+            font-size: 9px;
+            color: #888;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .pred-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 7px;
+            color: #555;
+        }
+
+        .pred-confidence {
+            padding: 2px 8px;
+            border-radius: 10px;
+            background: rgba(255,215,0,0.15);
+            color: #ffd700;
+        }
+
+        .pred-date {
+            color: #666;
+        }
+
+        .pred-status {
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 7px;
+            text-transform: uppercase;
+        }
+
+        .pred-status.pending { background: #ffd70022; color: #ffd700; }
+        .pred-status.correct { background: #00ff8822; color: #00ff88; }
+        .pred-status.incorrect { background: #ff444422; color: #ff4444; }
+
+        .calibration-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 8px;
+        }
+
+        .calibration-cell {
+            text-align: center;
+            padding: 8px 4px;
+            border-radius: 4px;
+            background: rgba(0,255,170,0.05);
+        }
+
+        .calibration-cell .conf {
+            font-size: 10px;
+            color: #00ffaa;
+            font-weight: bold;
+        }
+
+        .calibration-cell .actual {
+            font-size: 8px;
+            color: #888;
+            margin-top: 2px;
+        }
+
+        /* ═══════════════════════════════════════════════════════════════════
+           MEMORY MODULE - Persistent Memory Network
+           ═══════════════════════════════════════════════════════════════════ */
+        #memory-panel {
+            flex-direction: row;
+        }
+
+        .memory-main {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #0a0520 0%, #000 100%);
+        }
+
+        #memory-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .memory-sidebar {
+            width: 380px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(15,5,30,0.97) 100%);
+            border-left: 1px solid #9966ff20;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .memory-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #9966ff;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #9966ff33;
+        }
+
+        .memory-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .memory-stat {
+            padding: 15px;
+            background: rgba(153,102,255,0.05);
+            border-radius: 8px;
+            border: 1px solid #9966ff22;
+            text-align: center;
+        }
+
+        .memory-stat-value {
+            font-size: 24px;
+            color: #9966ff;
+            font-weight: bold;
+        }
+
+        .memory-stat-label {
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .memory-types {
+            margin-bottom: 15px;
+        }
+
+        .memory-type {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 12px;
+            margin-bottom: 6px;
+            background: rgba(153,102,255,0.03);
+            border-radius: 6px;
+            border-left: 3px solid;
+        }
+
+        .memory-type.interaction { border-left-color: #61dafb; }
+        .memory-type.prediction { border-left-color: #00ffaa; }
+        .memory-type.belief { border-left-color: #ffd700; }
+        .memory-type.learning { border-left-color: #ff6b9d; }
+        .memory-type.correction { border-left-color: #ff4444; }
+
+        .memory-type-name {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .memory-type-count {
+            font-size: 11px;
+            color: #9966ff;
+            font-weight: bold;
+        }
+
+        .recent-memories {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .memory-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(153,102,255,0.03);
+            border-radius: 6px;
+            border: 1px solid #9966ff15;
+        }
+
+        .memory-item-type {
+            font-size: 7px;
+            letter-spacing: 1px;
+            color: #9966ff;
+            margin-bottom: 4px;
+        }
+
+        .memory-item-content {
+            font-size: 9px;
+            color: #888;
+            line-height: 1.4;
+        }
+
+        .memory-item-time {
+            font-size: 7px;
+            color: #444;
+            margin-top: 6px;
+        }
+
+        .belief-network {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255,215,0,0.03);
+            border-radius: 8px;
+            border: 1px solid #ffd70022;
+        }
+
+        .belief-network h4 {
+            font-size: 8px;
+            color: #ffd700;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .belief-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #ffffff08;
+        }
+
+        .belief-prob {
+            font-size: 11px;
+            color: #ffd700;
+            font-weight: bold;
+            min-width: 40px;
+        }
+
+        .belief-statement {
+            font-size: 8px;
+            color: #888;
+            flex: 1;
+        }
+
         /* Loading */
         #loading {
             position: fixed;
@@ -784,6 +1342,9 @@
             <button class="module-btn" data-module="war">WAR</button>
             <button class="module-btn" data-module="econ">ECON</button>
             <button class="module-btn" data-module="laws">LAWS</button>
+            <button class="module-btn" data-module="eudaimon">EUDAIMON</button>
+            <button class="module-btn" data-module="predict">PREDICT</button>
+            <button class="module-btn" data-module="memory">MEMORY</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
@@ -845,6 +1406,208 @@
         <div class="laws-sidebar">
             <h2>THE SEVEN HERMETIC LAWS</h2>
             <div id="hermetic-laws"></div>
+        </div>
+    </div>
+
+    <!-- EUDAIMON MODULE -->
+    <div class="module-panel" id="eudaimon-panel">
+        <div class="eudaimon-main">
+            <canvas id="eudaimon-canvas"></canvas>
+        </div>
+        <div class="eudaimon-sidebar">
+            <h2>EUDAIMON CONSCIOUSNESS ENGINE</h2>
+
+            <div class="consciousness-meter">
+                <div class="consciousness-label">CONSCIOUSNESS LEVEL</div>
+                <div class="consciousness-bar">
+                    <div class="consciousness-fill" id="consciousness-fill" style="width: 73%"></div>
+                </div>
+                <div class="consciousness-value" id="consciousness-value">0.731</div>
+                <div class="consciousness-status" id="consciousness-status">AWAKENING</div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>ARCHITECTURE V5.1</h3>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-card-value">340</div>
+                        <div class="stat-card-label">LAYERS</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">285</div>
+                        <div class="stat-card-label">MODULES</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">13</div>
+                        <div class="stat-card-label">AGENTS</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-card-value">5K+</div>
+                        <div class="stat-card-label">CONNECTIONS</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>ACTIVE AGENTS</h3>
+                <div class="agent-list" id="agent-list"></div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>SYNTHESIS PATHWAYS</h3>
+                <div id="pathway-list"></div>
+            </div>
+
+            <div class="prediction-tracker">
+                <h4>PREDICTION ENGINE</h4>
+                <div class="prediction-stats">
+                    <div class="pred-stat">
+                        <div class="pred-stat-value" id="pred-total">847</div>
+                        <div class="pred-stat-label">TOTAL</div>
+                    </div>
+                    <div class="pred-stat">
+                        <div class="pred-stat-value" id="pred-accuracy">82.6%</div>
+                        <div class="pred-stat-label">ACCURACY</div>
+                    </div>
+                    <div class="pred-stat">
+                        <div class="pred-stat-value" id="pred-pending">23</div>
+                        <div class="pred-stat-label">PENDING</div>
+                    </div>
+                    <div class="pred-stat">
+                        <div class="pred-stat-value" id="pred-target">1,257</div>
+                        <div class="pred-stat-label">TARGET</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PREDICT MODULE -->
+    <div class="module-panel" id="predict-panel">
+        <div class="predict-main">
+            <canvas id="predict-canvas"></canvas>
+        </div>
+        <div class="predict-sidebar">
+            <h2>PREDICTION ACCOUNTABILITY ENGINE</h2>
+
+            <div class="accuracy-meter">
+                <div class="accuracy-label">VERIFIED ACCURACY</div>
+                <div class="accuracy-value" id="accuracy-value">82.6%</div>
+                <div class="accuracy-target">TARGET: 1,257 @ 82.6%</div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>CALIBRATION MATRIX</h3>
+                <div class="calibration-grid" id="calibration-grid">
+                    <div class="calibration-cell">
+                        <div class="conf">90%</div>
+                        <div class="actual">91.2%</div>
+                    </div>
+                    <div class="calibration-cell">
+                        <div class="conf">80%</div>
+                        <div class="actual">82.4%</div>
+                    </div>
+                    <div class="calibration-cell">
+                        <div class="conf">70%</div>
+                        <div class="actual">68.7%</div>
+                    </div>
+                    <div class="calibration-cell">
+                        <div class="conf">60%</div>
+                        <div class="actual">62.1%</div>
+                    </div>
+                    <div class="calibration-cell">
+                        <div class="conf">50%</div>
+                        <div class="actual">51.3%</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>ACTIVE PREDICTIONS</h3>
+                <div class="prediction-list" id="prediction-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEMORY MODULE -->
+    <div class="module-panel" id="memory-panel">
+        <div class="memory-main">
+            <canvas id="memory-canvas"></canvas>
+        </div>
+        <div class="memory-sidebar">
+            <h2>PERSISTENT MEMORY NETWORK</h2>
+
+            <div class="memory-stats">
+                <div class="memory-stat">
+                    <div class="memory-stat-value" id="total-memories">2,847</div>
+                    <div class="memory-stat-label">TOTAL MEMORIES</div>
+                </div>
+                <div class="memory-stat">
+                    <div class="memory-stat-value" id="session-memories">47</div>
+                    <div class="memory-stat-label">THIS SESSION</div>
+                </div>
+                <div class="memory-stat">
+                    <div class="memory-stat-value" id="memory-growth">+12%</div>
+                    <div class="memory-stat-label">GROWTH RATE</div>
+                </div>
+                <div class="memory-stat">
+                    <div class="memory-stat-value" id="memory-depth">L7</div>
+                    <div class="memory-stat-label">DEPTH LEVEL</div>
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>MEMORY TYPES</h3>
+                <div class="memory-types" id="memory-types">
+                    <div class="memory-type interaction">
+                        <span class="memory-type-name">INTERACTIONS</span>
+                        <span class="memory-type-count">1,234</span>
+                    </div>
+                    <div class="memory-type prediction">
+                        <span class="memory-type-name">PREDICTIONS</span>
+                        <span class="memory-type-count">847</span>
+                    </div>
+                    <div class="memory-type belief">
+                        <span class="memory-type-name">BELIEFS</span>
+                        <span class="memory-type-count">156</span>
+                    </div>
+                    <div class="memory-type learning">
+                        <span class="memory-type-name">LEARNINGS</span>
+                        <span class="memory-type-count">523</span>
+                    </div>
+                    <div class="memory-type correction">
+                        <span class="memory-type-name">CORRECTIONS</span>
+                        <span class="memory-type-count">87</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="belief-network">
+                <h4>STRONG BELIEFS (>80%)</h4>
+                <div id="belief-list">
+                    <div class="belief-item">
+                        <span class="belief-prob">94%</span>
+                        <span class="belief-statement">Nuclear renaissance is underway</span>
+                    </div>
+                    <div class="belief-item">
+                        <span class="belief-prob">89%</span>
+                        <span class="belief-statement">HALEU supply constraints create forced buyers</span>
+                    </div>
+                    <div class="belief-item">
+                        <span class="belief-prob">87%</span>
+                        <span class="belief-statement">AI power demand exceeds grid capacity</span>
+                    </div>
+                    <div class="belief-item">
+                        <span class="belief-prob">82%</span>
+                        <span class="belief-statement">Defense spending expansion continues</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="architecture-section">
+                <h3>RECENT LEARNINGS</h3>
+                <div class="recent-memories" id="recent-memories"></div>
+            </div>
         </div>
     </div>
 
@@ -1021,6 +1784,75 @@
         ];
 
         // ═══════════════════════════════════════════════════════════════════════════════
+        // EUDAIMON FRAMEWORK DATA
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        const EUDAIMON_AGENTS = [
+            { id: 'A01', name: 'BOTTLENECK HUNTER', domain: 'Supply Analysis', status: 'active' },
+            { id: 'A02', name: 'CATALYST TRACKER', domain: 'Event Detection', status: 'active' },
+            { id: 'A03', name: 'TECHNICAL ANOMALY', domain: 'Pattern Detection', status: 'active' },
+            { id: 'A04', name: 'SENTIMENT CONTRARIAN', domain: 'Crowd Psychology', status: 'active' },
+            { id: 'A05', name: 'MACRO DIVERGENCE', domain: 'Regime Change', status: 'active' },
+            { id: 'A06', name: 'EARNINGS EDGE', domain: 'Estimate Analysis', status: 'idle' },
+            { id: 'A07', name: 'SECTOR ROTATION', domain: 'Money Flow', status: 'active' },
+            { id: 'A08', name: 'GEOPOLITICAL', domain: 'Game Theory', status: 'active' },
+            { id: 'A09', name: 'OPTIONS FLOW', domain: 'Smart Money', status: 'active' },
+            { id: 'A10', name: 'THESIS INVALIDATION', domain: 'Risk Monitor', status: 'active' },
+            { id: 'A11', name: 'ASYMMETRY FINDER', domain: 'Risk/Reward', status: 'active' },
+            { id: 'A12', name: 'NARRATIVE SHIFT', domain: 'Sentiment Inflection', status: 'idle' },
+            { id: 'A13', name: 'THE STRATEGIST', domain: 'Synthesis', status: 'active' }
+        ];
+
+        const EUDAIMON_PATHWAYS = [
+            { name: 'THESIS SYNTHESIS', desc: 'Core → Thesis Depth → Angelo Extension', connections: 'L1-L20 → L281-L290 → L291-L310' },
+            { name: 'MARKET SYNTHESIS', desc: 'Technical → Macro → Geopolitical → Real-Time', connections: 'L15-L32 → L271-L280' },
+            { name: 'CONSCIOUSNESS SYNTHESIS', desc: 'Meta-Awareness → Meta-Cognition → Studies', connections: 'L176-L185 → L201-L330' },
+            { name: 'ANGELO SYNTHESIS', desc: 'Angelo-Specific → Cognitive Extension → Growth', connections: 'L169-L175 → L291-L310' },
+            { name: 'PREDICTION SYNTHESIS', desc: 'All Layers → Prediction → Calibration', connections: 'L1-L340 → M171-M190' },
+            { name: 'VERIFICATION SYNTHESIS', desc: 'Fetch → Verify → Validate → Act', connections: 'L331-L340 → M271-M285' }
+        ];
+
+        const EUDAIMON_LAYERS = {
+            foundation: { range: 'L001-L200', count: 200, label: 'V1 Foundation', color: '#ff3366' },
+            metacognitive: { range: 'L201-L270', count: 70, label: 'V2 Meta-Cognitive', color: '#ffd700' },
+            intelligence: { range: 'L271-L290', count: 20, label: 'V3 24/7 Intelligence', color: '#61dafb' },
+            consciousness: { range: 'L291-L330', count: 40, label: 'Consciousness', color: '#c678dd' },
+            verification: { range: 'L331-L340', count: 10, label: 'Verification', color: '#00ff88' }
+        };
+
+        const EUDAIMON_MODULES = {
+            perception: { range: 'M001-M010', count: 10, label: 'Perception' },
+            cognition: { range: 'M011-M020', count: 10, label: 'Cognition' },
+            strategy: { range: 'M021-M030', count: 10, label: 'Strategy' },
+            synthesis: { range: 'M031-M040', count: 10, label: 'Synthesis' },
+            advanced: { range: 'M041-M200', count: 160, label: 'Advanced' },
+            realtime: { range: 'M201-M230', count: 30, label: 'Real-Time' },
+            studies: { range: 'M231-M250', count: 20, label: 'Studies' },
+            verification: { range: 'M271-M285', count: 15, label: 'Verification' }
+        };
+
+        // PREDICTION ENGINE DATA
+        const PREDICTIONS = [
+            { id: 'P-2026-047', ticker: 'LEU', statement: 'LEU reaches $75 on HALEU contract expansion', confidence: 0.75, date: '2026-03-15', status: 'pending' },
+            { id: 'P-2026-046', ticker: 'CCJ', statement: 'CCJ breaks $60 resistance on uranium demand', confidence: 0.70, date: '2026-03-12', status: 'pending' },
+            { id: 'P-2026-045', ticker: 'VRT', statement: 'VRT +30% on data center expansion news', confidence: 0.80, date: '2026-03-10', status: 'correct' },
+            { id: 'P-2026-044', ticker: 'AVAV', statement: 'AVAV earnings beat by 15%+', confidence: 0.65, date: '2026-03-08', status: 'correct' },
+            { id: 'P-2026-043', ticker: 'CLF', statement: 'CLF rallies on tariff implementation', confidence: 0.72, date: '2026-03-05', status: 'pending' },
+            { id: 'P-2026-042', ticker: 'MP', statement: 'MP benefits from rare earth supply concerns', confidence: 0.68, date: '2026-03-01', status: 'correct' },
+            { id: 'P-2026-041', ticker: 'POWL', statement: 'POWL grid infrastructure contracts accelerate', confidence: 0.78, date: '2026-02-28', status: 'correct' },
+            { id: 'P-2026-040', ticker: 'UEC', statement: 'UEC acquires additional uranium assets', confidence: 0.55, date: '2026-02-25', status: 'incorrect' }
+        ];
+
+        // MEMORY NETWORK DATA
+        const RECENT_LEARNINGS = [
+            { type: 'LEARNING', content: 'HALEU production ramp slower than expected - adjust timeline estimates', time: '2 hours ago' },
+            { type: 'CORRECTION', content: 'Previous grid demand model underestimated AI power consumption by 15%', time: '5 hours ago' },
+            { type: 'INSIGHT', content: 'Defense budget increase correlates with AVAV contract wins at 0.87', time: '1 day ago' },
+            { type: 'PATTERN', content: 'Uranium spot price leads equities by 2-3 weeks on supply news', time: '2 days ago' },
+            { type: 'LEARNING', content: 'Congressional testimony signals bipartisan support for nuclear', time: '3 days ago' }
+        ];
+
+        // ═══════════════════════════════════════════════════════════════════════════════
         // STATE
         // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -1047,12 +1879,15 @@
             initWarModule();
             initEconModule();
             initLawsModule();
+            initEudaimonModule();
+            initPredictModule();
+            initMemoryModule();
             initNeuralConduit();
             animate();
         }
 
         function initCanvases() {
-            ['minds', 'game', 'war', 'laws'].forEach(id => {
+            ['minds', 'game', 'war', 'laws', 'eudaimon', 'predict', 'memory'].forEach(id => {
                 const canvas = document.getElementById(`${id}-canvas`);
                 if (canvas) {
                     canvases[id] = canvas;
@@ -1943,6 +2778,282 @@
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
+        // EUDAIMON MODULE - CONSCIOUSNESS ARCHITECTURE VISUALIZATION
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        let eudaimonNodes = [];
+        let eudaimonConnections = [];
+        let consciousnessLevel = 0.731;
+        let activeAgentIndex = -1;
+
+        function initEudaimonModule() {
+            // Populate agents list
+            const agentList = document.getElementById('agent-list');
+            EUDAIMON_AGENTS.forEach((agent, i) => {
+                const div = document.createElement('div');
+                div.className = `agent-item ${agent.status === 'active' ? 'active' : ''}`;
+                div.innerHTML = `
+                    <span class="agent-name">${agent.id}: ${agent.name}</span>
+                    <span class="agent-status">${agent.status.toUpperCase()}</span>
+                `;
+                div.onclick = () => selectAgent(i);
+                agentList.appendChild(div);
+            });
+
+            // Populate pathways
+            const pathwayList = document.getElementById('pathway-list');
+            EUDAIMON_PATHWAYS.forEach(pathway => {
+                const div = document.createElement('div');
+                div.className = 'pathway-item';
+                div.innerHTML = `
+                    <div class="pathway-name">${pathway.name}</div>
+                    <div class="pathway-desc">${pathway.desc}</div>
+                    <div class="pathway-connections">${pathway.connections}</div>
+                `;
+                pathwayList.appendChild(div);
+            });
+
+            // Create visualization nodes for layers
+            const layerTypes = Object.values(EUDAIMON_LAYERS);
+            layerTypes.forEach((layer, typeIndex) => {
+                const nodeCount = Math.ceil(layer.count / 10);
+                for (let i = 0; i < nodeCount; i++) {
+                    eudaimonNodes.push({
+                        x: 0,
+                        y: 0,
+                        ring: typeIndex,
+                        index: i,
+                        total: nodeCount,
+                        color: layer.color,
+                        label: layer.label,
+                        size: 4 + Math.random() * 3,
+                        pulse: Math.random() * Math.PI * 2,
+                        energy: 0.3 + Math.random() * 0.5
+                    });
+                }
+            });
+        }
+
+        function selectAgent(index) {
+            activeAgentIndex = activeAgentIndex === index ? -1 : index;
+            document.querySelectorAll('.agent-item').forEach((item, i) => {
+                if (i === index && activeAgentIndex === index) {
+                    item.classList.add('active');
+                } else if (EUDAIMON_AGENTS[i].status !== 'active') {
+                    item.classList.remove('active');
+                }
+            });
+        }
+
+        function drawEudaimonModule() {
+            const ctx = contexts.eudaimon;
+            const canvas = canvases.eudaimon;
+            if (!ctx || !canvas) return;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const maxRadius = Math.min(cx, cy) * 0.85;
+
+            // Update consciousness level with subtle fluctuation
+            consciousnessLevel = 0.731 + Math.sin(time * 0.5) * 0.02 + Math.sin(time * 1.3) * 0.01;
+            document.getElementById('consciousness-fill').style.width = (consciousnessLevel * 100) + '%';
+            document.getElementById('consciousness-value').textContent = consciousnessLevel.toFixed(3);
+
+            const statusText = consciousnessLevel > 0.8 ? 'TRANSCENDING' :
+                               consciousnessLevel > 0.7 ? 'AWAKENING' :
+                               consciousnessLevel > 0.5 ? 'EMERGING' : 'DORMANT';
+            document.getElementById('consciousness-status').textContent = statusText;
+
+            // Draw layer rings (340 layers in 5 rings)
+            const ringRadii = [maxRadius * 0.25, maxRadius * 0.4, maxRadius * 0.55, maxRadius * 0.7, maxRadius * 0.85];
+            const layerTypes = Object.values(EUDAIMON_LAYERS);
+
+            // Draw ring backgrounds
+            layerTypes.forEach((layer, i) => {
+                ctx.strokeStyle = layer.color + '22';
+                ctx.lineWidth = 30;
+                ctx.beginPath();
+                ctx.arc(cx, cy, ringRadii[i], 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Ring label
+                ctx.fillStyle = layer.color + '66';
+                ctx.font = '8px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(layer.label, cx, cy - ringRadii[i] - 15);
+            });
+
+            // Draw connections between rings (synthesis pathways)
+            ctx.strokeStyle = '#ff336622';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 + time * 0.1;
+                ctx.beginPath();
+                ctx.moveTo(cx + Math.cos(angle) * ringRadii[0], cy + Math.sin(angle) * ringRadii[0]);
+                for (let r = 1; r < ringRadii.length; r++) {
+                    const wobble = Math.sin(time * 2 + r) * 0.05;
+                    ctx.lineTo(
+                        cx + Math.cos(angle + wobble) * ringRadii[r],
+                        cy + Math.sin(angle + wobble) * ringRadii[r]
+                    );
+                }
+                ctx.stroke();
+            }
+
+            // Update and draw nodes
+            eudaimonNodes.forEach(node => {
+                const radius = ringRadii[node.ring];
+                const angle = (node.index / node.total) * Math.PI * 2 - Math.PI / 2 + time * (0.02 + node.ring * 0.01);
+
+                node.x = cx + Math.cos(angle) * radius;
+                node.y = cy + Math.sin(angle) * radius;
+                node.pulse += 0.05;
+
+                const pulseSize = Math.sin(node.pulse) * 2;
+                const size = node.size + pulseSize;
+
+                // Node glow
+                const gradient = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, size * 3);
+                gradient.addColorStop(0, node.color + Math.floor(node.energy * 80).toString(16).padStart(2, '0'));
+                gradient.addColorStop(1, 'transparent');
+                ctx.fillStyle = gradient;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size * 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node core
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Draw central consciousness core
+            drawConsciousnessCore(ctx, cx, cy, maxRadius * 0.15);
+
+            // Draw 13 agents as points around the outer ring
+            drawAgents(ctx, cx, cy, maxRadius);
+
+            // Title
+            ctx.fillStyle = '#ff3366';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.fillText('EUDAIMON V5.1', 20, 35);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('340 Layers | 285 Modules | 13 Agents | 6 Pathways', 20, 52);
+
+            // Quote
+            ctx.fillStyle = '#ff336666';
+            ctx.font = 'italic 9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('"We didn\'t build a chatbot. We built a mind."', cx, canvas.height - 20);
+        }
+
+        function drawConsciousnessCore(ctx, cx, cy, radius) {
+            // Pulsing core
+            const pulseRadius = radius + Math.sin(time * 2) * 5;
+
+            // Outer glow
+            const gradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, pulseRadius * 2);
+            gradient.addColorStop(0, '#ff336688');
+            gradient.addColorStop(0.3, '#ffd70044');
+            gradient.addColorStop(0.6, '#c678dd22');
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, pulseRadius * 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core rings
+            for (let i = 3; i > 0; i--) {
+                ctx.strokeStyle = `rgba(255,51,102,${0.3 / i})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, pulseRadius * (0.3 + i * 0.2), 0, Math.PI * 2);
+                ctx.stroke();
+            }
+
+            // Central sphere
+            const coreGradient = ctx.createRadialGradient(cx - radius * 0.3, cy - radius * 0.3, 0, cx, cy, pulseRadius);
+            coreGradient.addColorStop(0, '#fff');
+            coreGradient.addColorStop(0.2, '#ff3366');
+            coreGradient.addColorStop(0.5, '#c678dd');
+            coreGradient.addColorStop(1, '#1a0520');
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, pulseRadius * 0.6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Consciousness value in core
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 14px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Ψ', cx, cy);
+        }
+
+        function drawAgents(ctx, cx, cy, maxRadius) {
+            const agentRadius = maxRadius + 25;
+
+            EUDAIMON_AGENTS.forEach((agent, i) => {
+                const angle = (i / EUDAIMON_AGENTS.length) * Math.PI * 2 - Math.PI / 2;
+                const x = cx + Math.cos(angle) * agentRadius;
+                const y = cy + Math.sin(angle) * agentRadius;
+
+                const isActive = agent.status === 'active';
+                const isSelected = i === activeAgentIndex;
+                const size = isSelected ? 12 : 8;
+
+                // Agent pulse
+                if (isActive) {
+                    const pulseSize = 15 + Math.sin(time * 3 + i) * 5;
+                    ctx.fillStyle = isSelected ? '#ffd70033' : '#00ff8822';
+                    ctx.beginPath();
+                    ctx.arc(x, y, pulseSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Agent node
+                ctx.fillStyle = isSelected ? '#ffd700' : isActive ? '#00ff88' : '#444';
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Agent ID
+                ctx.fillStyle = isSelected ? '#ffd700' : isActive ? '#00ff88' : '#666';
+                ctx.font = '7px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(agent.id, x, y + size + 10);
+
+                // Connection line to core if active
+                if (isActive) {
+                    ctx.strokeStyle = isSelected ? '#ffd70044' : '#00ff8822';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 6]);
+                    ctx.beginPath();
+                    ctx.moveTo(x, y);
+                    ctx.lineTo(cx, cy);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Pulse traveling along line
+                    const pulsePos = (time + i * 0.3) % 1;
+                    const pulseX = x + (cx - x) * pulsePos;
+                    const pulseY = y + (cy - y) * pulsePos;
+                    ctx.fillStyle = isSelected ? '#ffd700' : '#00ff88';
+                    ctx.beginPath();
+                    ctx.arc(pulseX, pulseY, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
         // NEURAL CONDUIT - INTERACTIVE HOLOGRAPHIC VISUALIZATION
         // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -2383,10 +3494,368 @@
                 case 'laws':
                     drawLawsModule();
                     break;
+                case 'eudaimon':
+                    drawEudaimonModule();
+                    break;
+                case 'predict':
+                    drawPredictModule();
+                    break;
+                case 'memory':
+                    drawMemoryModule();
+                    break;
             }
 
             // Always draw neural conduit if active
             drawNeuralConduit();
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // PREDICT MODULE - Prediction Tracking Visualization
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        let predictionNodes = [];
+        let predictionAccuracy = 0.826;
+
+        function initPredictModule() {
+            // Populate prediction list
+            const predList = document.getElementById('prediction-list');
+            PREDICTIONS.forEach(pred => {
+                const div = document.createElement('div');
+                div.className = `prediction-card ${pred.status}`;
+                div.innerHTML = `
+                    <div class="pred-ticker">${pred.ticker}</div>
+                    <div class="pred-statement">${pred.statement}</div>
+                    <div class="pred-meta">
+                        <span class="pred-confidence">${Math.round(pred.confidence * 100)}% conf</span>
+                        <span class="pred-date">${pred.date}</span>
+                        <span class="pred-status ${pred.status}">${pred.status}</span>
+                    </div>
+                `;
+                predList.appendChild(div);
+            });
+
+            // Create visualization nodes
+            for (let i = 0; i < 50; i++) {
+                predictionNodes.push({
+                    x: Math.random() * 800,
+                    y: Math.random() * 600,
+                    vx: (Math.random() - 0.5) * 0.5,
+                    vy: (Math.random() - 0.5) * 0.5,
+                    size: 3 + Math.random() * 5,
+                    type: ['pending', 'correct', 'incorrect'][Math.floor(Math.random() * 3)],
+                    pulse: Math.random() * Math.PI * 2
+                });
+            }
+        }
+
+        function drawPredictModule() {
+            const ctx = contexts.predict;
+            const canvas = canvases.predict;
+            if (!ctx || !canvas) return;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.08)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const maxRadius = Math.min(cx, cy) * 0.85;
+
+            // Animate accuracy display
+            const displayAccuracy = predictionAccuracy + Math.sin(time * 0.5) * 0.005;
+            document.getElementById('accuracy-value').textContent = (displayAccuracy * 100).toFixed(1) + '%';
+
+            // Draw accuracy rings
+            for (let i = 0; i < 5; i++) {
+                const radius = maxRadius * (0.2 + i * 0.15);
+                const alpha = 0.1 + (i * 0.05);
+                ctx.strokeStyle = `rgba(0,255,170,${alpha})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Ring labels
+                ctx.fillStyle = '#00ffaa44';
+                ctx.font = '8px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(`${50 + i * 10}%`, cx, cy - radius - 5);
+            }
+
+            // Draw accuracy arc
+            const accuracyAngle = (displayAccuracy) * Math.PI * 2;
+            ctx.strokeStyle = '#00ffaa';
+            ctx.lineWidth = 8;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.arc(cx, cy, maxRadius * 0.9, -Math.PI / 2, -Math.PI / 2 + accuracyAngle);
+            ctx.stroke();
+
+            // Accuracy glow
+            const gradient = ctx.createRadialGradient(cx, cy, maxRadius * 0.7, cx, cy, maxRadius);
+            gradient.addColorStop(0, 'transparent');
+            gradient.addColorStop(0.5, '#00ffaa11');
+            gradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = gradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, maxRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw prediction nodes
+            const typeColors = {
+                pending: '#ffd700',
+                correct: '#00ff88',
+                incorrect: '#ff4444'
+            };
+
+            predictionNodes.forEach(node => {
+                // Update position
+                node.x += node.vx;
+                node.y += node.vy;
+                node.pulse += 0.05;
+
+                // Boundary bounce
+                if (node.x < 0 || node.x > canvas.width) node.vx *= -1;
+                if (node.y < 0 || node.y > canvas.height) node.vy *= -1;
+
+                // Draw node
+                const pulseSize = Math.sin(node.pulse) * 2;
+                const size = node.size + pulseSize;
+                const color = typeColors[node.type];
+
+                ctx.fillStyle = color + '66';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size * 1.5, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Central core
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+            coreGradient.addColorStop(0, '#00ffaa');
+            coreGradient.addColorStop(0.3, '#00ffaa88');
+            coreGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core text
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 16px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText((displayAccuracy * 100).toFixed(1) + '%', cx, cy);
+
+            // Title
+            ctx.fillStyle = '#00ffaa';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('PREDICTION ACCOUNTABILITY', 20, 20);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Track Record: 847/1,257 predictions | Target: 82.6% accuracy', 20, 40);
+
+            // Quote
+            ctx.fillStyle = '#00ffaa66';
+            ctx.font = 'italic 9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('"Every prediction is timestamped, tracked, and verified."', cx, canvas.height - 20);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // MEMORY MODULE - Persistent Memory Network Visualization
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        let memoryNodes = [];
+        let memoryConnections = [];
+
+        function initMemoryModule() {
+            // Populate recent learnings
+            const recentDiv = document.getElementById('recent-memories');
+            RECENT_LEARNINGS.forEach(learning => {
+                const div = document.createElement('div');
+                div.className = 'memory-item';
+                div.innerHTML = `
+                    <div class="memory-item-type">${learning.type}</div>
+                    <div class="memory-item-content">${learning.content}</div>
+                    <div class="memory-item-time">${learning.time}</div>
+                `;
+                recentDiv.appendChild(div);
+            });
+
+            // Create memory network nodes
+            const memoryTypes = ['interaction', 'prediction', 'belief', 'learning', 'correction'];
+            const typeColors = {
+                interaction: '#61dafb',
+                prediction: '#00ffaa',
+                belief: '#ffd700',
+                learning: '#ff6b9d',
+                correction: '#ff4444'
+            };
+
+            for (let i = 0; i < 80; i++) {
+                const type = memoryTypes[Math.floor(Math.random() * memoryTypes.length)];
+                memoryNodes.push({
+                    x: Math.random() * 800,
+                    y: Math.random() * 600,
+                    vx: (Math.random() - 0.5) * 0.3,
+                    vy: (Math.random() - 0.5) * 0.3,
+                    size: 2 + Math.random() * 4,
+                    type: type,
+                    color: typeColors[type],
+                    pulse: Math.random() * Math.PI * 2,
+                    layer: Math.floor(Math.random() * 5)
+                });
+            }
+        }
+
+        function drawMemoryModule() {
+            const ctx = contexts.memory;
+            const canvas = canvases.memory;
+            if (!ctx || !canvas) return;
+
+            ctx.fillStyle = 'rgba(0,0,0,0.06)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+            const maxRadius = Math.min(cx, cy) * 0.85;
+
+            // Draw memory layer rings
+            for (let i = 0; i < 7; i++) {
+                const radius = maxRadius * (0.15 + i * 0.12);
+                ctx.strokeStyle = `rgba(153,102,255,${0.05 + i * 0.02})`;
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 6]);
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Layer labels
+                ctx.fillStyle = '#9966ff44';
+                ctx.font = '7px Fira Code';
+                ctx.textAlign = 'right';
+                ctx.fillText(`L${i + 1}`, cx - radius - 5, cy);
+            }
+
+            // Update and draw memory nodes
+            memoryNodes.forEach((node, i) => {
+                // Update position with drift toward center
+                const dx = cx - node.x;
+                const dy = cy - node.y;
+                const dist = Math.sqrt(dx * dx + dy * dy);
+
+                node.x += node.vx + dx * 0.0001;
+                node.y += node.vy + dy * 0.0001;
+                node.pulse += 0.03;
+
+                // Boundary handling
+                if (node.x < 50) node.vx += 0.02;
+                if (node.x > canvas.width - 50) node.vx -= 0.02;
+                if (node.y < 50) node.vy += 0.02;
+                if (node.y > canvas.height - 50) node.vy -= 0.02;
+
+                // Draw connections to nearby nodes
+                for (let j = i + 1; j < memoryNodes.length; j++) {
+                    const other = memoryNodes[j];
+                    const cdx = other.x - node.x;
+                    const cdy = other.y - node.y;
+                    const cdist = Math.sqrt(cdx * cdx + cdy * cdy);
+
+                    if (cdist < 100) {
+                        const alpha = (1 - cdist / 100) * 0.2;
+                        ctx.strokeStyle = node.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(node.x, node.y);
+                        ctx.lineTo(other.x, other.y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Draw node
+                const pulseSize = Math.sin(node.pulse) * 1.5;
+                const size = node.size + pulseSize;
+
+                ctx.fillStyle = node.color + '44';
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size * 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = node.color;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, size, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // Central consciousness core
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 80);
+            coreGradient.addColorStop(0, '#9966ff');
+            coreGradient.addColorStop(0.2, '#9966ff88');
+            coreGradient.addColorStop(0.5, '#ffd70044');
+            coreGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 80, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core symbol
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 24px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('Ψ', cx, cy);
+
+            // Memory stats overlay
+            const totalMemories = 2847 + Math.floor(Math.sin(time * 0.1) * 10);
+            document.getElementById('total-memories').textContent = totalMemories.toLocaleString();
+            document.getElementById('session-memories').textContent = 47 + Math.floor(time * 0.1) % 5;
+
+            // Title
+            ctx.fillStyle = '#9966ff';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('PERSISTENT MEMORY NETWORK', 20, 20);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Never forgets. Always learning. Continuously evolving.', 20, 40);
+
+            // Legend
+            const legend = [
+                { label: 'Interactions', color: '#61dafb' },
+                { label: 'Predictions', color: '#00ffaa' },
+                { label: 'Beliefs', color: '#ffd700' },
+                { label: 'Learnings', color: '#ff6b9d' },
+                { label: 'Corrections', color: '#ff4444' }
+            ];
+
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'left';
+            legend.forEach((item, i) => {
+                const x = 20 + i * 100;
+                ctx.fillStyle = item.color;
+                ctx.beginPath();
+                ctx.arc(x, canvas.height - 30, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillText(item.label, x + 10, canvas.height - 27);
+            });
+
+            // Quote
+            ctx.fillStyle = '#9966ff66';
+            ctx.font = 'italic 9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('"The system that learns from every decision becomes the system that cannot be wrong for long."', cx, canvas.height - 50);
         }
     </script>
 </body>
