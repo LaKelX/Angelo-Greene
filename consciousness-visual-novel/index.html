@@ -4115,17 +4115,91 @@
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const GREAT_MINDS = [
-            { id: 0, name: 'SUN TZU', domain: 'WAR', color: '#ff4444', x: 0, y: 0, wisdom: 'All warfare is based on deception' },
-            { id: 1, name: 'MACHIAVELLI', domain: 'POWER', color: '#dc143c', x: 0, y: 0, wisdom: 'It is better to be feared than loved' },
-            { id: 2, name: 'BUFFETT', domain: 'VALUE', color: '#ffd700', x: 0, y: 0, wisdom: 'Be fearful when others are greedy' },
-            { id: 3, name: 'SOROS', domain: 'REFLEXIVITY', color: '#c678dd', x: 0, y: 0, wisdom: 'Markets are always wrong' },
-            { id: 4, name: 'NASH', domain: 'GAME THEORY', color: '#61dafb', x: 0, y: 0, wisdom: 'The best result comes from cooperation' },
-            { id: 5, name: 'KEYNES', domain: 'ECONOMICS', color: '#00ff88', x: 0, y: 0, wisdom: 'Markets can stay irrational longer than you can stay solvent' },
-            { id: 6, name: 'TALEB', domain: 'BLACK SWANS', color: '#ff6b9d', x: 0, y: 0, wisdom: 'Antifragility thrives on volatility' },
-            { id: 7, name: 'HERMES', domain: 'DIVINE', color: '#ffd700', x: 0, y: 0, wisdom: 'As above, so below' },
-            { id: 8, name: 'LIVERMORE', domain: 'SPECULATION', color: '#00ffff', x: 0, y: 0, wisdom: 'The market is never wrong, opinions are' },
-            { id: 9, name: 'VON NEUMANN', domain: 'MATHEMATICS', color: '#98c379', x: 0, y: 0, wisdom: 'In mathematics you dont understand things, you get used to them' }
+            { id: 0, name: 'SUN TZU', domain: 'WAR', color: '#ff4444', x: 0, y: 0, wisdom: 'All warfare is based on deception', quotes: [
+                'All warfare is based on deception',
+                'Supreme excellence consists in breaking the enemy\'s resistance without fighting',
+                'In the midst of chaos, there is also opportunity',
+                'Know thy enemy and know yourself; in a hundred battles you will never be defeated',
+                'Appear weak when you are strong, and strong when you are weak',
+                'The supreme art of war is to subdue the enemy without fighting'
+            ]},
+            { id: 1, name: 'MACHIAVELLI', domain: 'POWER', color: '#dc143c', x: 0, y: 0, wisdom: 'It is better to be feared than loved', quotes: [
+                'It is better to be feared than loved, if you cannot be both',
+                'Everyone sees what you appear to be, few experience what you really are',
+                'The lion cannot protect himself from traps, the fox cannot defend from wolves',
+                'Never attempt to win by force what can be won by deception',
+                'Men are so simple that a deceiver will always find those who allow themselves to be deceived',
+                'The first method for estimating the intelligence of a ruler is to look at the men he has around him'
+            ]},
+            { id: 2, name: 'BUFFETT', domain: 'VALUE', color: '#ffd700', x: 0, y: 0, wisdom: 'Be fearful when others are greedy', quotes: [
+                'Be fearful when others are greedy and greedy when others are fearful',
+                'Price is what you pay. Value is what you get',
+                'Our favorite holding period is forever',
+                'Risk comes from not knowing what you are doing',
+                'The stock market is a device for transferring money from the impatient to the patient',
+                'It takes 20 years to build a reputation and 5 minutes to ruin it'
+            ]},
+            { id: 3, name: 'SOROS', domain: 'REFLEXIVITY', color: '#c678dd', x: 0, y: 0, wisdom: 'Markets are always wrong', quotes: [
+                'Markets are constantly in a state of uncertainty and flux',
+                'The worse a situation becomes, the less it takes to turn it around',
+                'I\'m only rich because I know when I\'m wrong',
+                'Markets are designed to allow individuals to look after their private needs',
+                'Once we realize that imperfect understanding is the human condition, there is no shame in being wrong',
+                'If investing is entertaining, you\'re probably not making money'
+            ]},
+            { id: 4, name: 'NASH', domain: 'GAME THEORY', color: '#61dafb', x: 0, y: 0, wisdom: 'The best result comes from cooperation', quotes: [
+                'The best for the group comes when everyone does what is best for himself AND the group',
+                'In a non-cooperative game, each player acts independently',
+                'Equilibrium is reached when no player can benefit by changing only their own strategy',
+                'Rational players will converge to a stable outcome',
+                'The threat of mutual destruction can maintain peace',
+                'Optimal strategy depends on what others do'
+            ]},
+            { id: 5, name: 'KEYNES', domain: 'ECONOMICS', color: '#00ff88', x: 0, y: 0, wisdom: 'Markets can stay irrational longer than you can stay solvent', quotes: [
+                'Markets can stay irrational longer than you can stay solvent',
+                'The difficulty lies not so much in developing new ideas as in escaping from old ones',
+                'When the facts change, I change my mind. What do you do?',
+                'In the long run we are all dead',
+                'The market is a voting machine in the short run and a weighing machine in the long run',
+                'Worldly wisdom teaches that it is better to fail conventionally than succeed unconventionally'
+            ]},
+            { id: 6, name: 'TALEB', domain: 'BLACK SWANS', color: '#ff6b9d', x: 0, y: 0, wisdom: 'Antifragility thrives on volatility', quotes: [
+                'Antifragility is beyond resilience or robustness. The resilient resists shocks; the antifragile gets better',
+                'Wind extinguishes a candle and energizes fire',
+                'The three most harmful addictions are heroin, carbohydrates, and a monthly salary',
+                'If you see fraud and do not say fraud, you are a fraud',
+                'The inability to predict outliers implies the inability to predict the course of history',
+                'Never trust a man who doesn\'t have skin in the game'
+            ]},
+            { id: 7, name: 'HERMES', domain: 'DIVINE', color: '#ffd700', x: 0, y: 0, wisdom: 'As above, so below', quotes: [
+                'As above, so below; as within, so without',
+                'The All is Mind; the Universe is Mental',
+                'Nothing rests; everything moves; everything vibrates',
+                'Every Cause has its Effect; every Effect has its Cause',
+                'Gender is in everything; everything has its Masculine and Feminine Principles',
+                'The lips of wisdom are closed except to the ears of understanding'
+            ]},
+            { id: 8, name: 'LIVERMORE', domain: 'SPECULATION', color: '#00ffff', x: 0, y: 0, wisdom: 'The market is never wrong, opinions are', quotes: [
+                'The market is never wrong, opinions often are',
+                'There is nothing new on Wall Street. There can\'t be because speculation is as old as the hills',
+                'Men who can both be right and sit tight are uncommon',
+                'Losing money is the least of my troubles. Wrong is what bugs me',
+                'Play the market only when all factors are in your favor',
+                'The big money is made in the waiting'
+            ]},
+            { id: 9, name: 'VON NEUMANN', domain: 'MATHEMATICS', color: '#98c379', x: 0, y: 0, wisdom: 'In mathematics you dont understand things, you get used to them', quotes: [
+                'In mathematics you don\'t understand things, you just get used to them',
+                'If people do not believe that mathematics is simple, it is only because they do not realize how complicated life is',
+                'There\'s no sense being precise when you don\'t even know what you\'re talking about',
+                'Young man, in mathematics you don\'t understand things. You just get used to them',
+                'It would appear we have reached the limits of what is possible with computer technology',
+                'Anyone who attempts to generate random numbers by deterministic means is living in a state of sin'
+            ]}
         ];
+
+        // Flowing quotes state
+        let activeQuoteIndex = {};
+        let quoteTransitionTime = {};
 
         const IDEA_EXCHANGES = [
             { from: 'BUFFETT', to: 'SOROS', idea: 'Value investing requires patience, but markets can be irrational...' },
@@ -4248,6 +4322,91 @@
                 name: 'GENDER',
                 principle: '"Gender is in everything; everything has its Masculine and Feminine."',
                 application: 'Creation requires both forces. Analysis (masculine) and intuition (feminine) unite for mastery.'
+            },
+            // ═══════════════ ADDITIONAL LAWS ═══════════════
+            {
+                number: 'VIII',
+                name: 'PARETO',
+                principle: '"80% of effects come from 20% of causes."',
+                application: '20% of positions drive 80% of returns. Focus on the vital few, ignore the trivial many.'
+            },
+            {
+                number: 'IX',
+                name: 'REFLEXIVITY',
+                principle: '"Perception shapes reality; reality shapes perception."',
+                application: 'Markets are not purely objective. Participant beliefs create self-fulfilling prophecies.'
+            },
+            {
+                number: 'X',
+                name: 'ANTIFRAGILITY',
+                principle: '"Some things benefit from shocks; they thrive on volatility."',
+                application: 'Build portfolios that gain from disorder. Use chaos as opportunity, not threat.'
+            },
+            {
+                number: 'XI',
+                name: 'SECOND ORDER',
+                principle: '"Every action creates reactions that create further reactions."',
+                application: 'Think beyond immediate effects. The market\'s response to news matters more than the news.'
+            },
+            {
+                number: 'XII',
+                name: 'ENTROPY',
+                principle: '"All closed systems tend toward disorder."',
+                application: 'Markets require constant energy input. Thesis decay is natural. Refresh or die.'
+            },
+            {
+                number: 'XIII',
+                name: 'EMERGENCE',
+                principle: '"Complex systems exhibit properties not present in their parts."',
+                application: 'Macro behavior cannot be predicted from micro analysis alone. The whole transcends the sum.'
+            },
+            {
+                number: 'XIV',
+                name: 'MEAN REVERSION',
+                principle: '"Extremes return to the average; the center holds."',
+                application: 'Extended moves invite correction. Time heals overshoots. Patience is statistical edge.'
+            },
+            {
+                number: 'XV',
+                name: 'POWER LAW',
+                principle: '"A few events dominate; most are noise."',
+                application: 'Black swans define decades. Position for asymmetry. One winner pays for many losers.'
+            },
+            {
+                number: 'XVI',
+                name: 'INFORMATION ASYMMETRY',
+                principle: '"He who knows what others do not, holds the advantage."',
+                application: 'Edge exists in superior information or interpretation. Seek variant perception.'
+            },
+            {
+                number: 'XVII',
+                name: 'GAME THEORY',
+                principle: '"Every player\'s optimal strategy depends on others\' strategies."',
+                application: 'Market is multiplayer game. Anticipate the anticipations. Think recursively.'
+            },
+            {
+                number: 'XVIII',
+                name: 'COMPOUNDING',
+                principle: '"Small consistent gains become exponential over time."',
+                application: 'The eighth wonder. 1% daily = 37x yearly. Protect the base, let gains run.'
+            },
+            {
+                number: 'XIX',
+                name: 'SCARCITY',
+                principle: '"Value flows to that which is rare and needed."',
+                application: 'Supply constraints + demand = price explosion. Find bottlenecks before the crowd.'
+            },
+            {
+                number: 'XX',
+                name: 'CYCLES',
+                principle: '"History rhymes. Patterns repeat in new costumes."',
+                application: 'Study the past to predict the future. Same human psychology, different assets.'
+            },
+            {
+                number: 'XXI',
+                name: 'OPTIONALITY',
+                principle: '"Preserve choices. Asymmetric bets have limited downside, unlimited upside."',
+                application: 'Buy options, don\'t sell them. Position for convexity. Cap loss, uncap gain.'
             }
         ];
 
@@ -4807,6 +4966,63 @@
                 ctx.fillStyle = mind.color + '88';
                 ctx.font = '7px Fira Code';
                 ctx.fillText(mind.domain, mind.x, mind.y + 42);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // FLOWING QUOTES - Constantly cycling wisdom from each mind
+            // ═══════════════════════════════════════════════════════════════
+            GREAT_MINDS.forEach((mind, idx) => {
+                // Initialize quote tracking
+                if (activeQuoteIndex[idx] === undefined) {
+                    activeQuoteIndex[idx] = 0;
+                    quoteTransitionTime[idx] = time + idx * 0.7; // Stagger start times
+                }
+
+                // Cycle quotes every 4 seconds per mind
+                if (time > quoteTransitionTime[idx]) {
+                    activeQuoteIndex[idx] = (activeQuoteIndex[idx] + 1) % mind.quotes.length;
+                    quoteTransitionTime[idx] = time + 4 + Math.random(); // 4-5 second intervals
+                }
+
+                // Calculate fade based on time in cycle
+                const cycleProgress = (quoteTransitionTime[idx] - time);
+                let alpha = 1;
+                if (cycleProgress < 0.5) alpha = cycleProgress * 2; // Fade in
+                if (cycleProgress > 3.5) alpha = (4 - cycleProgress) * 2; // Fade out
+
+                const quote = mind.quotes[activeQuoteIndex[idx]];
+
+                // Draw quote bubble emanating from the mind
+                const angle = Math.atan2(cy - mind.y, cx - mind.x); // Point toward center
+                const bubbleX = mind.x + Math.cos(angle) * 70;
+                const bubbleY = mind.y + Math.sin(angle) * 50;
+
+                // Quote background
+                ctx.fillStyle = `rgba(0,0,0,${0.7 * alpha})`;
+                const maxWidth = 120;
+                const lines = wrapText(quote, maxWidth, ctx);
+                const lineHeight = 10;
+                const padding = 6;
+                const bubbleHeight = lines.length * lineHeight + padding * 2;
+                const bubbleWidth = maxWidth + padding * 2;
+
+                // Rounded rect background
+                ctx.beginPath();
+                ctx.roundRect(bubbleX - bubbleWidth/2, bubbleY - bubbleHeight/2, bubbleWidth, bubbleHeight, 5);
+                ctx.fill();
+
+                // Border glow
+                ctx.strokeStyle = mind.color + Math.floor(alpha * 100).toString(16).padStart(2, '0');
+                ctx.lineWidth = 1;
+                ctx.stroke();
+
+                // Quote text
+                ctx.fillStyle = mind.color + Math.floor(alpha * 200).toString(16).padStart(2, '0');
+                ctx.font = '8px Fira Code';
+                ctx.textAlign = 'center';
+                lines.forEach((line, i) => {
+                    ctx.fillText(line, bubbleX, bubbleY - bubbleHeight/2 + padding + 8 + i * lineHeight);
+                });
             });
 
             // Title
@@ -7600,6 +7816,29 @@
                 neuralCtx.arc(particleX, particleY, 3, 0, Math.PI * 2);
                 neuralCtx.fill();
             }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // UTILITY FUNCTIONS
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function wrapText(text, maxWidth, ctx) {
+            const words = text.split(' ');
+            const lines = [];
+            let currentLine = '';
+
+            words.forEach(word => {
+                const testLine = currentLine ? currentLine + ' ' + word : word;
+                const metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && currentLine) {
+                    lines.push(currentLine);
+                    currentLine = word;
+                } else {
+                    currentLine = testLine;
+                }
+            });
+            if (currentLine) lines.push(currentLine);
+            return lines;
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
