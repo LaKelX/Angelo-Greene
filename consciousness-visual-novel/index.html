@@ -4365,6 +4365,7 @@
         }
 
         function init() {
+            try {
             initCanvases();
             initUI();
             setupEvents();
@@ -4380,8 +4381,13 @@
             initLayersModule();
             initSupplyModule();
             initLiveModule();
+            initNeuralModule();
             initNeuralConduit();
             animate();
+            } catch(e) {
+                console.error('Init error:', e);
+                document.getElementById('loading').classList.add('hidden');
+            }
         }
 
         function initCanvases() {
