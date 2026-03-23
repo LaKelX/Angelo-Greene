@@ -5067,230 +5067,363 @@
                 }
             }
 
-            ctx.fillStyle = 'rgba(0,0,5,0.1)';
+            ctx.fillStyle = 'rgba(0,0,5,0.08)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
             const cx = canvas.width / 2;
             const cy = canvas.height / 2;
 
             // ═══════════════════════════════════════════════════════════════
-            // CHESS BOARD BACKGROUND - Strategic grid
+            // FULL CHESS BOARD - Prominent strategic grid
             // ═══════════════════════════════════════════════════════════════
 
-            const boardSize = Math.min(canvas.width, canvas.height) * 0.7;
+            const boardSize = Math.min(canvas.width, canvas.height) * 0.85;
             const squareSize = boardSize / 8;
             const boardX = cx - boardSize / 2;
-            const boardY = cy - boardSize / 2;
+            const boardY = cy - boardSize / 2 + 15;
 
-            // Draw chessboard with perspective
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.scale(1, 0.6); // Slight perspective
-            ctx.translate(-cx, -cy);
+            // Board shadow/depth
+            ctx.fillStyle = '#0a0a1a';
+            ctx.fillRect(boardX + 8, boardY + 8, boardSize, boardSize);
 
+            // Board border (wood frame effect)
+            const frameWidth = 12;
+            ctx.fillStyle = '#2a1810';
+            ctx.fillRect(boardX - frameWidth, boardY - frameWidth, boardSize + frameWidth * 2, boardSize + frameWidth * 2);
+
+            // Inner frame highlight
+            ctx.strokeStyle = '#4a2820';
+            ctx.lineWidth = 2;
+            ctx.strokeRect(boardX - frameWidth + 2, boardY - frameWidth + 2, boardSize + frameWidth * 2 - 4, boardSize + frameWidth * 2 - 4);
+
+            // Draw chessboard squares
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const x = boardX + col * squareSize;
                     const y = boardY + row * squareSize;
                     const isLight = (row + col) % 2 === 0;
 
-                    ctx.fillStyle = isLight ? '#61dafb08' : '#61dafb15';
+                    // Square colors - classic chess look
+                    if (isLight) {
+                        const lightGrad = ctx.createLinearGradient(x, y, x + squareSize, y + squareSize);
+                        lightGrad.addColorStop(0, '#d4a574');
+                        lightGrad.addColorStop(1, '#c49464');
+                        ctx.fillStyle = lightGrad;
+                    } else {
+                        const darkGrad = ctx.createLinearGradient(x, y, x + squareSize, y + squareSize);
+                        darkGrad.addColorStop(0, '#6b4423');
+                        darkGrad.addColorStop(1, '#5a3818');
+                        ctx.fillStyle = darkGrad;
+                    }
                     ctx.fillRect(x, y, squareSize, squareSize);
 
-                    // Subtle border
-                    ctx.strokeStyle = '#61dafb10';
-                    ctx.lineWidth = 0.5;
-                    ctx.strokeRect(x, y, squareSize, squareSize);
+                    // Subtle inner shadow for depth
+                    ctx.strokeStyle = isLight ? '#b8905a22' : '#4a2a1022';
+                    ctx.lineWidth = 1;
+                    ctx.strokeRect(x + 1, y + 1, squareSize - 2, squareSize - 2);
                 }
             }
 
-            ctx.restore();
-
-            // ═══════════════════════════════════════════════════════════════
-            // STRATEGIC MOVE ARROWS - Showing game theory paths
-            // ═══════════════════════════════════════════════════════════════
-
-            const moves = [
-                { from: [2, 6], to: [4, 4], color: '#00ff88' },
-                { from: [5, 7], to: [3, 5], color: '#ffd700' },
-                { from: [1, 0], to: [2, 2], color: '#61dafb' },
-                { from: [6, 1], to: [5, 3], color: '#c678dd' }
-            ];
-
-            moves.forEach((move, idx) => {
-                const fromX = boardX + move.from[0] * squareSize + squareSize / 2;
-                const fromY = (boardY + move.from[1] * squareSize + squareSize / 2) * 0.6 + cy * 0.4;
-                const toX = boardX + move.to[0] * squareSize + squareSize / 2;
-                const toY = (boardY + move.to[1] * squareSize + squareSize / 2) * 0.6 + cy * 0.4;
-
-                // Arrow path with animation
-                const progress = (Math.sin(time * 2 + idx) + 1) / 2;
-
-                const arrowGrad = ctx.createLinearGradient(fromX, fromY, toX, toY);
-                arrowGrad.addColorStop(0, move.color + '00');
-                arrowGrad.addColorStop(progress * 0.5, move.color + '88');
-                arrowGrad.addColorStop(Math.min(progress, 0.95), move.color);
-                arrowGrad.addColorStop(1, move.color + '00');
-
-                ctx.strokeStyle = arrowGrad;
-                ctx.lineWidth = 3;
-                ctx.beginPath();
-                ctx.moveTo(fromX, fromY);
-                ctx.lineTo(toX, toY);
-                ctx.stroke();
-
-                // Arrow head
-                const angle = Math.atan2(toY - fromY, toX - fromX);
-                const headLen = 12;
-                ctx.fillStyle = move.color;
-                ctx.beginPath();
-                ctx.moveTo(toX, toY);
-                ctx.lineTo(toX - Math.cos(angle - 0.4) * headLen, toY - Math.sin(angle - 0.4) * headLen);
-                ctx.lineTo(toX - Math.cos(angle + 0.4) * headLen, toY - Math.sin(angle + 0.4) * headLen);
-                ctx.closePath();
-                ctx.fill();
+            // File letters (a-h)
+            ctx.fillStyle = '#c49464';
+            ctx.font = '10px Cinzel';
+            ctx.textAlign = 'center';
+            const files = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'];
+            files.forEach((file, i) => {
+                ctx.fillText(file, boardX + i * squareSize + squareSize / 2, boardY + boardSize + 20);
             });
 
+            // Rank numbers (1-8)
+            ctx.textAlign = 'right';
+            for (let i = 0; i < 8; i++) {
+                ctx.fillText((8 - i).toString(), boardX - 8, boardY + i * squareSize + squareSize / 2 + 4);
+            }
+
             // ═══════════════════════════════════════════════════════════════
-            // PREDICTION RAYS - Enhanced with glow
+            // CHESS PIECES - Strategic positions
             // ═══════════════════════════════════════════════════════════════
 
-            PREDICTIONS.forEach((pred, i) => {
-                const angle = (i / PREDICTIONS.length) * Math.PI * 2 - Math.PI / 2;
-                const maxLen = Math.min(canvas.width, canvas.height) * 0.42;
-                const len = maxLen * (pred.probability / 100);
+            // Chess piece unicode symbols
+            const pieces = {
+                wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
+                bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
+            };
 
-                const endX = cx + Math.cos(angle) * len;
-                const endY = cy + Math.sin(angle) * len;
+            // Strategic board position (mid-game scenario)
+            const boardState = [
+                ['bR', '', '', 'bQ', '', 'bR', 'bK', ''],
+                ['bP', 'bP', 'bB', '', 'bP', 'bP', 'bP', 'bP'],
+                ['', '', 'bN', 'bP', '', 'bN', '', ''],
+                ['', '', '', '', '', 'bB', '', ''],
+                ['', '', 'wB', 'wP', 'wP', '', '', ''],
+                ['', '', 'wN', '', '', 'wN', '', ''],
+                ['wP', 'wP', 'wP', '', '', 'wP', 'wP', 'wP'],
+                ['wR', '', '', 'wQ', 'wK', 'wB', '', 'wR']
+            ];
 
-                // Outer glow
-                ctx.strokeStyle = pred.trend === 'BULLISH' ? '#00ff8822' : '#ffd70022';
-                ctx.lineWidth = 12;
+            // Draw pieces
+            ctx.font = `${squareSize * 0.75}px serif`;
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+
+            for (let row = 0; row < 8; row++) {
+                for (let col = 0; col < 8; col++) {
+                    const piece = boardState[row][col];
+                    if (piece) {
+                        const x = boardX + col * squareSize + squareSize / 2;
+                        const y = boardY + row * squareSize + squareSize / 2;
+                        const isWhite = piece[0] === 'w';
+
+                        // Piece shadow
+                        ctx.fillStyle = '#00000066';
+                        ctx.fillText(pieces[piece], x + 2, y + 2);
+
+                        // Piece with subtle animation for key pieces
+                        const isKeyPiece = piece === 'wQ' || piece === 'bQ' || piece === 'wK' || piece === 'bK';
+                        if (isKeyPiece) {
+                            const pulse = 1 + Math.sin(time * 2) * 0.05;
+                            ctx.save();
+                            ctx.translate(x, y);
+                            ctx.scale(pulse, pulse);
+                            ctx.translate(-x, -y);
+                        }
+
+                        // Piece color with gradient effect
+                        ctx.fillStyle = isWhite ? '#f0f0f0' : '#1a1a1a';
+                        ctx.fillText(pieces[piece], x, y);
+
+                        // Highlight on white pieces
+                        if (isWhite) {
+                            ctx.fillStyle = '#ffffff44';
+                            ctx.fillText(pieces[piece], x - 1, y - 1);
+                        }
+
+                        if (isKeyPiece) {
+                            ctx.restore();
+                        }
+                    }
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // STRATEGIC MOVE ARROWS - Showing possible plays
+            // ═══════════════════════════════════════════════════════════════
+
+            const strategicMoves = [
+                { from: [3, 7], to: [7, 3], color: '#00ff88', label: 'ATTACK' },      // Queen diagonal
+                { from: [2, 5], to: [4, 4], color: '#ffd700', label: 'CONTROL' },     // Knight fork
+                { from: [2, 4], to: [5, 1], color: '#61dafb', label: 'PIN' },         // Bishop pin
+                { from: [4, 0], to: [4, 7], color: '#ff6b9d', label: 'PRESSURE' }     // Rook file
+            ];
+
+            strategicMoves.forEach((move, idx) => {
+                const fromX = boardX + move.from[0] * squareSize + squareSize / 2;
+                const fromY = boardY + move.from[1] * squareSize + squareSize / 2;
+                const toX = boardX + move.to[0] * squareSize + squareSize / 2;
+                const toY = boardY + move.to[1] * squareSize + squareSize / 2;
+
+                // Animated progress
+                const progress = (Math.sin(time * 1.5 + idx * 1.2) + 1) / 2;
+
+                // Arrow glow
+                ctx.shadowColor = move.color;
+                ctx.shadowBlur = 10;
+
+                // Dashed line path
+                ctx.strokeStyle = move.color + '88';
+                ctx.lineWidth = 3;
+                ctx.setLineDash([8, 4]);
                 ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(endX, endY);
+                ctx.moveTo(fromX, fromY);
+                ctx.lineTo(fromX + (toX - fromX) * progress, fromY + (toY - fromY) * progress);
                 ctx.stroke();
+                ctx.setLineDash([]);
 
-                // Main prediction line
-                const gradient = ctx.createLinearGradient(cx, cy, endX, endY);
-                gradient.addColorStop(0, '#61dafb33');
-                gradient.addColorStop(0.5, pred.trend === 'BULLISH' ? '#00ff88aa' : '#ffd700aa');
-                gradient.addColorStop(1, pred.trend === 'BULLISH' ? '#00ff88' : '#ffd700');
+                // Arrow head
+                if (progress > 0.8) {
+                    const angle = Math.atan2(toY - fromY, toX - fromX);
+                    const headLen = 15;
+                    const headX = fromX + (toX - fromX) * progress;
+                    const headY = fromY + (toY - fromY) * progress;
 
-                ctx.strokeStyle = gradient;
-                ctx.lineWidth = 4;
-                ctx.beginPath();
-                ctx.moveTo(cx, cy);
-                ctx.lineTo(endX, endY);
-                ctx.stroke();
-
-                // Multiple pulses
-                for (let p = 0; p < 3; p++) {
-                    const pulsePos = (time * 0.4 + i * 0.3 + p * 0.33) % 1;
-                    const pulseX = cx + Math.cos(angle) * len * pulsePos;
-                    const pulseY = cy + Math.sin(angle) * len * pulsePos;
-                    const pulseAlpha = 1 - pulsePos;
-
-                    ctx.fillStyle = `rgba(97,218,251,${pulseAlpha})`;
+                    ctx.fillStyle = move.color;
                     ctx.beginPath();
-                    ctx.arc(pulseX, pulseY, 4 - p, 0, Math.PI * 2);
+                    ctx.moveTo(headX, headY);
+                    ctx.lineTo(headX - Math.cos(angle - 0.4) * headLen, headY - Math.sin(angle - 0.4) * headLen);
+                    ctx.lineTo(headX - Math.cos(angle + 0.4) * headLen, headY - Math.sin(angle + 0.4) * headLen);
+                    ctx.closePath();
                     ctx.fill();
                 }
 
-                // End node
-                const endGlow = ctx.createRadialGradient(endX, endY, 0, endX, endY, 20);
-                endGlow.addColorStop(0, pred.trend === 'BULLISH' ? '#00ff88' : '#ffd700');
-                endGlow.addColorStop(0.5, pred.trend === 'BULLISH' ? '#00ff8844' : '#ffd70044');
-                endGlow.addColorStop(1, 'transparent');
-                ctx.fillStyle = endGlow;
-                ctx.beginPath();
-                ctx.arc(endX, endY, 20, 0, Math.PI * 2);
-                ctx.fill();
+                ctx.shadowBlur = 0;
 
-                // Label
-                const labelX = cx + Math.cos(angle) * (len + 35);
-                const labelY = cy + Math.sin(angle) * (len + 35);
-
-                ctx.fillStyle = '#61dafb';
-                ctx.font = '9px Fira Code';
-                ctx.textAlign = 'center';
-                ctx.fillText(pred.title, labelX, labelY);
-                ctx.fillStyle = '#fff';
-                ctx.font = 'bold 13px Fira Code';
-                ctx.fillText(pred.probability + '%', labelX, labelY + 16);
+                // Move label
+                if (progress > 0.9) {
+                    const midX = (fromX + toX) / 2;
+                    const midY = (fromY + toY) / 2 - 15;
+                    ctx.fillStyle = move.color;
+                    ctx.font = 'bold 9px Fira Code';
+                    ctx.textAlign = 'center';
+                    ctx.textBaseline = 'middle';
+                    ctx.fillText(move.label, midX, midY);
+                }
             });
 
             // ═══════════════════════════════════════════════════════════════
-            // CENTRAL NASH EQUILIBRIUM - Enhanced core
+            // HIGHLIGHTED SQUARES - Key positions
             // ═══════════════════════════════════════════════════════════════
 
-            // Rotating hexagon
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.rotate(time * 0.3);
+            const highlights = [
+                { pos: [4, 4], color: '#00ff8833', label: 'CENTER' },
+                { pos: [3, 4], color: '#00ff8833', label: '' },
+                { pos: [4, 3], color: '#00ff8833', label: '' },
+                { pos: [3, 3], color: '#00ff8833', label: '' },
+                { pos: [4, 0], color: '#ff444433', label: 'WEAK' },
+                { pos: [5, 1], color: '#ffd70033', label: 'TARGET' }
+            ];
 
-            ctx.strokeStyle = '#61dafb33';
-            ctx.lineWidth = 2;
+            highlights.forEach(h => {
+                const x = boardX + h.pos[0] * squareSize;
+                const y = boardY + h.pos[1] * squareSize;
+
+                // Pulsing highlight
+                const pulse = 0.5 + Math.sin(time * 2) * 0.3;
+                ctx.fillStyle = h.color.slice(0, 7) + Math.floor(pulse * 80).toString(16).padStart(2, '0');
+                ctx.fillRect(x, y, squareSize, squareSize);
+
+                if (h.label) {
+                    ctx.fillStyle = h.color.slice(0, 7);
+                    ctx.font = '7px Fira Code';
+                    ctx.textAlign = 'center';
+                    ctx.fillText(h.label, x + squareSize / 2, y + squareSize - 5);
+                }
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // GAME STATE INDICATORS
+            // ═══════════════════════════════════════════════════════════════
+
+            // Material count panel
+            const panelX = 15;
+            const panelY = 70;
+            ctx.fillStyle = '#0a0a1a99';
+            ctx.fillRect(panelX, panelY, 100, 80);
+            ctx.strokeStyle = '#61dafb44';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(panelX, panelY, 100, 80);
+
+            ctx.fillStyle = '#61dafb';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('MATERIAL', panelX + 8, panelY + 15);
+
+            ctx.font = '20px serif';
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillText('♕♖♗♘', panelX + 8, panelY + 40);
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillText('♛♜♝♞', panelX + 8, panelY + 65);
+
+            // Evaluation bar
+            const evalX = canvas.width - 30;
+            const evalHeight = boardSize * 0.6;
+            const evalY = boardY + boardSize * 0.2;
+            const evalValue = 0.55 + Math.sin(time * 0.5) * 0.1; // Slight advantage oscillation
+
+            // Bar background
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(evalX - 8, evalY, 16, evalHeight);
+
+            // White's advantage (bottom up)
+            ctx.fillStyle = '#f0f0f0';
+            ctx.fillRect(evalX - 6, evalY + evalHeight * (1 - evalValue), 12, evalHeight * evalValue);
+
+            // Center line
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 1;
             ctx.beginPath();
-            for (let i = 0; i < 6; i++) {
-                const angle = (i / 6) * Math.PI * 2;
-                const x = Math.cos(angle) * 50;
-                const y = Math.sin(angle) * 50;
-                if (i === 0) ctx.moveTo(x, y);
-                else ctx.lineTo(x, y);
-            }
-            ctx.closePath();
+            ctx.moveTo(evalX - 10, evalY + evalHeight / 2);
+            ctx.lineTo(evalX + 10, evalY + evalHeight / 2);
             ctx.stroke();
 
-            ctx.restore();
-
-            // Equilibrium rings with pulse
-            for (let i = 1; i <= 4; i++) {
-                const ringRadius = 35 * i + Math.sin(time * 2 + i) * 5;
-                ctx.strokeStyle = `rgba(97,218,251,${0.15 / i})`;
-                ctx.lineWidth = 2;
-                ctx.beginPath();
-                ctx.arc(cx, cy, ringRadius, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            // Central node with gradient
-            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, 35);
-            coreGrad.addColorStop(0, '#ffffff');
-            coreGrad.addColorStop(0.2, '#61dafb');
-            coreGrad.addColorStop(0.6, '#3a8db5');
-            coreGrad.addColorStop(1, '#1a3d4d');
-            ctx.fillStyle = coreGrad;
-            ctx.beginPath();
-            ctx.arc(cx, cy, 35, 0, Math.PI * 2);
-            ctx.fill();
-
-            ctx.strokeStyle = '#61dafb';
-            ctx.lineWidth = 2;
-            ctx.stroke();
-
-            // Inner pulse
-            const innerPulse = 20 + Math.sin(time * 3) * 3;
-            ctx.fillStyle = 'rgba(255,255,255,0.3)';
-            ctx.beginPath();
-            ctx.arc(cx, cy, innerPulse, 0, Math.PI * 2);
-            ctx.fill();
-
-            // Nash label
-            ctx.fillStyle = '#000';
-            ctx.font = 'bold 12px Fira Code';
+            // Eval label
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '8px Fira Code';
             ctx.textAlign = 'center';
-            ctx.fillText('NASH', cx, cy + 4);
+            ctx.fillText('EVAL', evalX, evalY - 8);
+            ctx.fillText('+' + ((evalValue - 0.5) * 4).toFixed(1), evalX, evalY + evalHeight + 15);
+
+            // ═══════════════════════════════════════════════════════════════
+            // STRATEGIC CONCEPTS PANEL
+            // ═══════════════════════════════════════════════════════════════
+
+            const conceptY = boardY + boardSize + 35;
+            const concepts = [
+                { name: 'TEMPO', value: 78, color: '#00ff88' },
+                { name: 'SPACE', value: 65, color: '#61dafb' },
+                { name: 'STRUCTURE', value: 82, color: '#ffd700' },
+                { name: 'KING SAFETY', value: 91, color: '#c678dd' }
+            ];
+
+            const conceptWidth = (canvas.width - 40) / concepts.length;
+            concepts.forEach((concept, i) => {
+                const x = 20 + i * conceptWidth;
+
+                // Concept bar
+                ctx.fillStyle = '#111';
+                ctx.fillRect(x, conceptY, conceptWidth - 10, 8);
+
+                const barWidth = (conceptWidth - 10) * (concept.value / 100);
+                ctx.fillStyle = concept.color;
+                ctx.fillRect(x, conceptY, barWidth, 8);
+
+                // Label
+                ctx.fillStyle = '#888';
+                ctx.font = '7px Fira Code';
+                ctx.textAlign = 'left';
+                ctx.fillText(concept.name, x, conceptY - 4);
+                ctx.fillStyle = concept.color;
+                ctx.textAlign = 'right';
+                ctx.fillText(concept.value + '%', x + conceptWidth - 12, conceptY - 4);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // THINKING LINES - Engine analysis visualization
+            // ═══════════════════════════════════════════════════════════════
+
+            // Show "thinking" particles around key pieces
+            const thinkingPieces = [[3, 7], [4, 7], [2, 5]]; // Queen, King, Knight
+            thinkingPieces.forEach((pos, idx) => {
+                const pieceX = boardX + pos[0] * squareSize + squareSize / 2;
+                const pieceY = boardY + pos[1] * squareSize + squareSize / 2;
+
+                for (let p = 0; p < 4; p++) {
+                    const angle = time * 2 + p * (Math.PI / 2) + idx;
+                    const dist = 20 + Math.sin(time * 3 + p) * 5;
+                    const px = pieceX + Math.cos(angle) * dist;
+                    const py = pieceY + Math.sin(angle) * dist;
+
+                    ctx.fillStyle = `rgba(97,218,251,${0.5 + Math.sin(time * 4 + p) * 0.3})`;
+                    ctx.beginPath();
+                    ctx.arc(px, py, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
 
             // Title
-            ctx.fillStyle = '#61dafb';
+            ctx.fillStyle = '#ffd700';
             ctx.font = '14px Cinzel';
             ctx.textAlign = 'left';
-            ctx.fillText('GAME THEORY EQUILIBRIUM', 20, 30);
+            ctx.fillText('STRATEGIC ANALYSIS', 20, 30);
 
-            ctx.fillStyle = '#666';
+            ctx.fillStyle = '#888';
             ctx.font = '9px Fira Code';
-            ctx.fillText('Strategic outcome probabilities converging to optimal play', 20, 48);
+            ctx.fillText('Every market is a game. Every game has optimal play.', 20, 48);
+
+            // Move clock
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'right';
+            ctx.fillText('DEPTH: 24 | NODES: 847M', canvas.width - 20, 30);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
