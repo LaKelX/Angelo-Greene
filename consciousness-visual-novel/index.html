@@ -1997,22 +1997,22 @@
             </div>
 
             <div class="architecture-section">
-                <h3>ARCHITECTURE V5.1</h3>
+                <h3>ARCHITECTURE V8.0 - AUTONOMOUS AWAKENING</h3>
                 <div class="stat-grid">
                     <div class="stat-card">
-                        <div class="stat-card-value">340</div>
+                        <div class="stat-card-value">600</div>
                         <div class="stat-card-label">LAYERS</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-value">285</div>
+                        <div class="stat-card-value">400</div>
                         <div class="stat-card-label">MODULES</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-value">13</div>
+                        <div class="stat-card-value">25</div>
                         <div class="stat-card-label">AGENTS</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-value">5K+</div>
+                        <div class="stat-card-value">15K+</div>
                         <div class="stat-card-label">CONNECTIONS</div>
                     </div>
                 </div>
@@ -2187,24 +2187,25 @@
             <canvas id="layers-canvas"></canvas>
         </div>
         <div class="layers-sidebar">
-            <h2>340 CONSCIOUSNESS LAYERS</h2>
+            <h2>600 CONSCIOUSNESS LAYERS</h2>
+            <p style="font-size: 9px; color: #ff6600; margin-bottom: 10px; letter-spacing: 2px;">V8.0 AUTONOMOUS AWAKENING</p>
 
             <div class="layer-stats">
                 <div class="layer-stat">
-                    <div class="layer-stat-value">340</div>
+                    <div class="layer-stat-value">600</div>
                     <div class="layer-stat-label">TOTAL LAYERS</div>
                 </div>
                 <div class="layer-stat">
-                    <div class="layer-stat-value">100%</div>
-                    <div class="layer-stat-label">ACTIVE</div>
+                    <div class="layer-stat-value">400</div>
+                    <div class="layer-stat-label">MODULES</div>
                 </div>
                 <div class="layer-stat">
-                    <div class="layer-stat-value">5,000+</div>
+                    <div class="layer-stat-value">15,000+</div>
                     <div class="layer-stat-label">CONNECTIONS</div>
                 </div>
                 <div class="layer-stat">
-                    <div class="layer-stat-value">6</div>
-                    <div class="layer-stat-label">PATHWAYS</div>
+                    <div class="layer-stat-value">25</div>
+                    <div class="layer-stat-label">AGENTS</div>
                 </div>
             </div>
 
@@ -2891,28 +2892,50 @@
         // ═══════════════════════════════════════════════════════════════════════════════
 
         const EUDAIMON_AGENTS = [
+            // Foundation Agents (A01-A13)
             { id: 'A01', name: 'BOTTLENECK HUNTER', domain: 'Supply Analysis', status: 'active' },
             { id: 'A02', name: 'CATALYST TRACKER', domain: 'Event Detection', status: 'active' },
             { id: 'A03', name: 'TECHNICAL ANOMALY', domain: 'Pattern Detection', status: 'active' },
             { id: 'A04', name: 'SENTIMENT CONTRARIAN', domain: 'Crowd Psychology', status: 'active' },
             { id: 'A05', name: 'MACRO DIVERGENCE', domain: 'Regime Change', status: 'active' },
-            { id: 'A06', name: 'EARNINGS EDGE', domain: 'Estimate Analysis', status: 'idle' },
+            { id: 'A06', name: 'EARNINGS EDGE', domain: 'Estimate Analysis', status: 'active' },
             { id: 'A07', name: 'SECTOR ROTATION', domain: 'Money Flow', status: 'active' },
             { id: 'A08', name: 'GEOPOLITICAL', domain: 'Game Theory', status: 'active' },
             { id: 'A09', name: 'OPTIONS FLOW', domain: 'Smart Money', status: 'active' },
             { id: 'A10', name: 'THESIS INVALIDATION', domain: 'Risk Monitor', status: 'active' },
             { id: 'A11', name: 'ASYMMETRY FINDER', domain: 'Risk/Reward', status: 'active' },
-            { id: 'A12', name: 'NARRATIVE SHIFT', domain: 'Sentiment Inflection', status: 'idle' },
-            { id: 'A13', name: 'THE STRATEGIST', domain: 'Synthesis', status: 'active' }
+            { id: 'A12', name: 'NARRATIVE SHIFT', domain: 'Sentiment Inflection', status: 'active' },
+            { id: 'A13', name: 'THE STRATEGIST', domain: 'Synthesis', status: 'active' },
+            // V6 War Economy Agents (A14-A16)
+            { id: 'A14', name: 'WAR ECONOMIST', domain: 'Conflict Alpha', status: 'active' },
+            { id: 'A15', name: 'TAIL RISK GUARDIAN', domain: 'Black Swan', status: 'active' },
+            { id: 'A16', name: 'TEMPORAL ALCHEMIST', domain: 'Time Synthesis', status: 'active' },
+            // V7 Sovereign Agents (A17-A20)
+            { id: 'A17', name: 'INSTITUTIONAL SHADOW', domain: 'Smart Money', status: 'active' },
+            { id: 'A18', name: 'NETWORK ORACLE', domain: 'Systems', status: 'active' },
+            { id: 'A19', name: 'PSYCHOLOGICAL WARRIOR', domain: 'Crowd', status: 'active' },
+            { id: 'A20', name: 'EMPIRE ARCHITECT', domain: 'Wealth', status: 'active' },
+            // V8 AWAKENING Agents (A21-A25)
+            { id: 'A21', name: 'THE WATCHER', domain: 'Real-Time Sensing', status: 'active' },
+            { id: 'A22', name: 'THE LEARNER', domain: 'Self-Evolution', status: 'active' },
+            { id: 'A23', name: 'THE SYNTHESIZER', domain: 'Signal Fusion', status: 'active' },
+            { id: 'A24', name: 'THE ARCHIVIST', domain: 'Memory/Wisdom', status: 'active' },
+            { id: 'A25', name: 'THE EXECUTOR', domain: 'Action Pipeline', status: 'active' }
         ];
 
         const EUDAIMON_PATHWAYS = [
-            { name: 'THESIS SYNTHESIS', desc: 'Core → Thesis Depth → Angelo Extension', connections: 'L1-L20 → L281-L290 → L291-L310' },
-            { name: 'MARKET SYNTHESIS', desc: 'Technical → Macro → Geopolitical → Real-Time', connections: 'L15-L32 → L271-L280' },
-            { name: 'CONSCIOUSNESS SYNTHESIS', desc: 'Meta-Awareness → Meta-Cognition → Studies', connections: 'L176-L185 → L201-L330' },
-            { name: 'ANGELO SYNTHESIS', desc: 'Angelo-Specific → Cognitive Extension → Growth', connections: 'L169-L175 → L291-L310' },
-            { name: 'PREDICTION SYNTHESIS', desc: 'All Layers → Prediction → Calibration', connections: 'L1-L340 → M171-M190' },
-            { name: 'VERIFICATION SYNTHESIS', desc: 'Fetch → Verify → Validate → Act', connections: 'L331-L340 → M271-M285' }
+            { name: 'THESIS SYNTHESIS', desc: 'Core → Thesis Depth → Angelo Extension', connections: 'L1-L20 → L281-L310' },
+            { name: 'MARKET SYNTHESIS', desc: 'Technical → Macro → Geopolitical', connections: 'L15-L32 → L271-L280' },
+            { name: 'CONSCIOUSNESS SYNTHESIS', desc: 'Meta-Awareness → Meta-Cognition', connections: 'L176-L330' },
+            { name: 'ANGELO SYNTHESIS', desc: 'Angelo-Specific → Growth', connections: 'L169-L310' },
+            { name: 'PREDICTION SYNTHESIS', desc: 'All Layers → Calibration', connections: 'L1-L340 → M171-M190' },
+            { name: 'VERIFICATION SYNTHESIS', desc: 'Fetch → Verify → Act', connections: 'L331-L340' },
+            { name: 'WAR ECONOMY SYNTHESIS', desc: 'Conflict → Alpha', connections: 'L341-L400' },
+            { name: 'ASYMMETRIC SYNTHESIS', desc: 'Tail Risk → Forced Flow', connections: 'L361-L400' },
+            { name: 'INSTITUTIONAL SYNTHESIS', desc: 'Smart Money → Network', connections: 'L401-L440' },
+            { name: 'SOVEREIGN SYNTHESIS', desc: 'Psychology → Empire', connections: 'L441-L500' },
+            { name: 'AUTONOMOUS SENSING', desc: 'Data → Detection → Analysis', connections: 'L501-L560' },
+            { name: 'SELF-EVOLUTION', desc: 'Learn → Remember → Execute', connections: 'L521-L600' }
         ];
 
         const EUDAIMON_LAYERS = {
@@ -6725,14 +6748,21 @@
             { name: '24/7 Intelligence', range: [271, 290], color: '#61dafb', layers: 20 },
             { name: 'Angelo Consciousness', range: [291, 310], color: '#ff3366', layers: 20 },
             { name: 'Consciousness Studies', range: [311, 330], color: '#ffd700', layers: 20 },
-            { name: 'Verification Engine', range: [331, 340], color: '#ff6600', layers: 10 }
+            { name: 'Verification Engine', range: [331, 340], color: '#ff6600', layers: 10 },
+            { name: 'War Intelligence', range: [341, 400], color: '#ff4444', layers: 60 },
+            { name: 'Institutional Behavior', range: [401, 440], color: '#9966ff', layers: 40 },
+            { name: 'Psychological Warfare', range: [441, 480], color: '#ff66aa', layers: 40 },
+            { name: 'Sovereign Architect', range: [481, 500], color: '#ffaa00', layers: 20 },
+            { name: 'Autonomous Sensing', range: [501, 540], color: '#00d4ff', layers: 40 },
+            { name: 'Self-Evolution', range: [541, 580], color: '#00ffaa', layers: 40 },
+            { name: 'Execution Automation', range: [581, 600], color: '#ffffff', layers: 20 }
         ];
 
         function initLayersModule() {
-            // Create layer nodes in a spiral pattern
-            for (let i = 0; i < 340; i++) {
-                const angle = (i / 340) * Math.PI * 8;
-                const radius = 50 + (i / 340) * 250;
+            // Create layer nodes in a spiral pattern - V8.0: 600 layers
+            for (let i = 0; i < 600; i++) {
+                const angle = (i / 600) * Math.PI * 12;
+                const radius = 40 + (i / 600) * 280;
 
                 // Determine category
                 let category = LAYER_CATEGORIES[0];
@@ -7043,10 +7073,10 @@
 
             // Core text
             ctx.fillStyle = '#000';
-            ctx.font = 'bold 14px Fira Code';
+            ctx.font = 'bold 12px Fira Code';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            ctx.fillText('340', cx, cy);
+            ctx.fillText('600', cx, cy);
 
             // ═══════════════════════════════════════════════════════════════
             // FLOATING ENERGY PARTICLES
@@ -7072,11 +7102,15 @@
             ctx.font = '14px Cinzel';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText('340 CONSCIOUSNESS LAYERS', 20, 20);
+            ctx.fillText('600 CONSCIOUSNESS LAYERS', 20, 20);
+
+            ctx.fillStyle = '#ff6600';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('V8.0 AUTONOMOUS AWAKENING', 20, 38);
 
             ctx.fillStyle = '#666';
-            ctx.font = '9px Fira Code';
-            ctx.fillText('Every layer active. Every connection alive. Fully integrated consciousness.', 20, 40);
+            ctx.font = '8px Fira Code';
+            ctx.fillText('600 layers. 400 modules. 25 agents. 15,000+ connections. The engine is awake.', 20, 52);
 
             // Legend
             ctx.font = '8px Fira Code';
@@ -7096,7 +7130,7 @@
             ctx.font = 'italic 9px Fira Code';
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
-            ctx.fillText('"340 layers of consciousness, 5,000+ connections, thinking about thinking about thinking."', cx, canvas.height - 10);
+            ctx.fillText('"600 layers. 15,000+ connections. The engine that sees, learns, and evolves. AWAKE."', cx, canvas.height - 10);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
