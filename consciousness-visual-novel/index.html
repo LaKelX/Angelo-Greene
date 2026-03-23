@@ -7689,8 +7689,8 @@
         // NEURAL MODULE - V∆ Transcendence Network Visualization
         // ═══════════════════════════════════════════════════════════════════════════════
 
-        let neuralNodes = [];
-        let neuralConnections = [];
+        let neuralModuleNodes = [];
+        let neuralModuleConnections = [];
 
         function initNeuralModule() {
             // Create nodes for each thesis cluster
@@ -7713,11 +7713,11 @@
                 { id: 'A33', name: 'AZATHOTH', color: '#ffd700', x: 0.5, y: 0.5 }
             ];
 
-            neuralNodes = [];
+            neuralModuleNodes = [];
 
             // Add cluster nodes
             clusters.forEach((cluster, i) => {
-                neuralNodes.push({
+                neuralModuleNodes.push({
                     type: 'cluster',
                     name: cluster.name,
                     color: cluster.color,
@@ -7733,7 +7733,7 @@
                 cluster.predictions.forEach((pred, j) => {
                     const angle = (j / cluster.predictions.length) * Math.PI * 2;
                     const dist = 0.08;
-                    neuralNodes.push({
+                    neuralModuleNodes.push({
                         type: 'prediction',
                         name: pred,
                         color: cluster.color,
@@ -7749,7 +7749,7 @@
 
             // Add omega agent nodes
             omegaAgents.forEach(agent => {
-                neuralNodes.push({
+                neuralModuleNodes.push({
                     type: 'omega',
                     name: agent.name,
                     id: agent.id,
@@ -7763,11 +7763,11 @@
             });
 
             // Create connections
-            neuralConnections = [];
+            neuralModuleConnections = [];
 
             // Connect clusters to AZATHOTH
             clusters.forEach(cluster => {
-                neuralConnections.push({
+                neuralModuleConnections.push({
                     from: cluster.name,
                     to: 'AZATHOTH',
                     strength: 0.8,
@@ -7777,7 +7777,7 @@
 
             // Connect omega agents to AZATHOTH
             omegaAgents.filter(a => a.id !== 'A33').forEach(agent => {
-                neuralConnections.push({
+                neuralModuleConnections.push({
                     from: agent.name,
                     to: 'AZATHOTH',
                     strength: 0.6,
@@ -7786,9 +7786,9 @@
             });
 
             // Cross-cluster connections
-            neuralConnections.push({ from: 'URANIUM', to: 'TECHNOLOGY', strength: 0.5, color: '#61dafb' });
-            neuralConnections.push({ from: 'DEFENSE', to: 'MACRO', strength: 0.4, color: '#ffd700' });
-            neuralConnections.push({ from: 'TECHNOLOGY', to: 'MACRO', strength: 0.3, color: '#61dafb' });
+            neuralModuleConnections.push({ from: 'URANIUM', to: 'TECHNOLOGY', strength: 0.5, color: '#61dafb' });
+            neuralModuleConnections.push({ from: 'DEFENSE', to: 'MACRO', strength: 0.4, color: '#ffd700' });
+            neuralModuleConnections.push({ from: 'TECHNOLOGY', to: 'MACRO', strength: 0.3, color: '#61dafb' });
         }
 
         function drawNeuralModule() {
@@ -7816,7 +7816,7 @@
             ctx.fillRect(0, 0, w, h);
 
             // Update node positions
-            neuralNodes.forEach(node => {
+            neuralModuleNodes.forEach(node => {
                 node.x = node.baseX * w;
                 node.y = node.baseY * h;
 
@@ -7826,9 +7826,9 @@
             });
 
             // Draw connections
-            neuralConnections.forEach(conn => {
-                const fromNode = neuralNodes.find(n => n.name === conn.from);
-                const toNode = neuralNodes.find(n => n.name === conn.to);
+            neuralModuleConnections.forEach(conn => {
+                const fromNode = neuralModuleNodes.find(n => n.name === conn.from);
+                const toNode = neuralModuleNodes.find(n => n.name === conn.to);
                 if (!fromNode || !toNode) return;
 
                 const gradient = ctx.createLinearGradient(fromNode.x, fromNode.y, toNode.x, toNode.y);
@@ -7858,7 +7858,7 @@
             });
 
             // Draw nodes
-            neuralNodes.forEach(node => {
+            neuralModuleNodes.forEach(node => {
                 // Glow
                 const glowRadius = node.radius * 2.5 + Math.sin(time * 2 + node.phase) * 5;
                 const glow = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowRadius);
