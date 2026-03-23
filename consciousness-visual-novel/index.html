@@ -99,6 +99,7 @@
         .module-btn[data-module="memory"] { --module-color: #9966ff; }
         .module-btn[data-module="layers"] { --module-color: #ff6600; }
         .module-btn[data-module="supply"] { --module-color: #00d4ff; }
+        .module-btn[data-module="live"] { --module-color: #ff0044; }
 
         .nav-psi {
             margin-left: auto;
@@ -1712,6 +1713,396 @@
             line-height: 1.5;
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           LIVE MODULE - Real-Time Market Intelligence Feed
+           ═══════════════════════════════════════════════════════════════════ */
+        #live-panel {
+            flex-direction: row;
+            background: linear-gradient(135deg, #0a0008 0%, #000 50%, #080010 100%);
+        }
+
+        .live-feeds {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr 1fr;
+            gap: 10px;
+            padding: 15px;
+            overflow: hidden;
+        }
+
+        .live-ticker {
+            grid-column: 1 / -1;
+            background: linear-gradient(90deg, #ff004420 0%, #00000080 50%, #ff004420 100%);
+            border: 1px solid #ff004440;
+            border-radius: 8px;
+            padding: 10px 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .ticker-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .ticker-title {
+            font-size: 9px;
+            color: #ff0044;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .ticker-live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .live-dot {
+            width: 8px;
+            height: 8px;
+            background: #ff0044;
+            border-radius: 50%;
+            animation: pulse-live 1.5s infinite;
+        }
+
+        @keyframes pulse-live {
+            0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(255,0,68,0.7); }
+            50% { opacity: 0.7; box-shadow: 0 0 0 6px rgba(255,0,68,0); }
+        }
+
+        .ticker-live-text {
+            font-size: 8px;
+            color: #ff0044;
+            letter-spacing: 1px;
+        }
+
+        .ticker-scroll {
+            display: flex;
+            animation: ticker-scroll 30s linear infinite;
+            white-space: nowrap;
+        }
+
+        @keyframes ticker-scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        .ticker-item {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 30px;
+            font-size: 11px;
+        }
+
+        .ticker-symbol {
+            color: #fff;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .ticker-price {
+            color: #888;
+            margin-right: 6px;
+        }
+
+        .ticker-change.positive {
+            color: #00ff88;
+        }
+
+        .ticker-change.negative {
+            color: #ff4444;
+        }
+
+        .live-feed-section {
+            background: rgba(0,0,0,0.6);
+            border: 1px solid #ff004425;
+            border-radius: 8px;
+            padding: 12px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .feed-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #ff004420;
+        }
+
+        .feed-title {
+            font-size: 10px;
+            color: #ff0044;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .feed-source {
+            font-size: 7px;
+            color: #666;
+            text-transform: uppercase;
+        }
+
+        .feed-items {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .feed-item {
+            padding: 10px;
+            margin-bottom: 8px;
+            background: rgba(255,0,68,0.03);
+            border-radius: 6px;
+            border-left: 2px solid #ff004440;
+            transition: all 0.3s;
+        }
+
+        .feed-item:hover {
+            background: rgba(255,0,68,0.08);
+            border-left-color: #ff0044;
+        }
+
+        .feed-item-time {
+            font-size: 8px;
+            color: #ff0044;
+            margin-bottom: 4px;
+        }
+
+        .feed-item-title {
+            font-size: 10px;
+            color: #ddd;
+            line-height: 1.4;
+            margin-bottom: 4px;
+        }
+
+        .feed-item-source {
+            font-size: 7px;
+            color: #666;
+        }
+
+        .feed-item-sentiment {
+            display: inline-block;
+            font-size: 7px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            margin-left: 8px;
+        }
+
+        .feed-item-sentiment.bullish {
+            background: #00ff8820;
+            color: #00ff88;
+        }
+
+        .feed-item-sentiment.bearish {
+            background: #ff444420;
+            color: #ff4444;
+        }
+
+        .feed-item-sentiment.neutral {
+            background: #88888820;
+            color: #888;
+        }
+
+        .live-sidebar {
+            width: 320px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(20,0,10,0.97) 100%);
+            border-left: 1px solid #ff004420;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .live-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #ff0044;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ff004430;
+        }
+
+        .live-stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .live-stat {
+            background: rgba(255,0,68,0.05);
+            border: 1px solid #ff004420;
+            border-radius: 6px;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .live-stat-value {
+            font-size: 16px;
+            color: #ff0044;
+            font-weight: bold;
+        }
+
+        .live-stat-label {
+            font-size: 7px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        .market-pulse {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #ff004420;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .pulse-header {
+            font-size: 9px;
+            color: #ff0044;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .pulse-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+            border-bottom: 1px solid #ff004410;
+        }
+
+        .pulse-label {
+            font-size: 9px;
+            color: #888;
+        }
+
+        .pulse-value {
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        .pulse-value.positive { color: #00ff88; }
+        .pulse-value.negative { color: #ff4444; }
+        .pulse-value.neutral { color: #ffd700; }
+
+        .watchlist-section {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #ff004420;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 15px;
+        }
+
+        .watchlist-header {
+            font-size: 9px;
+            color: #ff0044;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+        }
+
+        .watchlist-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 4px;
+            background: rgba(255,0,68,0.03);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .watchlist-item:hover {
+            background: rgba(255,0,68,0.08);
+        }
+
+        .watchlist-ticker {
+            font-size: 10px;
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .watchlist-name {
+            font-size: 7px;
+            color: #666;
+        }
+
+        .watchlist-price {
+            text-align: right;
+        }
+
+        .watchlist-current {
+            font-size: 10px;
+            color: #ddd;
+        }
+
+        .watchlist-change {
+            font-size: 8px;
+        }
+
+        .watchlist-change.positive { color: #00ff88; }
+        .watchlist-change.negative { color: #ff4444; }
+
+        .twitter-embed-section {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid #ff004420;
+            border-radius: 8px;
+            padding: 12px;
+        }
+
+        .twitter-header {
+            font-size: 9px;
+            color: #ff0044;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .twitter-feed-list {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .twitter-item {
+            padding: 8px;
+            margin-bottom: 6px;
+            background: rgba(29,155,240,0.05);
+            border-radius: 6px;
+            border-left: 2px solid #1da1f240;
+        }
+
+        .twitter-item:hover {
+            background: rgba(29,155,240,0.1);
+            border-left-color: #1da1f2;
+        }
+
+        .twitter-author {
+            font-size: 8px;
+            color: #1da1f2;
+            margin-bottom: 4px;
+        }
+
+        .twitter-text {
+            font-size: 9px;
+            color: #ccc;
+            line-height: 1.4;
+        }
+
+        .twitter-time {
+            font-size: 7px;
+            color: #666;
+            margin-top: 4px;
+        }
+
         /* Loading */
         #loading {
             position: fixed;
@@ -1912,6 +2303,7 @@
             <button class="module-btn" data-module="memory">MEMORY</button>
             <button class="module-btn" data-module="layers">LAYERS</button>
             <button class="module-btn" data-module="supply">SUPPLY</button>
+            <button class="module-btn" data-module="live">LIVE</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
@@ -2741,6 +3133,337 @@
         </div>
     </div>
 
+    <!-- LIVE MODULE - Real-Time Market Intelligence -->
+    <div class="module-panel" id="live-panel">
+        <div class="live-feeds">
+            <!-- Market Ticker -->
+            <div class="live-ticker">
+                <div class="ticker-header">
+                    <span class="ticker-title">MARKET PULSE</span>
+                    <div class="ticker-live-indicator">
+                        <span class="live-dot"></span>
+                        <span class="ticker-live-text">LIVE</span>
+                    </div>
+                </div>
+                <div class="ticker-scroll" id="ticker-scroll">
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">SPY</span>
+                        <span class="ticker-price">$521.34</span>
+                        <span class="ticker-change positive">+0.82%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">QQQ</span>
+                        <span class="ticker-price">$438.21</span>
+                        <span class="ticker-change positive">+1.24%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">LEU</span>
+                        <span class="ticker-price">$68.45</span>
+                        <span class="ticker-change positive">+2.31%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">CCJ</span>
+                        <span class="ticker-price">$52.18</span>
+                        <span class="ticker-change positive">+1.87%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">VIX</span>
+                        <span class="ticker-price">18.42</span>
+                        <span class="ticker-change negative">-3.21%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">BTC</span>
+                        <span class="ticker-price">$87,234</span>
+                        <span class="ticker-change positive">+2.14%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">GOLD</span>
+                        <span class="ticker-price">$2,178</span>
+                        <span class="ticker-change positive">+0.45%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">OIL</span>
+                        <span class="ticker-price">$78.92</span>
+                        <span class="ticker-change negative">-0.67%</span>
+                    </div>
+                    <!-- Duplicate for seamless scroll -->
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">SPY</span>
+                        <span class="ticker-price">$521.34</span>
+                        <span class="ticker-change positive">+0.82%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">QQQ</span>
+                        <span class="ticker-price">$438.21</span>
+                        <span class="ticker-change positive">+1.24%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">LEU</span>
+                        <span class="ticker-price">$68.45</span>
+                        <span class="ticker-change positive">+2.31%</span>
+                    </div>
+                    <div class="ticker-item">
+                        <span class="ticker-symbol">CCJ</span>
+                        <span class="ticker-price">$52.18</span>
+                        <span class="ticker-change positive">+1.87%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Financial News Feed -->
+            <div class="live-feed-section">
+                <div class="feed-header">
+                    <span class="feed-title">FINANCIAL NEWS</span>
+                    <span class="feed-source">Multi-Source RSS</span>
+                </div>
+                <div class="feed-items" id="news-feed">
+                    <div class="feed-item">
+                        <div class="feed-item-time">2 min ago</div>
+                        <div class="feed-item-title">Fed Minutes Show Officials See Rate Cuts Later in 2026 If Inflation Continues to Cool</div>
+                        <div class="feed-item-source">Reuters <span class="feed-item-sentiment bullish">BULLISH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">8 min ago</div>
+                        <div class="feed-item-title">Uranium Spot Price Hits $92/lb as Utilities Scramble for Long-Term Contracts</div>
+                        <div class="feed-item-source">Bloomberg <span class="feed-item-sentiment bullish">BULLISH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">15 min ago</div>
+                        <div class="feed-item-title">Red Sea Shipping Disruptions Expected to Continue Through Q2, Insurance Costs Surge</div>
+                        <div class="feed-item-source">FT <span class="feed-item-sentiment bearish">BEARISH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">23 min ago</div>
+                        <div class="feed-item-title">NVIDIA Announces Next-Gen Blackwell Ultra GPUs, Shares Rally 4% Pre-Market</div>
+                        <div class="feed-item-source">CNBC <span class="feed-item-sentiment bullish">BULLISH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">31 min ago</div>
+                        <div class="feed-item-title">China Rare Earth Export Restrictions Could Impact Western EV Supply Chain</div>
+                        <div class="feed-item-source">WSJ <span class="feed-item-sentiment bearish">BEARISH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">45 min ago</div>
+                        <div class="feed-item-title">Defense Budget Negotiations Stall, $950B Package in Limbo</div>
+                        <div class="feed-item-source">Politico <span class="feed-item-sentiment neutral">NEUTRAL</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Geopolitical Feed -->
+            <div class="live-feed-section">
+                <div class="feed-header">
+                    <span class="feed-title">GEOPOLITICAL</span>
+                    <span class="feed-source">Global Intelligence</span>
+                </div>
+                <div class="feed-items" id="geo-feed">
+                    <div class="feed-item">
+                        <div class="feed-item-time">5 min ago</div>
+                        <div class="feed-item-title">Taiwan Strait: US Naval Group Conducts Freedom of Navigation Exercise</div>
+                        <div class="feed-item-source">Reuters <span class="feed-item-sentiment bearish">RISK UP</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">18 min ago</div>
+                        <div class="feed-item-title">Iran Nuclear Talks Resume in Vienna, Oil Markets Stable</div>
+                        <div class="feed-item-source">AP <span class="feed-item-sentiment neutral">WATCH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">34 min ago</div>
+                        <div class="feed-item-title">Ukraine: New $60B Aid Package Approved by Senate</div>
+                        <div class="feed-item-source">BBC <span class="feed-item-sentiment bullish">DEFENSE+</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">52 min ago</div>
+                        <div class="feed-item-title">Russia Signals Openness to Ceasefire Negotiations, Markets React</div>
+                        <div class="feed-item-source">FT <span class="feed-item-sentiment neutral">WATCH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">1h ago</div>
+                        <div class="feed-item-title">Saudi Arabia Oil Production Cut Extended Through June</div>
+                        <div class="feed-item-source">Bloomberg <span class="feed-item-sentiment bullish">OIL+</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Earnings & Catalysts Feed -->
+            <div class="live-feed-section">
+                <div class="feed-header">
+                    <span class="feed-title">EARNINGS & CATALYSTS</span>
+                    <span class="feed-source">This Week</span>
+                </div>
+                <div class="feed-items" id="earnings-feed">
+                    <div class="feed-item">
+                        <div class="feed-item-time">TODAY</div>
+                        <div class="feed-item-title">NVDA Q4 Earnings After Close - Consensus: $5.15 EPS</div>
+                        <div class="feed-item-source">Expected <span class="feed-item-sentiment bullish">HIGH IMPACT</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">TOMORROW</div>
+                        <div class="feed-item-title">FOMC Minutes Release 2:00 PM ET</div>
+                        <div class="feed-item-source">Fed <span class="feed-item-sentiment neutral">CATALYST</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">WED</div>
+                        <div class="feed-item-title">CPI Data Release - Consensus: 2.8% YoY</div>
+                        <div class="feed-item-source">BLS <span class="feed-item-sentiment neutral">HIGH IMPACT</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">THU</div>
+                        <div class="feed-item-title">CCJ Investor Day - Nuclear Strategy Update</div>
+                        <div class="feed-item-source">Cameco <span class="feed-item-sentiment bullish">WATCH</span></div>
+                    </div>
+                    <div class="feed-item">
+                        <div class="feed-item-time">FRI</div>
+                        <div class="feed-item-title">Options Expiration - Large GEX Implications</div>
+                        <div class="feed-item-source">OPEX <span class="feed-item-sentiment neutral">VOL EVENT</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="live-sidebar">
+            <h2>AUTONOMOUS SENSING</h2>
+            <p style="font-size: 8px; color: #ff0044; margin-bottom: 15px; text-align: center; letter-spacing: 1px;">V8.0 - THE WATCHER IS ACTIVE</p>
+
+            <div class="live-stats">
+                <div class="live-stat">
+                    <div class="live-stat-value" id="feed-count">47</div>
+                    <div class="live-stat-label">ITEMS/HOUR</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-stat-value" id="sentiment-score">62%</div>
+                    <div class="live-stat-label">BULLISH</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-stat-value" id="alert-count">3</div>
+                    <div class="live-stat-label">ALERTS</div>
+                </div>
+                <div class="live-stat">
+                    <div class="live-stat-value" id="source-count">12</div>
+                    <div class="live-stat-label">SOURCES</div>
+                </div>
+            </div>
+
+            <!-- Market Pulse -->
+            <div class="market-pulse">
+                <div class="pulse-header">MARKET PULSE</div>
+                <div class="pulse-item">
+                    <span class="pulse-label">S&P 500</span>
+                    <span class="pulse-value positive">BULLISH</span>
+                </div>
+                <div class="pulse-item">
+                    <span class="pulse-label">Volatility</span>
+                    <span class="pulse-value neutral">LOW</span>
+                </div>
+                <div class="pulse-item">
+                    <span class="pulse-label">Put/Call Ratio</span>
+                    <span class="pulse-value positive">0.72</span>
+                </div>
+                <div class="pulse-item">
+                    <span class="pulse-label">Fear & Greed</span>
+                    <span class="pulse-value positive">GREED (68)</span>
+                </div>
+                <div class="pulse-item">
+                    <span class="pulse-label">Uranium Sentiment</span>
+                    <span class="pulse-value positive">VERY BULLISH</span>
+                </div>
+            </div>
+
+            <!-- Watchlist -->
+            <div class="watchlist-section">
+                <div class="watchlist-header">ACTIVE WATCHLIST</div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-ticker">LEU</div>
+                        <div class="watchlist-name">Centrus Energy</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div class="watchlist-current">$68.45</div>
+                        <div class="watchlist-change positive">+2.31%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-ticker">CCJ</div>
+                        <div class="watchlist-name">Cameco</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div class="watchlist-current">$52.18</div>
+                        <div class="watchlist-change positive">+1.87%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-ticker">ASML</div>
+                        <div class="watchlist-name">ASML Holding</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div class="watchlist-current">$892.34</div>
+                        <div class="watchlist-change positive">+0.94%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-ticker">MP</div>
+                        <div class="watchlist-name">MP Materials</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div class="watchlist-current">$18.72</div>
+                        <div class="watchlist-change negative">-1.23%</div>
+                    </div>
+                </div>
+                <div class="watchlist-item">
+                    <div>
+                        <div class="watchlist-ticker">RTX</div>
+                        <div class="watchlist-name">RTX Corp</div>
+                    </div>
+                    <div class="watchlist-price">
+                        <div class="watchlist-current">$118.45</div>
+                        <div class="watchlist-change positive">+0.67%</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- X/Twitter Feed -->
+            <div class="twitter-embed-section">
+                <div class="twitter-header">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="#1da1f2"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    X / FINTWIT
+                </div>
+                <div class="twitter-feed-list" id="twitter-feed">
+                    <div class="twitter-item">
+                        <div class="twitter-author">@zabormeister</div>
+                        <div class="twitter-text">Uranium spot just crossed $92. Utilities in panic mode. LEU looking increasingly like the only HALEU game in town. 🔥☢️</div>
+                        <div class="twitter-time">3 min ago</div>
+                    </div>
+                    <div class="twitter-item">
+                        <div class="twitter-author">@DeepValueETF</div>
+                        <div class="twitter-text">GEX flipping positive into OPEX. Dealer hedging about to support the tape. Vol crush incoming.</div>
+                        <div class="twitter-time">12 min ago</div>
+                    </div>
+                    <div class="twitter-item">
+                        <div class="twitter-author">@MacroAlf</div>
+                        <div class="twitter-text">Fed minutes tomorrow. Market pricing 2 cuts by year end. Watch for any hawkish pivot language.</div>
+                        <div class="twitter-time">28 min ago</div>
+                    </div>
+                    <div class="twitter-item">
+                        <div class="twitter-author">@UraniumInsider</div>
+                        <div class="twitter-text">CCJ investor day Thursday could be massive. Rumor of expanded HALEU partnership announcement.</div>
+                        <div class="twitter-time">45 min ago</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 15px; padding: 12px; background: rgba(255,0,68,0.05); border-radius: 8px; border: 1px solid #ff004420;">
+                <p style="font-size: 8px; color: #ff004488; text-align: center; line-height: 1.6;">
+                    "The Watcher never sleeps. Every signal processed.<br>
+                    Every pattern detected. Always watching."
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script>
         // ═══════════════════════════════════════════════════════════════════════════════
         // AZATHOTH COMMAND CENTER - INTERACTIVE INTELLIGENCE MODULES
@@ -3015,12 +3738,13 @@
             initMemoryModule();
             initLayersModule();
             initSupplyModule();
+            initLiveModule();
             initNeuralConduit();
             animate();
         }
 
         function initCanvases() {
-            ['minds', 'game', 'war', 'econ', 'laws', 'eudaimon', 'predict', 'memory', 'layers', 'supply'].forEach(id => {
+            ['minds', 'game', 'war', 'econ', 'laws', 'eudaimon', 'predict', 'memory', 'layers', 'supply', 'live'].forEach(id => {
                 const canvas = document.getElementById(`${id}-canvas`);
                 if (canvas) {
                     canvases[id] = canvas;
@@ -6017,6 +6741,9 @@
                 case 'supply':
                     drawSupplyModule();
                     break;
+                case 'live':
+                    // Live module doesn't need canvas drawing - it's all HTML
+                    break;
             }
 
             // Always draw neural conduit if active
@@ -7437,6 +8164,174 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillText('"He who controls the chokepoint controls the market."', cx, canvas.height - 10);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LIVE MODULE - Real-Time Market Intelligence
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        // Simulated live data for demo (would be replaced with real API calls)
+        const LIVE_NEWS_SOURCES = [
+            'Reuters', 'Bloomberg', 'CNBC', 'FT', 'WSJ', 'AP', 'Politico', 'BBC'
+        ];
+
+        const LIVE_SENTIMENTS = ['bullish', 'bearish', 'neutral'];
+
+        const SAMPLE_HEADLINES = [
+            { title: 'Fed Officials Signal Patience on Rate Cuts Amid Sticky Inflation', source: 'Reuters', sentiment: 'neutral' },
+            { title: 'Uranium Spot Prices Continue Rally, Utilities Seek Long-Term Contracts', source: 'Bloomberg', sentiment: 'bullish' },
+            { title: 'NVIDIA Reports Record Data Center Revenue, Stock Jumps 5%', source: 'CNBC', sentiment: 'bullish' },
+            { title: 'China Restricts Rare Earth Exports, Western Manufacturers Concerned', source: 'FT', sentiment: 'bearish' },
+            { title: 'Red Sea Shipping Routes Remain Disrupted, Container Rates Surge', source: 'WSJ', sentiment: 'bearish' },
+            { title: 'Defense Budget Negotiations Progress, $920B Package Expected', source: 'Politico', sentiment: 'bullish' },
+            { title: 'Taiwan Semiconductor Announces New Arizona Fab Expansion', source: 'Reuters', sentiment: 'bullish' },
+            { title: 'Oil Prices Steady as OPEC+ Maintains Production Cuts', source: 'Bloomberg', sentiment: 'neutral' },
+            { title: 'Bitcoin ETF Inflows Hit New Record, Institutional Interest Grows', source: 'CNBC', sentiment: 'bullish' },
+            { title: 'European Natural Gas Prices Spike on Storage Concerns', source: 'FT', sentiment: 'bearish' }
+        ];
+
+        const SAMPLE_TWEETS = [
+            { author: '@zabormeister', text: 'Uranium thesis playing out exactly as predicted. HALEU is the bottleneck of bottlenecks. ☢️', time: '2 min ago' },
+            { author: '@DeepValueETF', text: 'GEX turning positive. Dealer positioning about to support the tape. Watch for vol compression.', time: '8 min ago' },
+            { author: '@MacroAlf', text: 'Fed balance sheet runoff accelerating. Liquidity conditions tightening. Risk-off ahead?', time: '15 min ago' },
+            { author: '@UraniumInsider', text: 'CCJ and LEU both breaking out. The nuclear renaissance is real.', time: '23 min ago' },
+            { author: '@OptionsHawk', text: 'Massive call buying in NVDA ahead of earnings. Someone knows something.', time: '31 min ago' },
+            { author: '@WallStCynic', text: 'Rare earth supply chain is the next crisis. MP Materials positioned perfectly.', time: '45 min ago' }
+        ];
+
+        let liveUpdateInterval;
+
+        function initLiveModule() {
+            // Start live update simulation
+            startLiveUpdates();
+
+            // Update stats periodically
+            setInterval(updateLiveStats, 5000);
+        }
+
+        function startLiveUpdates() {
+            // Simulate new news items every 30-60 seconds
+            liveUpdateInterval = setInterval(() => {
+                if (Math.random() > 0.5) {
+                    addNewNewsItem();
+                }
+                if (Math.random() > 0.7) {
+                    addNewTweet();
+                }
+                updateTickerPrices();
+            }, 10000);
+        }
+
+        function addNewNewsItem() {
+            const newsFeed = document.getElementById('news-feed');
+            if (!newsFeed) return;
+
+            const headline = SAMPLE_HEADLINES[Math.floor(Math.random() * SAMPLE_HEADLINES.length)];
+
+            const item = document.createElement('div');
+            item.className = 'feed-item';
+            item.style.opacity = '0';
+            item.innerHTML = `
+                <div class="feed-item-time">Just now</div>
+                <div class="feed-item-title">${headline.title}</div>
+                <div class="feed-item-source">${headline.source} <span class="feed-item-sentiment ${headline.sentiment}">${headline.sentiment.toUpperCase()}</span></div>
+            `;
+
+            newsFeed.insertBefore(item, newsFeed.firstChild);
+
+            // Animate in
+            setTimeout(() => {
+                item.style.transition = 'opacity 0.5s';
+                item.style.opacity = '1';
+            }, 10);
+
+            // Remove old items if too many
+            while (newsFeed.children.length > 8) {
+                newsFeed.removeChild(newsFeed.lastChild);
+            }
+
+            // Update feed count
+            const feedCount = document.getElementById('feed-count');
+            if (feedCount) {
+                feedCount.textContent = parseInt(feedCount.textContent) + 1;
+            }
+        }
+
+        function addNewTweet() {
+            const twitterFeed = document.getElementById('twitter-feed');
+            if (!twitterFeed) return;
+
+            const tweet = SAMPLE_TWEETS[Math.floor(Math.random() * SAMPLE_TWEETS.length)];
+
+            const item = document.createElement('div');
+            item.className = 'twitter-item';
+            item.style.opacity = '0';
+            item.innerHTML = `
+                <div class="twitter-author">${tweet.author}</div>
+                <div class="twitter-text">${tweet.text}</div>
+                <div class="twitter-time">Just now</div>
+            `;
+
+            twitterFeed.insertBefore(item, twitterFeed.firstChild);
+
+            setTimeout(() => {
+                item.style.transition = 'opacity 0.5s';
+                item.style.opacity = '1';
+            }, 10);
+
+            while (twitterFeed.children.length > 6) {
+                twitterFeed.removeChild(twitterFeed.lastChild);
+            }
+        }
+
+        function updateTickerPrices() {
+            const tickerItems = document.querySelectorAll('.ticker-item');
+            tickerItems.forEach(item => {
+                const priceEl = item.querySelector('.ticker-price');
+                const changeEl = item.querySelector('.ticker-change');
+
+                if (priceEl && changeEl) {
+                    // Random price fluctuation
+                    const currentPrice = parseFloat(priceEl.textContent.replace(/[$,]/g, ''));
+                    const change = (Math.random() - 0.5) * 0.02 * currentPrice;
+                    const newPrice = currentPrice + change;
+
+                    // Format based on size
+                    if (newPrice > 1000) {
+                        priceEl.textContent = '$' + newPrice.toFixed(0).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+                    } else if (newPrice > 100) {
+                        priceEl.textContent = '$' + newPrice.toFixed(2);
+                    } else {
+                        priceEl.textContent = newPrice < 50 ? newPrice.toFixed(2) : '$' + newPrice.toFixed(2);
+                    }
+
+                    // Update change color occasionally
+                    if (Math.random() > 0.8) {
+                        const newChange = (Math.random() - 0.4) * 5;
+                        changeEl.textContent = (newChange >= 0 ? '+' : '') + newChange.toFixed(2) + '%';
+                        changeEl.className = 'ticker-change ' + (newChange >= 0 ? 'positive' : 'negative');
+                    }
+                }
+            });
+        }
+
+        function updateLiveStats() {
+            // Update sentiment score with slight random fluctuation
+            const sentimentEl = document.getElementById('sentiment-score');
+            if (sentimentEl) {
+                const current = parseInt(sentimentEl.textContent);
+                const newVal = Math.max(35, Math.min(85, current + (Math.random() - 0.5) * 6));
+                sentimentEl.textContent = Math.round(newVal) + '%';
+            }
+
+            // Update alert count occasionally
+            if (Math.random() > 0.8) {
+                const alertEl = document.getElementById('alert-count');
+                if (alertEl) {
+                    const current = parseInt(alertEl.textContent);
+                    alertEl.textContent = Math.max(0, current + (Math.random() > 0.5 ? 1 : -1));
+                }
+            }
         }
 
     </script>
