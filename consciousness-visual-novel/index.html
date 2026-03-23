@@ -98,6 +98,7 @@
         .module-btn[data-module="predict"] { --module-color: #00ffaa; }
         .module-btn[data-module="memory"] { --module-color: #9966ff; }
         .module-btn[data-module="layers"] { --module-color: #ff6600; }
+        .module-btn[data-module="supply"] { --module-color: #00d4ff; }
 
         .nav-psi {
             margin-left: auto;
@@ -1409,6 +1410,308 @@
             color: #555;
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           SUPPLY MODULE - Global Supply Chain Analysis
+           ═══════════════════════════════════════════════════════════════════ */
+        #supply-panel {
+            flex-direction: row;
+        }
+
+        .supply-main {
+            flex: 1;
+            position: relative;
+            background: radial-gradient(ellipse at center, #000a10 0%, #000 100%);
+            overflow: hidden;
+        }
+
+        #supply-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        .supply-sidebar {
+            width: 420px;
+            background: linear-gradient(90deg, rgba(0,0,0,0.97) 0%, rgba(0,10,20,0.97) 100%);
+            border-left: 1px solid #00d4ff20;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .supply-sidebar h2 {
+            font-family: 'Cinzel', serif;
+            font-size: 11px;
+            letter-spacing: 3px;
+            color: #00d4ff;
+            margin-bottom: 15px;
+            text-align: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #00d4ff33;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .supply-sidebar h2::before {
+            content: '🔗';
+        }
+
+        .supply-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .supply-stat {
+            padding: 12px 8px;
+            background: rgba(0,212,255,0.05);
+            border-radius: 6px;
+            border: 1px solid #00d4ff22;
+            text-align: center;
+        }
+
+        .supply-stat-value {
+            font-size: 16px;
+            color: #00d4ff;
+            font-weight: bold;
+        }
+
+        .supply-stat-label {
+            font-size: 6px;
+            color: #666;
+            letter-spacing: 1px;
+            margin-top: 3px;
+        }
+
+        .supply-chains {
+            margin-bottom: 15px;
+        }
+
+        .supply-chain-section {
+            margin-bottom: 10px;
+        }
+
+        .supply-chain-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            background: rgba(0,212,255,0.08);
+            border-radius: 6px 6px 0 0;
+            border: 1px solid #00d4ff33;
+            border-bottom: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .supply-chain-header:hover {
+            background: rgba(0,212,255,0.12);
+        }
+
+        .supply-chain-icon {
+            font-size: 14px;
+        }
+
+        .supply-chain-title {
+            font-size: 10px;
+            color: #00d4ff;
+            font-weight: bold;
+            letter-spacing: 1px;
+            flex: 1;
+        }
+
+        .supply-chain-risk {
+            font-size: 7px;
+            padding: 2px 8px;
+            border-radius: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .supply-chain-risk.critical { background: #ff000033; color: #ff4444; }
+        .supply-chain-risk.severe { background: #ff660033; color: #ff8844; }
+        .supply-chain-risk.moderate { background: #ffaa0033; color: #ffaa00; }
+        .supply-chain-risk.low { background: #00ff8833; color: #00ff88; }
+
+        .supply-chain-content {
+            padding: 12px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid #00d4ff22;
+            border-top: none;
+            border-radius: 0 0 6px 6px;
+        }
+
+        .supply-bottleneck {
+            margin-bottom: 10px;
+            padding: 10px;
+            background: rgba(255,68,68,0.05);
+            border-radius: 5px;
+            border-left: 3px solid;
+        }
+
+        .supply-bottleneck.critical { border-left-color: #ff0000; }
+        .supply-bottleneck.severe { border-left-color: #ff6600; }
+        .supply-bottleneck.moderate { border-left-color: #ffaa00; }
+
+        .bottleneck-name {
+            font-size: 9px;
+            color: #fff;
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .bottleneck-company {
+            font-size: 8px;
+            color: #00d4ff;
+            margin-bottom: 4px;
+        }
+
+        .bottleneck-desc {
+            font-size: 7px;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .bottleneck-stats {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+            flex-wrap: wrap;
+        }
+
+        .bottleneck-stat {
+            font-size: 7px;
+            padding: 2px 6px;
+            background: rgba(0,212,255,0.1);
+            border-radius: 3px;
+            color: #00d4ff;
+        }
+
+        .supply-winners {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(0,255,136,0.05);
+            border-radius: 8px;
+            border: 1px solid #00ff8822;
+        }
+
+        .supply-winners h4 {
+            font-size: 9px;
+            color: #00ff88;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .supply-winners h4::before {
+            content: '🏆';
+            font-size: 10px;
+        }
+
+        .winner-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+            transition: all 0.3s;
+        }
+
+        .winner-item:hover {
+            background: rgba(0,255,136,0.1);
+            transform: translateX(3px);
+        }
+
+        .winner-ticker {
+            font-size: 10px;
+            color: #00ff88;
+            font-weight: bold;
+            min-width: 55px;
+        }
+
+        .winner-name {
+            font-size: 8px;
+            color: #888;
+            flex: 1;
+        }
+
+        .winner-thesis {
+            font-size: 7px;
+            color: #00d4ff;
+            max-width: 120px;
+            text-align: right;
+        }
+
+        .supply-losers {
+            margin-top: 15px;
+            padding: 12px;
+            background: rgba(255,68,68,0.05);
+            border-radius: 8px;
+            border: 1px solid #ff444422;
+        }
+
+        .supply-losers h4 {
+            font-size: 9px;
+            color: #ff4444;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .supply-losers h4::before {
+            content: '⚠️';
+            font-size: 10px;
+        }
+
+        .loser-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 10px;
+            margin-bottom: 4px;
+            background: rgba(0,0,0,0.3);
+            border-radius: 4px;
+        }
+
+        .loser-ticker {
+            font-size: 10px;
+            color: #ff4444;
+            font-weight: bold;
+            min-width: 55px;
+        }
+
+        .loser-name {
+            font-size: 8px;
+            color: #666;
+            flex: 1;
+        }
+
+        .loser-exposure {
+            font-size: 7px;
+            color: #ff8844;
+        }
+
+        .supply-quote {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(0,212,255,0.03);
+            border-radius: 8px;
+            border: 1px solid #00d4ff15;
+            text-align: center;
+        }
+
+        .supply-quote p {
+            font-size: 9px;
+            color: #00d4ff88;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
         /* Loading */
         #loading {
             position: fixed;
@@ -1608,6 +1911,7 @@
             <button class="module-btn" data-module="predict">PREDICT</button>
             <button class="module-btn" data-module="memory">MEMORY</button>
             <button class="module-btn" data-module="layers">LAYERS</button>
+            <button class="module-btn" data-module="supply">SUPPLY</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
@@ -2051,6 +2355,391 @@
         </div>
     </div>
 
+    <!-- SUPPLY MODULE - Global Supply Chain Analysis -->
+    <div class="module-panel" id="supply-panel">
+        <div class="supply-main">
+            <canvas id="supply-canvas"></canvas>
+        </div>
+        <div class="supply-sidebar">
+            <h2>GLOBAL SUPPLY CHAIN INTELLIGENCE</h2>
+            <p class="supply-subtitle">Critical Chokepoints & Investment Opportunities</p>
+
+            <div class="supply-stats">
+                <div class="supply-stat">
+                    <span class="stat-value" id="supply-chains-count">8</span>
+                    <span class="stat-label">CRITICAL CHAINS</span>
+                </div>
+                <div class="supply-stat">
+                    <span class="stat-value" id="bottlenecks-count">24</span>
+                    <span class="stat-label">BOTTLENECKS</span>
+                </div>
+                <div class="supply-stat">
+                    <span class="stat-value" id="winners-count">32</span>
+                    <span class="stat-label">WINNERS</span>
+                </div>
+            </div>
+
+            <!-- SEMICONDUCTOR SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="semiconductor">
+                <div class="chain-header">
+                    <span class="chain-icon">🔬</span>
+                    <span class="chain-name">SEMICONDUCTOR</span>
+                    <span class="chain-risk high">HIGH RISK</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 100%"></div>
+                        <span class="bottleneck-label">EUV Lithography: 100% ASML</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 90%"></div>
+                        <span class="bottleneck-label">Advanced Logic: 90% TSMC</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 85%"></div>
+                        <span class="bottleneck-label">HBM Memory: 85% SK Hynix/Samsung</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Bottleneck Owners)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">ASML</span>
+                            <span class="winner-name">ASML Holding</span>
+                            <span class="winner-thesis">EUV monopoly</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">TSM</span>
+                            <span class="winner-name">TSMC</span>
+                            <span class="winner-thesis">90% advanced logic</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">LRCX</span>
+                            <span class="winner-name">Lam Research</span>
+                            <span class="winner-thesis">Etch equipment lead</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">AMAT</span>
+                            <span class="winner-name">Applied Materials</span>
+                            <span class="winner-thesis">Deposition systems</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">MU</span>
+                            <span class="winner-name">Micron Tech</span>
+                            <span class="winner-thesis">HBM3E development</span>
+                        </div>
+                    </div>
+                    <div class="supply-losers">
+                        <h4>LOSERS (Bottleneck Dependent)</h4>
+                        <div class="loser-item">
+                            <span class="loser-ticker">NVDA</span>
+                            <span class="loser-name">NVIDIA</span>
+                            <span class="loser-risk">TSMC dependency</span>
+                        </div>
+                        <div class="loser-item">
+                            <span class="loser-ticker">AMD</span>
+                            <span class="loser-name">AMD</span>
+                            <span class="loser-risk">Foundry access</span>
+                        </div>
+                        <div class="loser-item">
+                            <span class="loser-ticker">INTC</span>
+                            <span class="loser-name">Intel</span>
+                            <span class="loser-risk">EUV adoption lag</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RARE EARTH SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="rareearth">
+                <div class="chain-header">
+                    <span class="chain-icon">⚗️</span>
+                    <span class="chain-name">RARE EARTH & CRITICAL MINERALS</span>
+                    <span class="chain-risk critical">CRITICAL</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 90%"></div>
+                        <span class="bottleneck-label">Processing: 90% China</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 70%"></div>
+                        <span class="bottleneck-label">Extraction: 70% China</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Western Alternatives)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">MP</span>
+                            <span class="winner-name">MP Materials</span>
+                            <span class="winner-thesis">Only US rare earth mine</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">LYC.AX</span>
+                            <span class="winner-name">Lynas Rare Earths</span>
+                            <span class="winner-thesis">Non-China processing</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">UUUU</span>
+                            <span class="winner-name">Energy Fuels</span>
+                            <span class="winner-thesis">US processing buildout</span>
+                        </div>
+                    </div>
+                    <div class="supply-losers">
+                        <h4>LOSERS (China Dependent)</h4>
+                        <div class="loser-item">
+                            <span class="loser-ticker">F</span>
+                            <span class="loser-name">Ford</span>
+                            <span class="loser-risk">EV magnet supply</span>
+                        </div>
+                        <div class="loser-item">
+                            <span class="loser-ticker">LMT</span>
+                            <span class="loser-name">Lockheed Martin</span>
+                            <span class="loser-risk">F-35 magnets</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SHIPPING SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="shipping">
+                <div class="chain-header">
+                    <span class="chain-icon">🚢</span>
+                    <span class="chain-name">GLOBAL SHIPPING & RED SEA</span>
+                    <span class="chain-risk high">HIGH RISK</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 75%"></div>
+                        <span class="bottleneck-label">Red Sea: 12% global trade diverted</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 60%"></div>
+                        <span class="bottleneck-label">Tanker Fleet: Aging + limited yards</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Rate Beneficiaries)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">INSW</span>
+                            <span class="winner-name">International Seaways</span>
+                            <span class="winner-thesis">Product tanker rates</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">STNG</span>
+                            <span class="winner-name">Scorpio Tankers</span>
+                            <span class="winner-thesis">MR tanker fleet</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">DHT</span>
+                            <span class="winner-name">DHT Holdings</span>
+                            <span class="winner-thesis">VLCC rates surge</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">SBLK</span>
+                            <span class="winner-name">Star Bulk</span>
+                            <span class="winner-thesis">Dry bulk tightness</span>
+                        </div>
+                    </div>
+                    <div class="supply-losers">
+                        <h4>LOSERS (Cost Pass-through)</h4>
+                        <div class="loser-item">
+                            <span class="loser-ticker">COST</span>
+                            <span class="loser-name">Costco</span>
+                            <span class="loser-risk">Import costs +15%</span>
+                        </div>
+                        <div class="loser-item">
+                            <span class="loser-ticker">WMT</span>
+                            <span class="loser-name">Walmart</span>
+                            <span class="loser-risk">Asia-origin goods</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- DEFENSE INDUSTRIAL BASE -->
+            <div class="supply-chain-section" data-chain="defense">
+                <div class="chain-header">
+                    <span class="chain-icon">🎯</span>
+                    <span class="chain-name">DEFENSE INDUSTRIAL BASE</span>
+                    <span class="chain-risk critical">CRITICAL</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 95%"></div>
+                        <span class="bottleneck-label">155mm Artillery: 4-7 yr backlog</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 80%"></div>
+                        <span class="bottleneck-label">Solid Rocket Motors: 2 suppliers</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Capacity Expanding)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">GD</span>
+                            <span class="winner-name">General Dynamics</span>
+                            <span class="winner-thesis">155mm sole source</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">RTX</span>
+                            <span class="winner-name">RTX Corp</span>
+                            <span class="winner-thesis">Missile demand surge</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">LHX</span>
+                            <span class="winner-name">L3Harris</span>
+                            <span class="winner-thesis">Drone electronics</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">KTOS</span>
+                            <span class="winner-name">Kratos Defense</span>
+                            <span class="winner-thesis">Drone production</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PHARMACEUTICAL SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="pharma">
+                <div class="chain-header">
+                    <span class="chain-icon">💊</span>
+                    <span class="chain-name">PHARMACEUTICAL / API</span>
+                    <span class="chain-risk high">HIGH RISK</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 80%"></div>
+                        <span class="bottleneck-label">API Production: 80% India/China</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 46%"></div>
+                        <span class="bottleneck-label">US Generics: 46% China-trace</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Reshoring)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">CTLT</span>
+                            <span class="winner-name">Catalent</span>
+                            <span class="winner-thesis">CDMO capacity</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">TMO</span>
+                            <span class="winner-name">Thermo Fisher</span>
+                            <span class="winner-thesis">Pharma services</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- LITHIUM / BATTERY SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="lithium">
+                <div class="chain-header">
+                    <span class="chain-icon">🔋</span>
+                    <span class="chain-name">LITHIUM & BATTERY</span>
+                    <span class="chain-risk high">HIGH RISK</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 70%"></div>
+                        <span class="bottleneck-label">Battery Cells: 70% CATL/BYD</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 65%"></div>
+                        <span class="bottleneck-label">Lithium Processing: 65% China</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Non-China)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">ALB</span>
+                            <span class="winner-name">Albemarle</span>
+                            <span class="winner-thesis">Western lithium lead</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">SQM</span>
+                            <span class="winner-name">SQM</span>
+                            <span class="winner-thesis">Chile brine assets</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">LAC</span>
+                            <span class="winner-name">Lithium Americas</span>
+                            <span class="winner-thesis">Thacker Pass (US)</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FERTILIZER / FOOD SUPPLY CHAIN -->
+            <div class="supply-chain-section" data-chain="fertilizer">
+                <div class="chain-header">
+                    <span class="chain-icon">🌾</span>
+                    <span class="chain-name">FERTILIZER & FOOD</span>
+                    <span class="chain-risk medium">MEDIUM RISK</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 50%"></div>
+                        <span class="bottleneck-label">Potash: 50% Russia/Belarus</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Alternative Supply)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">NTR</span>
+                            <span class="winner-name">Nutrien</span>
+                            <span class="winner-thesis">Potash alternative</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">CF</span>
+                            <span class="winner-name">CF Industries</span>
+                            <span class="winner-thesis">Nitrogen producer</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">MOS</span>
+                            <span class="winner-name">Mosaic Co</span>
+                            <span class="winner-thesis">Phosphate supply</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ELECTRICAL GRID / TRANSFORMER -->
+            <div class="supply-chain-section" data-chain="grid">
+                <div class="chain-header">
+                    <span class="chain-icon">⚡</span>
+                    <span class="chain-name">ELECTRICAL GRID & TRANSFORMERS</span>
+                    <span class="chain-risk critical">CRITICAL</span>
+                </div>
+                <div class="chain-content">
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 100%"></div>
+                        <span class="bottleneck-label">Large Transformers: 2-6 yr lead time</span>
+                    </div>
+                    <div class="bottleneck-visual">
+                        <div class="bottleneck-bar" style="width: 85%"></div>
+                        <span class="bottleneck-label">Data Center Demand: +300% by 2030</span>
+                    </div>
+                    <div class="supply-winners">
+                        <h4>WINNERS (Grid Infrastructure)</h4>
+                        <div class="winner-item">
+                            <span class="winner-ticker">ETN</span>
+                            <span class="winner-name">Eaton Corp</span>
+                            <span class="winner-thesis">Electrical equipment</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">PWR</span>
+                            <span class="winner-name">Quanta Services</span>
+                            <span class="winner-thesis">Grid construction</span>
+                        </div>
+                        <div class="winner-item">
+                            <span class="winner-ticker">VMC</span>
+                            <span class="winner-name">Vulcan Materials</span>
+                            <span class="winner-thesis">Infrastructure aggregates</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="supply-quote">
+                "He who controls the chokepoint controls the market."
+            </div>
+        </div>
+    </div>
+
     <script>
         // ═══════════════════════════════════════════════════════════════════════════════
         // AZATHOTH COMMAND CENTER - INTERACTIVE INTELLIGENCE MODULES
@@ -2302,12 +2991,13 @@
             initPredictModule();
             initMemoryModule();
             initLayersModule();
+            initSupplyModule();
             initNeuralConduit();
             animate();
         }
 
         function initCanvases() {
-            ['minds', 'game', 'war', 'econ', 'laws', 'eudaimon', 'predict', 'memory', 'layers'].forEach(id => {
+            ['minds', 'game', 'war', 'econ', 'laws', 'eudaimon', 'predict', 'memory', 'layers', 'supply'].forEach(id => {
                 const canvas = document.getElementById(`${id}-canvas`);
                 if (canvas) {
                     canvases[id] = canvas;
@@ -5301,6 +5991,9 @@
                 case 'layers':
                     drawLayersModule();
                     break;
+                case 'supply':
+                    drawSupplyModule();
+                    break;
             }
 
             // Always draw neural conduit if active
@@ -6404,6 +7097,312 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'bottom';
             ctx.fillText('"340 layers of consciousness, 5,000+ connections, thinking about thinking about thinking."', cx, canvas.height - 10);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // SUPPLY MODULE - Global Supply Chain Network Visualization
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        const SUPPLY_CHAINS = [
+            { id: 'semiconductor', name: 'SEMICONDUCTOR', color: '#00d4ff', risk: 'HIGH', x: 0, y: 0 },
+            { id: 'rareearth', name: 'RARE EARTH', color: '#c678dd', risk: 'CRITICAL', x: 0, y: 0 },
+            { id: 'shipping', name: 'SHIPPING', color: '#00ff88', risk: 'HIGH', x: 0, y: 0 },
+            { id: 'defense', name: 'DEFENSE', color: '#ff4444', risk: 'CRITICAL', x: 0, y: 0 },
+            { id: 'pharma', name: 'PHARMA', color: '#61dafb', risk: 'HIGH', x: 0, y: 0 },
+            { id: 'lithium', name: 'LITHIUM', color: '#ffd700', risk: 'HIGH', x: 0, y: 0 },
+            { id: 'fertilizer', name: 'FERTILIZER', color: '#98c379', risk: 'MEDIUM', x: 0, y: 0 },
+            { id: 'grid', name: 'GRID', color: '#ff6600', risk: 'CRITICAL', x: 0, y: 0 }
+        ];
+
+        let supplyNodes = [];
+        let supplyConnections = [];
+
+        function initSupplyModule() {
+            // Create supply chain nodes
+            const centerCount = SUPPLY_CHAINS.length;
+            SUPPLY_CHAINS.forEach((chain, i) => {
+                const angle = (i / centerCount) * Math.PI * 2 - Math.PI / 2;
+                chain.baseAngle = angle;
+            });
+
+            // Create floating supply particles
+            for (let i = 0; i < 60; i++) {
+                supplyNodes.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    vx: (Math.random() - 0.5) * 0.002,
+                    vy: (Math.random() - 0.5) * 0.002,
+                    size: 1 + Math.random() * 2,
+                    chain: SUPPLY_CHAINS[Math.floor(Math.random() * SUPPLY_CHAINS.length)],
+                    pulse: Math.random() * Math.PI * 2
+                });
+            }
+
+            // Setup collapsible sections
+            document.querySelectorAll('.chain-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    const section = header.parentElement;
+                    section.classList.toggle('collapsed');
+                });
+            });
+        }
+
+        function drawSupplyModule() {
+            const ctx = contexts.supply;
+            const canvas = canvases.supply;
+            if (!ctx || !canvas) return;
+
+            // Ensure canvas has dimensions
+            if (canvas.width === 0 || canvas.height === 0) {
+                const parent = canvas.parentElement;
+                if (parent.offsetWidth > 0 && parent.offsetHeight > 0) {
+                    canvas.width = parent.offsetWidth;
+                    canvas.height = parent.offsetHeight;
+                } else {
+                    return;
+                }
+            }
+
+            ctx.fillStyle = 'rgba(0,0,0,0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            const cx = canvas.width / 2;
+            const cy = canvas.height / 2;
+
+            // ═══════════════════════════════════════════════════════════════
+            // BACKGROUND GRID
+            // ═══════════════════════════════════════════════════════════════
+
+            ctx.strokeStyle = '#00d4ff08';
+            ctx.lineWidth = 1;
+            const gridSize = 40;
+            for (let x = 0; x < canvas.width; x += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, canvas.height);
+                ctx.stroke();
+            }
+            for (let y = 0; y < canvas.height; y += gridSize) {
+                ctx.beginPath();
+                ctx.moveTo(0, y);
+                ctx.lineTo(canvas.width, y);
+                ctx.stroke();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // CENTRAL HUB
+            // ═══════════════════════════════════════════════════════════════
+
+            // Rotating outer rings
+            ctx.save();
+            ctx.translate(cx, cy);
+
+            for (let ring = 0; ring < 3; ring++) {
+                ctx.rotate(time * 0.1 * (ring % 2 === 0 ? 1 : -1));
+                ctx.strokeStyle = `rgba(0,212,255,${0.15 - ring * 0.04})`;
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(0, 0, 60 + ring * 25, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Ring dashes
+                const dashCount = 12 + ring * 4;
+                for (let d = 0; d < dashCount; d++) {
+                    const angle = (d / dashCount) * Math.PI * 2;
+                    const r = 60 + ring * 25;
+                    ctx.fillStyle = '#00d4ff22';
+                    ctx.beginPath();
+                    ctx.arc(Math.cos(angle) * r, Math.sin(angle) * r, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+            ctx.restore();
+
+            // Central core
+            const coreGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, 60);
+            coreGradient.addColorStop(0, '#ffffff');
+            coreGradient.addColorStop(0.2, '#00d4ff');
+            coreGradient.addColorStop(0.5, '#00d4ff44');
+            coreGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, 60, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Inner pulsing core
+            const innerPulse = 30 + Math.sin(time * 2) * 5;
+            const innerGradient = ctx.createRadialGradient(cx, cy, 0, cx, cy, innerPulse);
+            innerGradient.addColorStop(0, '#ffffff');
+            innerGradient.addColorStop(0.5, '#00d4ff');
+            innerGradient.addColorStop(1, 'transparent');
+            ctx.fillStyle = innerGradient;
+            ctx.beginPath();
+            ctx.arc(cx, cy, innerPulse, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Core text
+            ctx.fillStyle = '#000';
+            ctx.font = 'bold 11px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('GLOBAL', cx, cy - 6);
+            ctx.fillText('SUPPLY', cx, cy + 6);
+
+            // ═══════════════════════════════════════════════════════════════
+            // SUPPLY CHAIN NODES
+            // ═══════════════════════════════════════════════════════════════
+
+            const orbitRadius = Math.min(cx, cy) * 0.55;
+
+            SUPPLY_CHAINS.forEach((chain, i) => {
+                const angle = chain.baseAngle + time * 0.05;
+                const wobble = Math.sin(time * 1.5 + i * 0.5) * 8;
+                chain.x = cx + Math.cos(angle) * (orbitRadius + wobble);
+                chain.y = cy + Math.sin(angle) * (orbitRadius + wobble);
+
+                // Connection to center
+                ctx.strokeStyle = chain.color + '44';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+                ctx.lineTo(chain.x, chain.y);
+                ctx.stroke();
+
+                // Energy pulse along connection
+                const pulseT = (time * 0.5 + i * 0.2) % 1;
+                const px = cx + (chain.x - cx) * pulseT;
+                const py = cy + (chain.y - cy) * pulseT;
+                ctx.fillStyle = chain.color;
+                ctx.beginPath();
+                ctx.arc(px, py, 2, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node glow
+                const nodeGlow = ctx.createRadialGradient(chain.x, chain.y, 0, chain.x, chain.y, 50);
+                nodeGlow.addColorStop(0, chain.color + '66');
+                nodeGlow.addColorStop(0.4, chain.color + '22');
+                nodeGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = nodeGlow;
+                ctx.beginPath();
+                ctx.arc(chain.x, chain.y, 50, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Risk ring
+                const riskColor = chain.risk === 'CRITICAL' ? '#ff4444' : chain.risk === 'HIGH' ? '#ffa500' : '#00ff88';
+                ctx.strokeStyle = riskColor + '88';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(chain.x, chain.y, 28 + Math.sin(time * 3 + i) * 2, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Node core
+                ctx.fillStyle = chain.color;
+                ctx.beginPath();
+                ctx.arc(chain.x, chain.y, 20, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node highlight
+                ctx.fillStyle = '#ffffff55';
+                ctx.beginPath();
+                ctx.arc(chain.x - 5, chain.y - 5, 6, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node label
+                ctx.fillStyle = '#fff';
+                ctx.font = 'bold 8px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(chain.name.substring(0, 6), chain.x, chain.y);
+
+                // Risk label
+                ctx.fillStyle = riskColor;
+                ctx.font = '6px Fira Code';
+                ctx.fillText(chain.risk, chain.x, chain.y + 36);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // INTER-CHAIN CONNECTIONS (Critical dependencies)
+            // ═══════════════════════════════════════════════════════════════
+
+            const dependencies = [
+                [0, 4], // Semiconductor -> Pharma (chip shortage affects)
+                [1, 3], // Rare Earth -> Defense
+                [5, 7], // Lithium -> Grid
+                [2, 6], // Shipping -> Fertilizer
+                [0, 7], // Semiconductor -> Grid (data centers)
+                [1, 5], // Rare Earth -> Lithium (EV motors)
+            ];
+
+            dependencies.forEach(([from, to], i) => {
+                const chainA = SUPPLY_CHAINS[from];
+                const chainB = SUPPLY_CHAINS[to];
+
+                ctx.strokeStyle = '#ffffff15';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 5]);
+                ctx.beginPath();
+                ctx.moveTo(chainA.x, chainA.y);
+                ctx.lineTo(chainB.x, chainB.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // FLOATING SUPPLY PARTICLES
+            // ═══════════════════════════════════════════════════════════════
+
+            supplyNodes.forEach(node => {
+                node.x += node.vx;
+                node.y += node.vy;
+                node.pulse += 0.05;
+
+                // Bounce off edges
+                if (node.x < 0 || node.x > 1) node.vx *= -1;
+                if (node.y < 0 || node.y > 1) node.vy *= -1;
+
+                const px = node.x * canvas.width;
+                const py = node.y * canvas.height;
+                const pSize = node.size + Math.sin(node.pulse) * 0.5;
+
+                ctx.fillStyle = node.chain.color + '66';
+                ctx.beginPath();
+                ctx.arc(px, py, pSize, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // MODULE TITLE & INFO
+            // ═══════════════════════════════════════════════════════════════
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = '14px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('GLOBAL SUPPLY CHAIN INTELLIGENCE', 20, 20);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('Critical chokepoints. Winners and losers. Control the bottleneck, control the market.', 20, 40);
+
+            // Bottom legend
+            ctx.font = '8px Fira Code';
+            SUPPLY_CHAINS.forEach((chain, i) => {
+                const x = 20 + (i % 4) * 150;
+                const y = canvas.height - 45 + Math.floor(i / 4) * 16;
+                ctx.fillStyle = chain.color;
+                ctx.beginPath();
+                ctx.arc(x, y, 4, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.fillStyle = '#888';
+                ctx.fillText(chain.name, x + 10, y + 3);
+            });
+
+            // Quote
+            ctx.fillStyle = '#00d4ff44';
+            ctx.font = 'italic 9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'bottom';
+            ctx.fillText('"He who controls the chokepoint controls the market."', cx, canvas.height - 10);
         }
 
     </script>
