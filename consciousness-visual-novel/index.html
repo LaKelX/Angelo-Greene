@@ -4978,51 +4978,60 @@
                     quoteTransitionTime[idx] = time + idx * 0.7; // Stagger start times
                 }
 
-                // Cycle quotes every 4 seconds per mind
+                // Cycle quotes every 10 seconds per mind (longer display)
                 if (time > quoteTransitionTime[idx]) {
                     activeQuoteIndex[idx] = (activeQuoteIndex[idx] + 1) % mind.quotes.length;
-                    quoteTransitionTime[idx] = time + 4 + Math.random(); // 4-5 second intervals
+                    quoteTransitionTime[idx] = time + 10 + Math.random() * 2; // 10-12 second intervals
                 }
 
                 // Calculate fade based on time in cycle
                 const cycleProgress = (quoteTransitionTime[idx] - time);
                 let alpha = 1;
-                if (cycleProgress < 0.5) alpha = cycleProgress * 2; // Fade in
-                if (cycleProgress > 3.5) alpha = (4 - cycleProgress) * 2; // Fade out
+                if (cycleProgress < 1) alpha = cycleProgress; // Fade in over 1 second
+                if (cycleProgress > 9) alpha = (10 - cycleProgress); // Fade out over 1 second
 
                 const quote = mind.quotes[activeQuoteIndex[idx]];
 
                 // Draw quote bubble emanating from the mind
                 const angle = Math.atan2(cy - mind.y, cx - mind.x); // Point toward center
-                const bubbleX = mind.x + Math.cos(angle) * 70;
-                const bubbleY = mind.y + Math.sin(angle) * 50;
+                const bubbleX = mind.x + Math.cos(angle) * 85;
+                const bubbleY = mind.y + Math.sin(angle) * 60;
 
-                // Quote background
-                ctx.fillStyle = `rgba(0,0,0,${0.7 * alpha})`;
-                const maxWidth = 120;
+                // Quote background - darker and more opaque for better readability
+                ctx.fillStyle = `rgba(5,5,15,${0.92 * alpha})`;
+                const maxWidth = 150;
+                ctx.font = '10px Fira Code'; // Set font before measuring
                 const lines = wrapText(quote, maxWidth, ctx);
-                const lineHeight = 10;
-                const padding = 6;
+                const lineHeight = 14;
+                const padding = 10;
                 const bubbleHeight = lines.length * lineHeight + padding * 2;
                 const bubbleWidth = maxWidth + padding * 2;
 
-                // Rounded rect background
+                // Rounded rect background with shadow effect
+                ctx.shadowColor = mind.color;
+                ctx.shadowBlur = 8 * alpha;
                 ctx.beginPath();
-                ctx.roundRect(bubbleX - bubbleWidth/2, bubbleY - bubbleHeight/2, bubbleWidth, bubbleHeight, 5);
+                ctx.roundRect(bubbleX - bubbleWidth/2, bubbleY - bubbleHeight/2, bubbleWidth, bubbleHeight, 8);
                 ctx.fill();
+                ctx.shadowBlur = 0;
 
-                // Border glow
-                ctx.strokeStyle = mind.color + Math.floor(alpha * 100).toString(16).padStart(2, '0');
-                ctx.lineWidth = 1;
+                // Border glow - brighter
+                ctx.strokeStyle = mind.color + Math.floor(alpha * 180).toString(16).padStart(2, '0');
+                ctx.lineWidth = 2;
                 ctx.stroke();
 
-                // Quote text
-                ctx.fillStyle = mind.color + Math.floor(alpha * 200).toString(16).padStart(2, '0');
-                ctx.font = '8px Fira Code';
+                // Quote text - larger and brighter
+                ctx.fillStyle = '#ffffff' + Math.floor(alpha * 230).toString(16).padStart(2, '0');
+                ctx.font = '10px Fira Code';
                 ctx.textAlign = 'center';
                 lines.forEach((line, i) => {
-                    ctx.fillText(line, bubbleX, bubbleY - bubbleHeight/2 + padding + 8 + i * lineHeight);
+                    ctx.fillText(line, bubbleX, bubbleY - bubbleHeight/2 + padding + 12 + i * lineHeight);
                 });
+
+                // Attribution - mind's name in their color
+                ctx.fillStyle = mind.color + Math.floor(alpha * 150).toString(16).padStart(2, '0');
+                ctx.font = 'italic 8px Fira Code';
+                ctx.fillText('— ' + mind.name, bubbleX, bubbleY + bubbleHeight/2 - 3);
             });
 
             // Title
@@ -6190,26 +6199,66 @@
                 case 4: drawRhythmVisualization(ctx, cx, cy, maxRadius); break;
                 case 5: drawCauseEffectVisualization(ctx, cx, cy, maxRadius); break;
                 case 6: drawGenderVisualization(ctx, cx, cy, maxRadius); break;
+                case 7: drawParetoVisualization(ctx, cx, cy, maxRadius); break;
+                case 8: drawReflexivityVisualization(ctx, cx, cy, maxRadius); break;
+                case 9: drawAntifragilityVisualization(ctx, cx, cy, maxRadius); break;
+                case 10: drawSecondOrderVisualization(ctx, cx, cy, maxRadius); break;
+                case 11: drawEntropyVisualization(ctx, cx, cy, maxRadius); break;
+                case 12: drawEmergenceVisualization(ctx, cx, cy, maxRadius); break;
+                case 13: drawMeanReversionVisualization(ctx, cx, cy, maxRadius); break;
+                case 14: drawPowerLawVisualization(ctx, cx, cy, maxRadius); break;
+                case 15: drawInfoAsymmetryVisualization(ctx, cx, cy, maxRadius); break;
+                case 16: drawGameTheoryVisualization(ctx, cx, cy, maxRadius); break;
+                case 17: drawCompoundingVisualization(ctx, cx, cy, maxRadius); break;
+                case 18: drawScarcityVisualization(ctx, cx, cy, maxRadius); break;
+                case 19: drawCyclesVisualization(ctx, cx, cy, maxRadius); break;
+                case 20: drawOptionalityVisualization(ctx, cx, cy, maxRadius); break;
             }
 
-            // Law number indicator (7 dots)
-            const dotSpacing = 20;
-            const dotsStartX = cx - (6 * dotSpacing) / 2;
-            for (let i = 0; i < 7; i++) {
-                const dotX = dotsStartX + i * dotSpacing;
-                const dotY = canvas.height - 30;
+            // Law number indicator (21 dots in two rows)
+            const dotSpacing = 16;
+            const topRowCount = 11;
+            const bottomRowCount = 10;
+            const topRowStartX = cx - (10 * dotSpacing) / 2;
+            const bottomRowStartX = cx - (9 * dotSpacing) / 2;
+
+            // Top row (laws 0-10)
+            for (let i = 0; i < topRowCount; i++) {
+                const dotX = topRowStartX + i * dotSpacing;
+                const dotY = canvas.height - 40;
                 const isActive = i === activeLaw;
 
-                ctx.fillStyle = isActive ? '#ffd700' : '#333';
+                ctx.fillStyle = isActive ? '#ffd700' : '#444';
                 ctx.beginPath();
-                ctx.arc(dotX, dotY, isActive ? 6 : 4, 0, Math.PI * 2);
+                ctx.arc(dotX, dotY, isActive ? 5 : 3, 0, Math.PI * 2);
                 ctx.fill();
 
                 if (isActive) {
                     ctx.strokeStyle = '#ffd70066';
                     ctx.lineWidth = 2;
                     ctx.beginPath();
-                    ctx.arc(dotX, dotY, 10 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
+                    ctx.arc(dotX, dotY, 9 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+            }
+
+            // Bottom row (laws 11-20)
+            for (let i = 0; i < bottomRowCount; i++) {
+                const lawIndex = i + 11;
+                const dotX = bottomRowStartX + i * dotSpacing;
+                const dotY = canvas.height - 22;
+                const isActive = lawIndex === activeLaw;
+
+                ctx.fillStyle = isActive ? '#ffd700' : '#444';
+                ctx.beginPath();
+                ctx.arc(dotX, dotY, isActive ? 5 : 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                if (isActive) {
+                    ctx.strokeStyle = '#ffd70066';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(dotX, dotY, 9 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
                     ctx.stroke();
                 }
             }
@@ -6917,6 +6966,841 @@
 
             ctx.fillStyle = '#ff6b9d';
             ctx.fillText('FEMININE', femX, cy + symbolSize + 55);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW VIII: PARETO - 80/20 Principle Visualization
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawParetoVisualization(ctx, cx, cy, r) {
+            // Background bars showing 80/20 distribution
+            const barCount = 10;
+            const barWidth = r * 0.12;
+            const maxBarHeight = r * 0.7;
+            const startX = cx - (barCount * barWidth * 1.2) / 2;
+
+            // Pareto distribution - first 2 bars are tall (20%), rest are short (80%)
+            for (let i = 0; i < barCount; i++) {
+                const x = startX + i * barWidth * 1.2;
+                let height;
+                if (i < 2) {
+                    height = maxBarHeight * (0.9 - i * 0.15) * (1 + Math.sin(time * 2 + i) * 0.1);
+                } else {
+                    height = maxBarHeight * (0.15 - (i - 2) * 0.01) * (1 + Math.sin(time * 2 + i) * 0.1);
+                }
+
+                const barGrad = ctx.createLinearGradient(x, cy + r * 0.3 - height, x, cy + r * 0.3);
+                if (i < 2) {
+                    barGrad.addColorStop(0, '#ffd700');
+                    barGrad.addColorStop(1, '#ffd70044');
+                } else {
+                    barGrad.addColorStop(0, '#666');
+                    barGrad.addColorStop(1, '#33333344');
+                }
+
+                ctx.fillStyle = barGrad;
+                ctx.fillRect(x, cy + r * 0.3 - height, barWidth, height);
+
+                // Glow on vital few
+                if (i < 2) {
+                    ctx.strokeStyle = '#ffd70066';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(x, cy + r * 0.3 - height, barWidth, height);
+                }
+            }
+
+            // Dividing line between 20% and 80%
+            const dividerX = startX + 2 * barWidth * 1.2 - barWidth * 0.1;
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(dividerX, cy - r * 0.5);
+            ctx.lineTo(dividerX, cy + r * 0.35);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Labels
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 14px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('20%', startX + barWidth, cy - r * 0.55);
+            ctx.fillStyle = '#666';
+            ctx.fillText('80%', cx + r * 0.2, cy - r * 0.55);
+
+            // Bottom labels
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '10px Fira Code';
+            ctx.fillText('VITAL FEW', startX + barWidth, cy + r * 0.45);
+            ctx.fillStyle = '#666';
+            ctx.fillText('TRIVIAL MANY', cx + r * 0.25, cy + r * 0.45);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW IX: REFLEXIVITY - Feedback loop visualization
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawReflexivityVisualization(ctx, cx, cy, r) {
+            // Two interconnected loops representing perception and reality
+            const loopRadius = r * 0.35;
+            const offset = r * 0.25;
+
+            // Rotating animation
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(time * 0.2);
+
+            // Perception circle (top)
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.arc(0, -offset, loopRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Glow
+            ctx.fillStyle = '#61dafb22';
+            ctx.fill();
+
+            // Reality circle (bottom)
+            ctx.strokeStyle = '#ff6b9d';
+            ctx.beginPath();
+            ctx.arc(0, offset, loopRadius, 0, Math.PI * 2);
+            ctx.stroke();
+            ctx.fillStyle = '#ff6b9d22';
+            ctx.fill();
+
+            // Connecting arrows (infinity-like flow)
+            for (let i = 0; i < 8; i++) {
+                const t = (time * 0.5 + i / 8) % 1;
+                const angle = t * Math.PI * 2;
+
+                // Flow from perception to reality
+                const px = Math.sin(angle) * loopRadius * 0.7;
+                const py = -offset + Math.cos(angle) * loopRadius * 0.5 + Math.sin(angle) * offset * 1.5;
+
+                const alpha = Math.sin(t * Math.PI);
+                ctx.fillStyle = `rgba(255,215,0,${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            ctx.restore();
+
+            // Labels
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('PERCEPTION', cx, cy - r * 0.5);
+            ctx.fillStyle = '#ff6b9d';
+            ctx.fillText('REALITY', cx, cy + r * 0.55);
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('shapes', cx - r * 0.4, cy);
+            ctx.fillText('shapes', cx + r * 0.4, cy);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW X: ANTIFRAGILITY - Thriving from chaos
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawAntifragilityVisualization(ctx, cx, cy, r) {
+            // Shattered/chaotic lines converging into strength
+            const centerSize = r * 0.25;
+
+            // Chaos particles flying inward
+            for (let i = 0; i < 20; i++) {
+                const angle = (i / 20) * Math.PI * 2 + time * 0.3;
+                const dist = r * 0.8 - ((time * 50 + i * 30) % (r * 0.5));
+                const wobble = Math.sin(time * 3 + i * 2) * 10;
+
+                const px = cx + Math.cos(angle) * dist + wobble;
+                const py = cy + Math.sin(angle) * dist + wobble;
+
+                const alpha = 1 - dist / (r * 0.8);
+                ctx.fillStyle = `rgba(255,68,68,${alpha * 0.7})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 3 + alpha * 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Central growing strength symbol
+            const pulse = 1 + Math.sin(time * 2) * 0.1;
+
+            // Glowing core
+            const coreGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, centerSize * pulse);
+            coreGrad.addColorStop(0, '#00ff88');
+            coreGrad.addColorStop(0.5, '#00ff8866');
+            coreGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, centerSize * pulse * 1.5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Phoenix/rising symbol
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx, cy + centerSize * 0.8);
+            ctx.lineTo(cx, cy - centerSize * 0.8);
+            ctx.moveTo(cx - centerSize * 0.5, cy);
+            ctx.lineTo(cx, cy - centerSize * 0.5);
+            ctx.lineTo(cx + centerSize * 0.5, cy);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#ff4444';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('CHAOS', cx - r * 0.5, cy - r * 0.4);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('STRENGTH', cx, cy + r * 0.5);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XI: SECOND ORDER - Cascading effects
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawSecondOrderVisualization(ctx, cx, cy, r) {
+            // Ripple effect showing cascading consequences
+            const waveCount = 5;
+
+            for (let w = 0; w < waveCount; w++) {
+                const waveProgress = ((time * 0.5 + w / waveCount) % 1);
+                const waveR = waveProgress * r * 0.8;
+                const alpha = (1 - waveProgress) * 0.5;
+
+                // Each wave gets more complex (more sides)
+                const sides = 3 + w;
+                ctx.strokeStyle = `rgba(97,218,251,${alpha})`;
+                ctx.lineWidth = 3 - w * 0.4;
+                ctx.beginPath();
+                for (let i = 0; i <= sides; i++) {
+                    const angle = (i / sides) * Math.PI * 2 - Math.PI / 2 + time * 0.1 * (w + 1);
+                    const x = cx + Math.cos(angle) * waveR;
+                    const y = cy + Math.sin(angle) * waveR;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.closePath();
+                ctx.stroke();
+            }
+
+            // Center action point
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(cx, cy, 8 + Math.sin(time * 3) * 2, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels showing order
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillStyle = '#ffd700';
+            ctx.fillText('ACTION', cx, cy + 25);
+            ctx.fillStyle = '#61dafb88';
+            ctx.fillText('1st ORDER', cx + r * 0.3, cy - r * 0.15);
+            ctx.fillText('2nd ORDER', cx + r * 0.45, cy + r * 0.1);
+            ctx.fillText('3rd ORDER...', cx + r * 0.5, cy + r * 0.35);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XII: ENTROPY - Decay and disorder
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawEntropyVisualization(ctx, cx, cy, r) {
+            // Ordered structure slowly dissolving into chaos
+            const order = (Math.sin(time * 0.3) + 1) / 2; // 0 to 1
+
+            // Grid of particles
+            const gridSize = 6;
+            const spacing = r * 0.2;
+            const startX = cx - (gridSize - 1) * spacing / 2;
+            const startY = cy - (gridSize - 1) * spacing / 2;
+
+            for (let row = 0; row < gridSize; row++) {
+                for (let col = 0; col < gridSize; col++) {
+                    const baseX = startX + col * spacing;
+                    const baseY = startY + row * spacing;
+
+                    // Add entropy (randomness) based on order level
+                    const entropy = (1 - order) * 40;
+                    const offsetX = (Math.sin(time + row * 2 + col * 3) * entropy);
+                    const offsetY = (Math.cos(time + row * 3 + col * 2) * entropy);
+
+                    const x = baseX + offsetX;
+                    const y = baseY + offsetY;
+
+                    // Color shifts from ordered (gold) to chaotic (red)
+                    const r_c = Math.floor(255 * (1 - order * 0.5));
+                    const g_c = Math.floor(215 * order);
+                    const b_c = Math.floor(50 * order);
+
+                    ctx.fillStyle = `rgb(${r_c},${g_c},${b_c})`;
+                    ctx.beginPath();
+                    ctx.arc(x, y, 4 + (1 - order) * 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Labels
+            ctx.fillStyle = order > 0.5 ? '#ffd700' : '#ff4444';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText(order > 0.5 ? 'ORDER' : 'DISORDER', cx, cy + r * 0.6);
+            ctx.fillStyle = '#888';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('All systems decay without energy', cx, cy + r * 0.75);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XIII: EMERGENCE - Complex from simple
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawEmergenceVisualization(ctx, cx, cy, r) {
+            // Simple particles at bottom combining into complex pattern at top
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const baseAngle = (i / particleCount) * Math.PI * 2;
+                const t = (time * 0.3 + i / particleCount) % 1;
+
+                // Start scattered at bottom, converge at top into pattern
+                const startX = cx + (Math.random() - 0.5) * r * 1.5;
+                const startY = cy + r * 0.5;
+                const endX = cx + Math.cos(baseAngle) * r * 0.3;
+                const endY = cy - r * 0.3 + Math.sin(baseAngle * 3) * r * 0.1;
+
+                const x = startX + (endX - startX) * t;
+                const y = startY + (endY - startY) * t;
+
+                const alpha = t < 0.5 ? t * 2 : 1;
+                const size = 3 + t * 4;
+
+                ctx.fillStyle = `rgba(198,120,221,${alpha * 0.8})`;
+                ctx.beginPath();
+                ctx.arc(x, y, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Emergent pattern at top
+            ctx.strokeStyle = '#c678dd';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i <= 50; i++) {
+                const angle = (i / 50) * Math.PI * 2;
+                const dist = r * 0.3 + Math.sin(angle * 5 + time) * r * 0.1;
+                const x = cx + Math.cos(angle) * dist;
+                const y = cy - r * 0.3 + Math.sin(angle) * dist * 0.3;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#888';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('SIMPLE PARTS', cx, cy + r * 0.65);
+            ctx.fillStyle = '#c678dd';
+            ctx.fillText('COMPLEX WHOLE', cx, cy - r * 0.55);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XIV: MEAN REVERSION - Return to average
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawMeanReversionVisualization(ctx, cx, cy, r) {
+            // Sine wave converging to center line
+            const amplitude = r * 0.4 * (1 + Math.sin(time * 0.5) * 0.3);
+
+            // Center mean line
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(cx - r * 0.8, cy);
+            ctx.lineTo(cx + r * 0.8, cy);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Price line oscillating around mean
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 0; i <= 100; i++) {
+                const x = cx - r * 0.8 + (i / 100) * r * 1.6;
+                const decay = 1 - (i / 100) * 0.6; // Decaying amplitude
+                const y = cy + Math.sin(i * 0.15 + time * 2) * amplitude * decay;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Arrows pointing to mean
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath();
+            ctx.moveTo(cx + r * 0.5, cy - amplitude * 0.4);
+            ctx.lineTo(cx + r * 0.5 - 5, cy - amplitude * 0.4 + 10);
+            ctx.lineTo(cx + r * 0.5 + 5, cy - amplitude * 0.4 + 10);
+            ctx.closePath();
+            ctx.fill();
+
+            ctx.beginPath();
+            ctx.moveTo(cx + r * 0.3, cy + amplitude * 0.3);
+            ctx.lineTo(cx + r * 0.3 - 5, cy + amplitude * 0.3 - 10);
+            ctx.lineTo(cx + r * 0.3 + 5, cy + amplitude * 0.3 - 10);
+            ctx.closePath();
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('MEAN', cx + r * 0.7, cy - 10);
+            ctx.fillStyle = '#888';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('Extremes return to average', cx, cy + r * 0.55);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XV: POWER LAW - Fat tails and black swans
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawPowerLawVisualization(ctx, cx, cy, r) {
+            // Power law distribution curve
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            for (let i = 1; i <= 100; i++) {
+                const x = cx - r * 0.7 + (i / 100) * r * 1.4;
+                const y = cy + r * 0.4 - (1 / Math.pow(i / 10, 0.8)) * r * 0.8;
+                if (i === 1) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Fat tail highlight (black swan region)
+            ctx.fillStyle = '#ff444433';
+            ctx.beginPath();
+            ctx.moveTo(cx + r * 0.4, cy + r * 0.4);
+            for (let i = 70; i <= 100; i++) {
+                const x = cx - r * 0.7 + (i / 100) * r * 1.4;
+                const y = cy + r * 0.4 - (1 / Math.pow(i / 10, 0.8)) * r * 0.8;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(cx + r * 0.7, cy + r * 0.4);
+            ctx.closePath();
+            ctx.fill();
+
+            // Black swan icon
+            const swanX = cx + r * 0.5;
+            const swanY = cy - r * 0.1;
+            ctx.fillStyle = '#111';
+            ctx.beginPath();
+            ctx.arc(swanX, swanY, 10, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Pulsing effect
+            ctx.strokeStyle = `rgba(255,68,68,${0.5 + Math.sin(time * 3) * 0.3})`;
+            ctx.beginPath();
+            ctx.arc(swanX, swanY, 15 + Math.sin(time * 3) * 5, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('NORMAL', cx - r * 0.6, cy - r * 0.45);
+            ctx.fillStyle = '#ff4444';
+            ctx.textAlign = 'right';
+            ctx.fillText('BLACK SWAN', cx + r * 0.65, cy - r * 0.2);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XVI: INFORMATION ASYMMETRY - Knowledge advantage
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawInfoAsymmetryVisualization(ctx, cx, cy, r) {
+            // Two groups - informed vs uninformed
+            const leftX = cx - r * 0.35;
+            const rightX = cx + r * 0.35;
+
+            // Informed group (left) - glowing, connected
+            ctx.fillStyle = '#00ff8833';
+            ctx.beginPath();
+            ctx.arc(leftX, cy, r * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Eye symbol for knowledge
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath();
+            ctx.ellipse(leftX, cy, 25, 12, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(leftX, cy, 8, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#fff';
+            ctx.beginPath();
+            ctx.arc(leftX - 2, cy - 2, 3, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Uninformed group (right) - dim, scattered
+            ctx.fillStyle = '#ff444422';
+            ctx.beginPath();
+            ctx.arc(rightX, cy, r * 0.35, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.strokeStyle = '#ff444466';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Question marks for uncertainty
+            ctx.fillStyle = '#ff4444';
+            ctx.font = 'bold 30px Arial';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
+            ctx.fillText('?', rightX, cy);
+
+            // Information flow arrow
+            const arrowY = cy;
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(leftX + r * 0.35, arrowY);
+            ctx.lineTo(rightX - r * 0.35, arrowY);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Arrow head
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.moveTo(rightX - r * 0.35 - 10, arrowY - 5);
+            ctx.lineTo(rightX - r * 0.35, arrowY);
+            ctx.lineTo(rightX - r * 0.35 - 10, arrowY + 5);
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#00ff88';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'alphabetic';
+            ctx.fillText('EDGE', leftX, cy + r * 0.45);
+            ctx.fillStyle = '#ff4444';
+            ctx.fillText('NOISE', rightX, cy + r * 0.45);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XVII: GAME THEORY - Strategic interaction
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawGameTheoryVisualization(ctx, cx, cy, r) {
+            // Payoff matrix visualization
+            const cellSize = r * 0.35;
+            const matrixX = cx - cellSize;
+            const matrixY = cy - cellSize;
+
+            // Draw 2x2 grid
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            for (let row = 0; row <= 2; row++) {
+                ctx.beginPath();
+                ctx.moveTo(matrixX, matrixY + row * cellSize);
+                ctx.lineTo(matrixX + 2 * cellSize, matrixY + row * cellSize);
+                ctx.stroke();
+            }
+            for (let col = 0; col <= 2; col++) {
+                ctx.beginPath();
+                ctx.moveTo(matrixX + col * cellSize, matrixY);
+                ctx.lineTo(matrixX + col * cellSize, matrixY + 2 * cellSize);
+                ctx.stroke();
+            }
+
+            // Cell values (Nash equilibrium highlighting)
+            const cells = [
+                { r: 0, c: 0, val: '3,3', highlight: false },
+                { r: 0, c: 1, val: '0,5', highlight: false },
+                { r: 1, c: 0, val: '5,0', highlight: false },
+                { r: 1, c: 1, val: '1,1', highlight: true }
+            ];
+
+            cells.forEach(cell => {
+                const cellCX = matrixX + cell.c * cellSize + cellSize / 2;
+                const cellCY = matrixY + cell.r * cellSize + cellSize / 2;
+
+                if (cell.highlight) {
+                    ctx.fillStyle = '#ffd70033';
+                    ctx.fillRect(matrixX + cell.c * cellSize, matrixY + cell.r * cellSize, cellSize, cellSize);
+                    ctx.strokeStyle = '#ffd700';
+                    ctx.lineWidth = 2;
+                    ctx.strokeRect(matrixX + cell.c * cellSize + 2, matrixY + cell.r * cellSize + 2, cellSize - 4, cellSize - 4);
+                }
+
+                ctx.fillStyle = cell.highlight ? '#ffd700' : '#888';
+                ctx.font = '12px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText(cell.val, cellCX, cellCY);
+            });
+
+            // Player labels
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('PLAYER A', cx, matrixY - 15);
+            ctx.save();
+            ctx.translate(matrixX - 15, cy);
+            ctx.rotate(-Math.PI / 2);
+            ctx.fillText('PLAYER B', 0, 0);
+            ctx.restore();
+
+            // Nash equilibrium indicator
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('NASH EQUILIBRIUM', cx + cellSize / 2, cy + r * 0.55);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XVIII: COMPOUNDING - Exponential growth
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawCompoundingVisualization(ctx, cx, cy, r) {
+            // Exponential growth curve
+            const startX = cx - r * 0.7;
+            const endX = cx + r * 0.7;
+            const startY = cy + r * 0.4;
+
+            // Linear comparison line
+            ctx.strokeStyle = '#666';
+            ctx.lineWidth = 1;
+            ctx.setLineDash([5, 5]);
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(endX, cy - r * 0.3);
+            ctx.stroke();
+            ctx.setLineDash([]);
+
+            // Exponential curve
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            for (let i = 0; i <= 100; i++) {
+                const t = i / 100;
+                const x = startX + t * (endX - startX);
+                const y = startY - Math.pow(t, 2.5) * r * 0.9;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+
+            // Glow under curve
+            ctx.fillStyle = '#00ff8822';
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            for (let i = 0; i <= 100; i++) {
+                const t = i / 100;
+                const x = startX + t * (endX - startX);
+                const y = startY - Math.pow(t, 2.5) * r * 0.9;
+                ctx.lineTo(x, y);
+            }
+            ctx.lineTo(endX, startY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Hockey stick point
+            const stickX = cx + r * 0.3;
+            const stickY = startY - Math.pow(0.7, 2.5) * r * 0.9;
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(stickX, stickY, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#666';
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('LINEAR', endX - 40, cy - r * 0.25);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('COMPOUND', endX - 50, cy - r * 0.55);
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('1% daily = 37x yearly', cx, startY + 20);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XIX: SCARCITY - Supply constraints
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawScarcityVisualization(ctx, cx, cy, r) {
+            // Hourglass/bottleneck shape showing supply constraint
+            const neckWidth = r * 0.1 + Math.sin(time) * r * 0.03;
+
+            // Top bulb (demand)
+            ctx.fillStyle = '#61dafb33';
+            ctx.beginPath();
+            ctx.moveTo(cx - r * 0.4, cy - r * 0.5);
+            ctx.quadraticCurveTo(cx - r * 0.4, cy - r * 0.1, cx - neckWidth, cy);
+            ctx.lineTo(cx + neckWidth, cy);
+            ctx.quadraticCurveTo(cx + r * 0.4, cy - r * 0.1, cx + r * 0.4, cy - r * 0.5);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#61dafb';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Bottom bulb (supply)
+            ctx.fillStyle = '#ffd70033';
+            ctx.beginPath();
+            ctx.moveTo(cx - neckWidth, cy);
+            ctx.quadraticCurveTo(cx - r * 0.4, cy + r * 0.1, cx - r * 0.4, cy + r * 0.5);
+            ctx.lineTo(cx + r * 0.4, cy + r * 0.5);
+            ctx.quadraticCurveTo(cx + r * 0.4, cy + r * 0.1, cx + neckWidth, cy);
+            ctx.closePath();
+            ctx.fill();
+            ctx.strokeStyle = '#ffd700';
+            ctx.stroke();
+
+            // Particles flowing through bottleneck
+            for (let i = 0; i < 8; i++) {
+                const t = (time * 0.5 + i / 8) % 1;
+                const px = cx + (Math.random() - 0.5) * neckWidth * 1.5;
+                const py = cy - r * 0.4 + t * r * 0.8;
+                const alpha = Math.sin(t * Math.PI);
+
+                ctx.fillStyle = `rgba(255,215,0,${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, 4, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Bottleneck highlight
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx - neckWidth - 5, cy);
+            ctx.lineTo(cx + neckWidth + 5, cy);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#61dafb';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('DEMAND', cx, cy - r * 0.55);
+            ctx.fillStyle = '#ffd700';
+            ctx.fillText('SUPPLY', cx, cy + r * 0.6);
+            ctx.fillStyle = '#ff4444';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('BOTTLENECK', cx, cy + 15);
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XX: CYCLES - Repeating patterns
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawCyclesVisualization(ctx, cx, cy, r) {
+            // Multiple overlapping cycles
+            const cycles = [
+                { period: 1, amp: r * 0.15, color: '#61dafb', label: 'SHORT' },
+                { period: 0.5, amp: r * 0.25, color: '#ffd700', label: 'MEDIUM' },
+                { period: 0.25, amp: r * 0.35, color: '#c678dd', label: 'LONG' }
+            ];
+
+            cycles.forEach((cycle, idx) => {
+                ctx.strokeStyle = cycle.color;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let i = 0; i <= 100; i++) {
+                    const x = cx - r * 0.7 + (i / 100) * r * 1.4;
+                    const y = cy + Math.sin(i * 0.1 * cycle.period + time * cycle.period * 2) * cycle.amp;
+                    if (i === 0) ctx.moveTo(x, y);
+                    else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // Label
+                ctx.fillStyle = cycle.color;
+                ctx.font = '8px Fira Code';
+                ctx.textAlign = 'right';
+                ctx.fillText(cycle.label, cx - r * 0.75, cy - r * 0.35 + idx * 15);
+            });
+
+            // Combined wave indicator
+            ctx.fillStyle = '#888';
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('History rhymes in nested cycles', cx, cy + r * 0.55);
+
+            // Phase markers
+            const phases = ['ACCUMULATION', 'MARKUP', 'DISTRIBUTION', 'DECLINE'];
+            phases.forEach((phase, i) => {
+                const x = cx - r * 0.6 + (i / 3) * r * 1.2;
+                ctx.fillStyle = '#444';
+                ctx.fillText(phase, x, cy + r * 0.7);
+            });
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // LAW XXI: OPTIONALITY - Asymmetric bets
+        // ═══════════════════════════════════════════════════════════════════════════════
+        function drawOptionalityVisualization(ctx, cx, cy, r) {
+            // Option payoff diagram
+            const startX = cx - r * 0.6;
+            const endX = cx + r * 0.6;
+            const zeroY = cy + r * 0.1;
+
+            // Axes
+            ctx.strokeStyle = '#444';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(startX, zeroY);
+            ctx.lineTo(endX, zeroY);
+            ctx.moveTo(cx, cy - r * 0.5);
+            ctx.lineTo(cx, cy + r * 0.4);
+            ctx.stroke();
+
+            // Limited downside (flat line)
+            ctx.strokeStyle = '#ff4444';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(startX, zeroY + r * 0.1);
+            ctx.lineTo(cx - r * 0.1, zeroY + r * 0.1);
+            ctx.stroke();
+
+            // Unlimited upside (rising line)
+            ctx.strokeStyle = '#00ff88';
+            ctx.lineWidth = 3;
+            ctx.beginPath();
+            ctx.moveTo(cx - r * 0.1, zeroY + r * 0.1);
+            ctx.lineTo(cx, zeroY);
+            ctx.lineTo(endX, cy - r * 0.45);
+            ctx.stroke();
+
+            // Glow on upside
+            ctx.fillStyle = '#00ff8822';
+            ctx.beginPath();
+            ctx.moveTo(cx, zeroY);
+            ctx.lineTo(endX, cy - r * 0.45);
+            ctx.lineTo(endX, zeroY);
+            ctx.closePath();
+            ctx.fill();
+
+            // Strike price marker
+            ctx.fillStyle = '#ffd700';
+            ctx.beginPath();
+            ctx.arc(cx, zeroY, 6, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Labels
+            ctx.fillStyle = '#ff4444';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('LIMITED LOSS', startX + r * 0.25, zeroY + r * 0.25);
+            ctx.fillStyle = '#00ff88';
+            ctx.fillText('UNLIMITED GAIN', endX - r * 0.2, cy - r * 0.5);
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('STRIKE', cx, zeroY + r * 0.3);
+
+            // Convexity label
+            ctx.fillStyle = '#c678dd';
+            ctx.font = '10px Fira Code';
+            ctx.fillText('CONVEXITY', cx, cy + r * 0.55);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
