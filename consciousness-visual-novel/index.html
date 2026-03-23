@@ -5140,13 +5140,51 @@
             }
 
             // ═══════════════════════════════════════════════════════════════
-            // CHESS PIECES - Strategic positions
+            // NAMED CHESS PIECES - Market Players & Strategies
             // ═══════════════════════════════════════════════════════════════
 
             // Chess piece unicode symbols
-            const pieces = {
+            const pieceSymbols = {
                 wK: '♔', wQ: '♕', wR: '♖', wB: '♗', wN: '♘', wP: '♙',
                 bK: '♚', bQ: '♛', bR: '♜', bB: '♝', bN: '♞', bP: '♟'
+            };
+
+            // Named pieces with market/strategy identities
+            const namedPieces = {
+                // White pieces (YOUR SIDE - Long positions, bullish plays)
+                'wK_4_7': { name: 'ANGELO', role: 'SOVEREIGN', color: '#ffd700' },
+                'wQ_3_7': { name: 'EUDAIMON', role: 'SYNTHESIS', color: '#00ff88' },
+                'wR_0_7': { name: 'LEU', role: 'URANIUM ALPHA', color: '#ff6b9d' },
+                'wR_7_7': { name: 'CCJ', role: 'NUCLEAR BASE', color: '#ff6b9d' },
+                'wB_5_7': { name: 'BUFFETT', role: 'VALUE LENS', color: '#c678dd' },
+                'wB_2_4': { name: 'SOROS', role: 'REFLEXIVITY', color: '#c678dd' },
+                'wN_2_5': { name: 'TEMPO', role: 'CATALYST', color: '#61dafb' },
+                'wN_5_5': { name: 'EDGE', role: 'ASYMMETRY', color: '#61dafb' },
+                'wP_0_6': { name: 'DCA', role: 'ACCUMULATE', color: '#888' },
+                'wP_1_6': { name: 'HODL', role: 'CONVICTION', color: '#888' },
+                'wP_2_6': { name: 'SCALE', role: 'POSITION', color: '#888' },
+                'wP_3_4': { name: 'PUSH', role: 'ADVANCE', color: '#00ff88' },
+                'wP_4_4': { name: 'CONTROL', role: 'CENTER', color: '#00ff88' },
+                'wP_5_6': { name: 'DEFEND', role: 'PROTECT', color: '#888' },
+                'wP_6_6': { name: 'RESERVE', role: 'BACKUP', color: '#888' },
+                'wP_7_6': { name: 'FLANK', role: 'OPTION', color: '#888' },
+
+                // Black pieces (MARKET FORCES - Opposition, headwinds)
+                'bK_6_0': { name: 'FED', role: 'REGIME', color: '#ff4444' },
+                'bQ_3_0': { name: 'VOLATILITY', role: 'CHAOS', color: '#ff4444' },
+                'bR_0_0': { name: 'RECESSION', role: 'MACRO RISK', color: '#ff6666' },
+                'bR_5_0': { name: 'INFLATION', role: 'PRESSURE', color: '#ff6666' },
+                'bB_2_1': { name: 'NARRATIVE', role: 'SHIFT', color: '#ffaa44' },
+                'bB_5_3': { name: 'SHORTS', role: 'OPPOSITION', color: '#ffaa44' },
+                'bN_2_2': { name: 'BLACK SWAN', role: 'TAIL RISK', color: '#ff4444' },
+                'bN_5_2': { name: 'CROWDING', role: 'TRAP', color: '#ff4444' },
+                'bP_0_1': { name: 'FEAR', role: 'SENTIMENT', color: '#666' },
+                'bP_1_1': { name: 'DOUBT', role: 'NOISE', color: '#666' },
+                'bP_3_2': { name: 'DELAY', role: 'CATALYST MISS', color: '#666' },
+                'bP_4_1': { name: 'RATES', role: 'HEADWIND', color: '#666' },
+                'bP_5_1': { name: 'DILUTION', role: 'RISK', color: '#666' },
+                'bP_6_1': { name: 'SUPPLY', role: 'OVERHANG', color: '#666' },
+                'bP_7_1': { name: 'FADE', role: 'DECAY', color: '#666' }
             };
 
             // Strategic board position (mid-game scenario)
@@ -5161,11 +5199,10 @@
                 ['wR', '', '', 'wQ', 'wK', 'wB', '', 'wR']
             ];
 
-            // Draw pieces
-            ctx.font = `${squareSize * 0.75}px serif`;
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
+            // Track hovered piece for tooltip
+            let hoveredPiece = null;
 
+            // Draw pieces with names
             for (let row = 0; row < 8; row++) {
                 for (let col = 0; col < 8; col++) {
                     const piece = boardState[row][col];
@@ -5173,13 +5210,18 @@
                         const x = boardX + col * squareSize + squareSize / 2;
                         const y = boardY + row * squareSize + squareSize / 2;
                         const isWhite = piece[0] === 'w';
+                        const pieceKey = `${piece}_${col}_${row}`;
+                        const namedPiece = namedPieces[pieceKey];
 
                         // Piece shadow
                         ctx.fillStyle = '#00000066';
-                        ctx.fillText(pieces[piece], x + 2, y + 2);
+                        ctx.font = `${squareSize * 0.65}px serif`;
+                        ctx.textAlign = 'center';
+                        ctx.textBaseline = 'middle';
+                        ctx.fillText(pieceSymbols[piece], x + 2, y + 2);
 
-                        // Piece with subtle animation for key pieces
-                        const isKeyPiece = piece === 'wQ' || piece === 'bQ' || piece === 'wK' || piece === 'bK';
+                        // Key piece animation
+                        const isKeyPiece = piece.includes('K') || piece.includes('Q');
                         if (isKeyPiece) {
                             const pulse = 1 + Math.sin(time * 2) * 0.05;
                             ctx.save();
@@ -5188,18 +5230,33 @@
                             ctx.translate(-x, -y);
                         }
 
-                        // Piece color with gradient effect
+                        // Piece glow for named pieces
+                        if (namedPiece) {
+                            ctx.shadowColor = namedPiece.color;
+                            ctx.shadowBlur = 8;
+                        }
+
+                        // Piece color
                         ctx.fillStyle = isWhite ? '#f0f0f0' : '#1a1a1a';
-                        ctx.fillText(pieces[piece], x, y);
+                        ctx.fillText(pieceSymbols[piece], x, y);
+                        ctx.shadowBlur = 0;
 
                         // Highlight on white pieces
                         if (isWhite) {
                             ctx.fillStyle = '#ffffff44';
-                            ctx.fillText(pieces[piece], x - 1, y - 1);
+                            ctx.fillText(pieceSymbols[piece], x - 1, y - 1);
                         }
 
                         if (isKeyPiece) {
                             ctx.restore();
+                        }
+
+                        // Draw piece name label below
+                        if (namedPiece) {
+                            ctx.fillStyle = namedPiece.color;
+                            ctx.font = 'bold 6px Fira Code';
+                            ctx.textAlign = 'center';
+                            ctx.fillText(namedPiece.name, x, y + squareSize * 0.38);
                         }
                     }
                 }
@@ -5300,130 +5357,292 @@
             });
 
             // ═══════════════════════════════════════════════════════════════
-            // GAME STATE INDICATORS
+            // THEORIES PANEL - Potential Ventures
             // ═══════════════════════════════════════════════════════════════
 
-            // Material count panel
-            const panelX = 15;
-            const panelY = 70;
-            ctx.fillStyle = '#0a0a1a99';
-            ctx.fillRect(panelX, panelY, 100, 80);
-            ctx.strokeStyle = '#61dafb44';
-            ctx.lineWidth = 1;
-            ctx.strokeRect(panelX, panelY, 100, 80);
+            const theoriesX = 12;
+            const theoriesY = 65;
+            const theoriesWidth = 140;
+            const theoriesHeight = boardSize * 0.75;
 
-            ctx.fillStyle = '#61dafb';
-            ctx.font = 'bold 9px Fira Code';
+            // Panel background
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(theoriesX, theoriesY, theoriesWidth, theoriesHeight);
+            ctx.strokeStyle = '#ffd70066';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(theoriesX, theoriesY, theoriesWidth, theoriesHeight);
+
+            // Panel header
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 10px Cinzel';
             ctx.textAlign = 'left';
-            ctx.fillText('MATERIAL', panelX + 8, panelY + 15);
+            ctx.fillText('⚔ THEORIES', theoriesX + 8, theoriesY + 18);
+            ctx.fillStyle = '#666';
+            ctx.font = '7px Fira Code';
+            ctx.fillText('Potential Ventures', theoriesX + 8, theoriesY + 30);
 
-            ctx.font = '20px serif';
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fillText('♕♖♗♘', panelX + 8, panelY + 40);
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillText('♛♜♝♞', panelX + 8, panelY + 65);
-
-            // Evaluation bar
-            const evalX = canvas.width - 30;
-            const evalHeight = boardSize * 0.6;
-            const evalY = boardY + boardSize * 0.2;
-            const evalValue = 0.55 + Math.sin(time * 0.5) * 0.1; // Slight advantage oscillation
-
-            // Bar background
-            ctx.fillStyle = '#1a1a1a';
-            ctx.fillRect(evalX - 8, evalY, 16, evalHeight);
-
-            // White's advantage (bottom up)
-            ctx.fillStyle = '#f0f0f0';
-            ctx.fillRect(evalX - 6, evalY + evalHeight * (1 - evalValue), 12, evalHeight * evalValue);
-
-            // Center line
-            ctx.strokeStyle = '#ff4444';
-            ctx.lineWidth = 1;
-            ctx.beginPath();
-            ctx.moveTo(evalX - 10, evalY + evalHeight / 2);
-            ctx.lineTo(evalX + 10, evalY + evalHeight / 2);
-            ctx.stroke();
-
-            // Eval label
-            ctx.fillStyle = '#61dafb';
-            ctx.font = '8px Fira Code';
-            ctx.textAlign = 'center';
-            ctx.fillText('EVAL', evalX, evalY - 8);
-            ctx.fillText('+' + ((evalValue - 0.5) * 4).toFixed(1), evalX, evalY + evalHeight + 15);
-
-            // ═══════════════════════════════════════════════════════════════
-            // STRATEGIC CONCEPTS PANEL
-            // ═══════════════════════════════════════════════════════════════
-
-            const conceptY = boardY + boardSize + 35;
-            const concepts = [
-                { name: 'TEMPO', value: 78, color: '#00ff88' },
-                { name: 'SPACE', value: 65, color: '#61dafb' },
-                { name: 'STRUCTURE', value: 82, color: '#ffd700' },
-                { name: 'KING SAFETY', value: 91, color: '#c678dd' }
+            // Theories/Ventures list
+            const theories = [
+                { name: 'URANIUM SQUEEZE', conf: 85, status: 'ACTIVE', color: '#00ff88', ticker: 'LEU/CCJ' },
+                { name: 'DEFENSE RAMP', conf: 78, status: 'ACTIVE', color: '#00ff88', ticker: 'LMT/RTX' },
+                { name: 'AI INFRASTRUCTURE', conf: 72, status: 'WATCHING', color: '#ffd700', ticker: 'NVDA/AMD' },
+                { name: 'RATE CUT PLAY', conf: 55, status: 'PENDING', color: '#61dafb', ticker: 'TLT/GLD' },
+                { name: 'CHINA DECOUPLING', conf: 68, status: 'WATCHING', color: '#ffd700', ticker: 'MP/UUUU' },
+                { name: 'ENERGY CRISIS', conf: 62, status: 'WATCHING', color: '#ffd700', ticker: 'XOM/OXY' },
+                { name: 'SHIPPING BOOM', conf: 58, status: 'PENDING', color: '#61dafb', ticker: 'ZIM/GOGL' },
+                { name: 'CRYPTO CYCLE', conf: 45, status: 'RISK', color: '#ff4444', ticker: 'MSTR' }
             ];
 
-            const conceptWidth = (canvas.width - 40) / concepts.length;
-            concepts.forEach((concept, i) => {
-                const x = 20 + i * conceptWidth;
+            const theoryRowHeight = (theoriesHeight - 45) / theories.length;
+            theories.forEach((theory, i) => {
+                const rowY = theoriesY + 42 + i * theoryRowHeight;
+                const isHighConf = theory.conf >= 70;
 
-                // Concept bar
-                ctx.fillStyle = '#111';
-                ctx.fillRect(x, conceptY, conceptWidth - 10, 8);
+                // Row highlight for active theories
+                if (theory.status === 'ACTIVE') {
+                    ctx.fillStyle = '#00ff8808';
+                    ctx.fillRect(theoriesX + 2, rowY - 2, theoriesWidth - 4, theoryRowHeight - 2);
+                }
 
-                const barWidth = (conceptWidth - 10) * (concept.value / 100);
-                ctx.fillStyle = concept.color;
-                ctx.fillRect(x, conceptY, barWidth, 8);
-
-                // Label
-                ctx.fillStyle = '#888';
-                ctx.font = '7px Fira Code';
+                // Theory name
+                ctx.fillStyle = theory.color;
+                ctx.font = isHighConf ? 'bold 8px Fira Code' : '8px Fira Code';
                 ctx.textAlign = 'left';
-                ctx.fillText(concept.name, x, conceptY - 4);
-                ctx.fillStyle = concept.color;
+                ctx.fillText(theory.name, theoriesX + 6, rowY + 8);
+
+                // Ticker
+                ctx.fillStyle = '#888';
+                ctx.font = '6px Fira Code';
+                ctx.fillText(theory.ticker, theoriesX + 6, rowY + 17);
+
+                // Confidence bar
+                const barX = theoriesX + theoriesWidth - 45;
+                const barWidth = 35;
+                const barHeight = 6;
+
+                ctx.fillStyle = '#222';
+                ctx.fillRect(barX, rowY + 4, barWidth, barHeight);
+
+                const confWidth = barWidth * (theory.conf / 100);
+                ctx.fillStyle = theory.color;
+                ctx.fillRect(barX, rowY + 4, confWidth, barHeight);
+
+                // Confidence %
+                ctx.fillStyle = theory.color;
+                ctx.font = 'bold 7px Fira Code';
                 ctx.textAlign = 'right';
-                ctx.fillText(concept.value + '%', x + conceptWidth - 12, conceptY - 4);
+                ctx.fillText(theory.conf + '%', barX - 3, rowY + 10);
+
+                // Pulsing indicator for active
+                if (theory.status === 'ACTIVE') {
+                    const pulseAlpha = 0.5 + Math.sin(time * 3 + i) * 0.3;
+                    ctx.fillStyle = `rgba(0,255,136,${pulseAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(theoriesX + theoriesWidth - 8, rowY + 7, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
             });
 
             // ═══════════════════════════════════════════════════════════════
-            // THINKING LINES - Engine analysis visualization
+            // POSITION EVAL BAR - Right side
             // ═══════════════════════════════════════════════════════════════
 
-            // Show "thinking" particles around key pieces
-            const thinkingPieces = [[3, 7], [4, 7], [2, 5]]; // Queen, King, Knight
-            thinkingPieces.forEach((pos, idx) => {
-                const pieceX = boardX + pos[0] * squareSize + squareSize / 2;
-                const pieceY = boardY + pos[1] * squareSize + squareSize / 2;
+            const evalX = canvas.width - 35;
+            const evalHeight = boardSize * 0.6;
+            const evalY = boardY + boardSize * 0.2;
+            const evalValue = 0.62 + Math.sin(time * 0.5) * 0.08; // Your advantage
 
-                for (let p = 0; p < 4; p++) {
-                    const angle = time * 2 + p * (Math.PI / 2) + idx;
-                    const dist = 20 + Math.sin(time * 3 + p) * 5;
+            // Bar background
+            ctx.fillStyle = '#1a1a1a';
+            ctx.fillRect(evalX - 10, evalY, 20, evalHeight);
+            ctx.strokeStyle = '#ffd70044';
+            ctx.strokeRect(evalX - 10, evalY, 20, evalHeight);
+
+            // Your advantage (bottom up) - green
+            const yourAdvantage = evalHeight * evalValue;
+            const advGrad = ctx.createLinearGradient(evalX, evalY + evalHeight, evalX, evalY + evalHeight - yourAdvantage);
+            advGrad.addColorStop(0, '#00ff8866');
+            advGrad.addColorStop(1, '#00ff88');
+            ctx.fillStyle = advGrad;
+            ctx.fillRect(evalX - 8, evalY + evalHeight - yourAdvantage, 16, yourAdvantage);
+
+            // Market (top down) - red
+            ctx.fillStyle = '#ff444466';
+            ctx.fillRect(evalX - 8, evalY, 16, evalHeight - yourAdvantage);
+
+            // Center equilibrium line
+            ctx.strokeStyle = '#ffd700';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            ctx.moveTo(evalX - 12, evalY + evalHeight / 2);
+            ctx.lineTo(evalX + 12, evalY + evalHeight / 2);
+            ctx.stroke();
+
+            // Labels
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('YOU', evalX, evalY + evalHeight + 12);
+            ctx.fillStyle = '#ff4444';
+            ctx.fillText('MKT', evalX, evalY - 8);
+
+            // Edge value
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 10px Fira Code';
+            ctx.fillText('+' + ((evalValue - 0.5) * 10).toFixed(1), evalX, evalY + evalHeight / 2 + 4);
+
+            // ═══════════════════════════════════════════════════════════════
+            // PIECE LEGEND PANEL - Right side bottom
+            // ═══════════════════════════════════════════════════════════════
+
+            const legendX = canvas.width - 145;
+            const legendY = boardY + boardSize * 0.65;
+            const legendWidth = 130;
+            const legendHeight = boardSize * 0.35;
+
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(legendX, legendY, legendWidth, legendHeight);
+            ctx.strokeStyle = '#61dafb44';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(legendX, legendY, legendWidth, legendHeight);
+
+            ctx.fillStyle = '#61dafb';
+            ctx.font = 'bold 9px Cinzel';
+            ctx.textAlign = 'left';
+            ctx.fillText('♔ KEY PLAYERS', legendX + 8, legendY + 15);
+
+            const legendPieces = [
+                { symbol: '♔', name: 'ANGELO', role: 'Sovereign Capital', color: '#ffd700' },
+                { symbol: '♕', name: 'EUDAIMON', role: 'AI Synthesis', color: '#00ff88' },
+                { symbol: '♖', name: 'LEU/CCJ', role: 'Core Positions', color: '#ff6b9d' },
+                { symbol: '♗', name: 'BUFFETT/SOROS', role: 'Mental Models', color: '#c678dd' },
+                { symbol: '♘', name: 'TEMPO/EDGE', role: 'Tactical Moves', color: '#61dafb' },
+                { symbol: '♚', name: 'FED', role: 'Regime Control', color: '#ff4444' },
+                { symbol: '♛', name: 'VOLATILITY', role: 'Market Chaos', color: '#ff4444' }
+            ];
+
+            const legendRowHeight = (legendHeight - 25) / legendPieces.length;
+            legendPieces.forEach((lp, i) => {
+                const rowY = legendY + 25 + i * legendRowHeight;
+
+                ctx.fillStyle = lp.color;
+                ctx.font = '14px serif';
+                ctx.textAlign = 'left';
+                ctx.fillText(lp.symbol, legendX + 8, rowY + 5);
+
+                ctx.fillStyle = lp.color;
+                ctx.font = 'bold 7px Fira Code';
+                ctx.fillText(lp.name, legendX + 26, rowY + 2);
+
+                ctx.fillStyle = '#666';
+                ctx.font = '6px Fira Code';
+                ctx.fillText(lp.role, legendX + 26, rowY + 10);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // STRATEGIC METRICS - Bottom bar
+            // ═══════════════════════════════════════════════════════════════
+
+            const metricsY = boardY + boardSize + 30;
+            const metrics = [
+                { name: 'POSITION STRENGTH', value: 78, color: '#00ff88' },
+                { name: 'THESIS CONVICTION', value: 85, color: '#ffd700' },
+                { name: 'RISK CONTROL', value: 72, color: '#61dafb' },
+                { name: 'MARKET TIMING', value: 65, color: '#c678dd' }
+            ];
+
+            const metricWidth = (canvas.width - 180) / metrics.length;
+            const metricsStartX = 155;
+
+            metrics.forEach((metric, i) => {
+                const x = metricsStartX + i * metricWidth;
+
+                // Metric bar background
+                ctx.fillStyle = '#111';
+                ctx.fillRect(x, metricsY + 8, metricWidth - 8, 6);
+
+                // Metric bar fill
+                const barWidth = (metricWidth - 8) * (metric.value / 100);
+                ctx.fillStyle = metric.color;
+                ctx.fillRect(x, metricsY + 8, barWidth, 6);
+
+                // Label
+                ctx.fillStyle = '#888';
+                ctx.font = '6px Fira Code';
+                ctx.textAlign = 'left';
+                ctx.fillText(metric.name, x, metricsY + 4);
+                ctx.fillStyle = metric.color;
+                ctx.textAlign = 'right';
+                ctx.font = 'bold 7px Fira Code';
+                ctx.fillText(metric.value + '%', x + metricWidth - 10, metricsY + 4);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // THINKING LINES - Analysis around key pieces
+            // ═══════════════════════════════════════════════════════════════
+
+            // Show "thinking" particles around ANGELO (King) and EUDAIMON (Queen)
+            const thinkingPieces = [
+                { pos: [4, 7], color: '#ffd700', name: 'ANGELO' },      // King
+                { pos: [3, 7], color: '#00ff88', name: 'EUDAIMON' },    // Queen
+                { pos: [0, 7], color: '#ff6b9d', name: 'LEU' }         // Rook
+            ];
+
+            thinkingPieces.forEach((tp, idx) => {
+                const pieceX = boardX + tp.pos[0] * squareSize + squareSize / 2;
+                const pieceY = boardY + tp.pos[1] * squareSize + squareSize / 2;
+
+                // Orbiting analysis particles
+                for (let p = 0; p < 5; p++) {
+                    const angle = time * 2.5 + p * (Math.PI * 2 / 5) + idx * 0.5;
+                    const dist = squareSize * 0.45 + Math.sin(time * 3 + p) * 4;
                     const px = pieceX + Math.cos(angle) * dist;
                     const py = pieceY + Math.sin(angle) * dist;
 
-                    ctx.fillStyle = `rgba(97,218,251,${0.5 + Math.sin(time * 4 + p) * 0.3})`;
+                    const alpha = 0.6 + Math.sin(time * 4 + p) * 0.3;
+                    ctx.fillStyle = tp.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
                     ctx.beginPath();
-                    ctx.arc(px, py, 2, 0, Math.PI * 2);
+                    ctx.arc(px, py, 2.5, 0, Math.PI * 2);
                     ctx.fill();
+                }
+
+                // Connection lines between thinking pieces
+                if (idx > 0) {
+                    const prevPiece = thinkingPieces[idx - 1];
+                    const prevX = boardX + prevPiece.pos[0] * squareSize + squareSize / 2;
+                    const prevY = boardY + prevPiece.pos[1] * squareSize + squareSize / 2;
+
+                    ctx.strokeStyle = '#ffd70022';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 3]);
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(pieceX, pieceY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
                 }
             });
 
             // Title
             ctx.fillStyle = '#ffd700';
-            ctx.font = '14px Cinzel';
+            ctx.font = 'bold 14px Cinzel';
             ctx.textAlign = 'left';
-            ctx.fillText('STRATEGIC ANALYSIS', 20, 30);
+            ctx.fillText('⚔ GAME THEORY BATTLEFIELD', 160, 28);
 
             ctx.fillStyle = '#888';
-            ctx.font = '9px Fira Code';
-            ctx.fillText('Every market is a game. Every game has optimal play.', 20, 48);
+            ctx.font = '8px Fira Code';
+            ctx.fillText('Every market is a game. Every piece has a purpose. Every move has consequence.', 160, 42);
 
-            // Move clock
+            // Analysis stats
             ctx.fillStyle = '#61dafb';
-            ctx.font = '10px Fira Code';
+            ctx.font = '9px Fira Code';
             ctx.textAlign = 'right';
-            ctx.fillText('DEPTH: 24 | NODES: 847M', canvas.width - 20, 30);
+            ctx.fillText('DEPTH: 24 | EVALS: 847M | EDGE: +2.4σ', canvas.width - 20, 28);
+
+            // Current move indicator
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.fillText('YOUR MOVE', canvas.width - 20, 42);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
