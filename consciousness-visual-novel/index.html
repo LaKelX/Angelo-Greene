@@ -9718,16 +9718,181 @@
                 ctx.fill();
             }
 
+            // ═══════════════════════════════════════════════════════════════
+            // ALL 27 PREDICTIONS PANEL (Left side)
+            // ═══════════════════════════════════════════════════════════════
+
+            const ALL_PREDICTIONS = [
+                // Nuclear Cluster (P001-P012)
+                { id: 'P001', text: 'LEU $75 by Q3 2026', conf: 65, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P002', text: 'Uranium >$90/lb EOY', conf: 60, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P008', text: 'CCJ +30% on supply miss', conf: 62, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P009', text: 'URA ETF outperforms SPY', conf: 55, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P010', text: 'Nuclear sentiment shift', conf: 70, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P011', text: 'Kazatomprom miss again', conf: 58, cluster: 'NUCLEAR', status: 'pending' },
+                { id: 'P012', text: 'SMR approval catalyst', conf: 52, cluster: 'NUCLEAR', status: 'pending' },
+                // Defense Cluster (P013-P017)
+                { id: 'P006', text: 'Pro-nuclear policy 2026', conf: 70, cluster: 'DEFENSE', status: 'pending' },
+                { id: 'P007', text: 'Defense >$900B FY27', conf: 65, cluster: 'DEFENSE', status: 'pending' },
+                { id: 'P013', text: 'LMT beats on backlog', conf: 62, cluster: 'DEFENSE', status: 'pending' },
+                { id: 'P014', text: 'Taiwan tension spike', conf: 35, cluster: 'DEFENSE', status: 'pending' },
+                { id: 'P017', text: 'NATO spend increase', conf: 72, cluster: 'DEFENSE', status: 'pending' },
+                // Tech Cluster (P018-P022)
+                { id: 'P003', text: 'DDOG beats Q4 2025', conf: 55, cluster: 'TECH', status: 'pending' },
+                { id: 'P016', text: 'AI capex acceleration', conf: 68, cluster: 'TECH', status: 'pending' },
+                { id: 'P018', text: 'NVDA $150 by Q2', conf: 70, cluster: 'TECH', status: 'pending' },
+                { id: 'P019', text: 'Semiconductor cycle turn', conf: 62, cluster: 'TECH', status: 'pending' },
+                { id: 'P021', text: 'Cloud growth reaccel', conf: 65, cluster: 'TECH', status: 'pending' },
+                { id: 'P022', text: 'MSFT AI monetization', conf: 68, cluster: 'TECH', status: 'pending' },
+                // Macro Cluster (P023-P027)
+                { id: 'P004', text: 'Fed cuts by Q2 2026', conf: 50, cluster: 'MACRO', status: 'pending' },
+                { id: 'P005', text: 'VIX >30 in 90 days', conf: 45, cluster: 'MACRO', status: 'pending' },
+                { id: 'P015', text: 'Yield curve uninverts', conf: 55, cluster: 'MACRO', status: 'pending' },
+                { id: 'P020', text: 'Soft landing confirmed', conf: 58, cluster: 'MACRO', status: 'pending' },
+                { id: 'P023', text: 'Dollar weakens 5%', conf: 72, cluster: 'MACRO', status: 'pending' },
+                { id: 'P024', text: 'Gold >$2500', conf: 65, cluster: 'MACRO', status: 'pending' },
+                { id: 'P025', text: 'Oil spikes >$95', conf: 42, cluster: 'MACRO', status: 'pending' },
+                { id: 'P026', text: 'GLD outperforms SPY', conf: 55, cluster: 'MACRO', status: 'pending' },
+                { id: 'P027', text: 'Recession avoided 2026', conf: 68, cluster: 'MACRO', status: 'pending' }
+            ];
+
+            const clusterColors = {
+                'NUCLEAR': '#00ff88',
+                'DEFENSE': '#ff4444',
+                'TECH': '#61dafb',
+                'MACRO': '#ffd700'
+            };
+
+            const predPanelX = 15;
+            const predPanelY = 60;
+            const predPanelWidth = 175;
+            const predPanelHeight = canvas.height - 100;
+
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(predPanelX, predPanelY, predPanelWidth, predPanelHeight);
+            ctx.strokeStyle = '#00ffaa44';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(predPanelX, predPanelY, predPanelWidth, predPanelHeight);
+
+            ctx.fillStyle = '#00ffaa';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('📊 27 PREDICTIONS', predPanelX + 8, predPanelY + 15);
+
+            ctx.fillStyle = '#666';
+            ctx.font = '7px Fira Code';
+            ctx.fillText('Resolved: 0 | Accuracy: MEASURING', predPanelX + 8, predPanelY + 27);
+
+            // Scrolling prediction list (show subset based on time)
+            const visibleCount = Math.floor((predPanelHeight - 45) / 18);
+            const scrollOffset = Math.floor(time * 0.3) % ALL_PREDICTIONS.length;
+
+            for (let i = 0; i < Math.min(visibleCount, ALL_PREDICTIONS.length); i++) {
+                const predIdx = (i + scrollOffset) % ALL_PREDICTIONS.length;
+                const pred = ALL_PREDICTIONS[predIdx];
+                const rowY = predPanelY + 40 + i * 18;
+
+                // Cluster color dot
+                ctx.fillStyle = clusterColors[pred.cluster];
+                ctx.beginPath();
+                ctx.arc(predPanelX + 12, rowY + 3, 3, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Prediction ID
+                ctx.fillStyle = '#888';
+                ctx.font = '6px Fira Code';
+                ctx.fillText(pred.id, predPanelX + 20, rowY + 5);
+
+                // Prediction text
+                ctx.fillStyle = '#ccc';
+                ctx.font = '7px Fira Code';
+                const truncatedText = pred.text.substring(0, 20) + (pred.text.length > 20 ? '...' : '');
+                ctx.fillText(truncatedText, predPanelX + 45, rowY + 5);
+
+                // Confidence bar
+                const barX = predPanelX + predPanelWidth - 45;
+                const barWidth = 30;
+                ctx.fillStyle = '#222';
+                ctx.fillRect(barX, rowY - 2, barWidth, 5);
+
+                const confWidth = barWidth * (pred.conf / 100);
+                const confColor = pred.conf >= 70 ? '#00ff88' : pred.conf >= 50 ? '#ffd700' : '#ff4444';
+                ctx.fillStyle = confColor;
+                ctx.fillRect(barX, rowY - 2, confWidth, 5);
+
+                // Conf %
+                ctx.fillStyle = confColor;
+                ctx.font = '6px Fira Code';
+                ctx.textAlign = 'right';
+                ctx.fillText(pred.conf + '%', predPanelX + predPanelWidth - 5, rowY + 5);
+                ctx.textAlign = 'left';
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // CLUSTER SUMMARY (Right side)
+            // ═══════════════════════════════════════════════════════════════
+
+            const clusterPanelX = canvas.width - 145;
+            const clusterPanelY = 60;
+            const clusterPanelWidth = 130;
+
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(clusterPanelX, clusterPanelY, clusterPanelWidth, 140);
+            ctx.strokeStyle = '#00ffaa44';
+            ctx.strokeRect(clusterPanelX, clusterPanelY, clusterPanelWidth, 140);
+
+            ctx.fillStyle = '#00ffaa';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.fillText('🔗 THESIS CLUSTERS', clusterPanelX + 8, clusterPanelY + 15);
+
+            const clusters = [
+                { name: 'NUCLEAR', count: 7, avgConf: 60, color: '#00ff88' },
+                { name: 'DEFENSE', count: 5, avgConf: 61, color: '#ff4444' },
+                { name: 'TECH', count: 6, avgConf: 65, color: '#61dafb' },
+                { name: 'MACRO', count: 9, avgConf: 57, color: '#ffd700' }
+            ];
+
+            clusters.forEach((cluster, i) => {
+                const rowY = clusterPanelY + 35 + i * 26;
+
+                // Cluster indicator
+                ctx.fillStyle = cluster.color;
+                ctx.beginPath();
+                ctx.arc(clusterPanelX + 12, rowY + 3, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Cluster name
+                ctx.fillStyle = cluster.color;
+                ctx.font = 'bold 8px Fira Code';
+                ctx.fillText(cluster.name, clusterPanelX + 22, rowY + 6);
+
+                // Count
+                ctx.fillStyle = '#888';
+                ctx.font = '7px Fira Code';
+                ctx.fillText(cluster.count + ' predictions', clusterPanelX + 22, rowY + 16);
+
+                // Avg confidence
+                ctx.fillStyle = cluster.avgConf >= 60 ? '#00ff88' : '#ffd700';
+                ctx.textAlign = 'right';
+                ctx.fillText(cluster.avgConf + '% avg', clusterPanelX + clusterPanelWidth - 8, rowY + 6);
+                ctx.textAlign = 'left';
+            });
+
+            // Neural connections count
+            ctx.fillStyle = '#888';
+            ctx.font = '7px Fira Code';
+            ctx.fillText('Neural Connections: 47', clusterPanelX + 8, clusterPanelY + 130);
+
             // Title
             ctx.fillStyle = '#00ffaa';
             ctx.font = '14px Cinzel';
             ctx.textAlign = 'left';
             ctx.textBaseline = 'top';
-            ctx.fillText('PREDICTION ACCOUNTABILITY', 20, 20);
+            ctx.fillText('PREDICTION ACCOUNTABILITY', 200, 20);
 
             ctx.fillStyle = '#666';
             ctx.font = '9px Fira Code';
-            ctx.fillText('Track Record: 847/1,257 predictions | Target: 82.6% accuracy', 20, 40);
+            ctx.fillText('27 predictions | 0 resolved | Target: 82.6% accuracy', 200, 40);
 
             // Quote
             ctx.fillStyle = '#00ffaa66';
