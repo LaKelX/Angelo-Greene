@@ -10515,15 +10515,58 @@
         // SUPPLY MODULE - Global Supply Chain Network Visualization
         // ═══════════════════════════════════════════════════════════════════════════════
 
+        // ═══════════════════════════════════════════════════════════════
+        // SUPPLY CHAIN DATA - Enhanced with thesis connections
+        // ═══════════════════════════════════════════════════════════════
         const SUPPLY_CHAINS = [
-            { id: 'semiconductor', name: 'SEMICONDUCTOR', color: '#00d4ff', risk: 'HIGH', x: 0, y: 0 },
-            { id: 'rareearth', name: 'RARE EARTH', color: '#c678dd', risk: 'CRITICAL', x: 0, y: 0 },
-            { id: 'shipping', name: 'SHIPPING', color: '#00ff88', risk: 'HIGH', x: 0, y: 0 },
-            { id: 'defense', name: 'DEFENSE', color: '#ff4444', risk: 'CRITICAL', x: 0, y: 0 },
-            { id: 'pharma', name: 'PHARMA', color: '#61dafb', risk: 'HIGH', x: 0, y: 0 },
-            { id: 'lithium', name: 'LITHIUM', color: '#ffd700', risk: 'HIGH', x: 0, y: 0 },
-            { id: 'fertilizer', name: 'FERTILIZER', color: '#98c379', risk: 'MEDIUM', x: 0, y: 0 },
-            { id: 'grid', name: 'GRID', color: '#ff6600', risk: 'CRITICAL', x: 0, y: 0 }
+            {
+                id: 'uranium', name: 'URANIUM', color: '#00ff88', risk: 'CRITICAL', x: 0, y: 0,
+                tickers: ['LEU', 'CCJ', 'UUUU'], thesis: 'HALEU bottleneck + Kazakhstan miss',
+                bottleneck: 'Enrichment capacity', flowRate: 92, price: '$107/lb', trend: 'up',
+                source: 'Kazakhstan 43%', processor: 'Russia 44%', endUser: 'US/EU Reactors'
+            },
+            {
+                id: 'semiconductor', name: 'CHIPS', color: '#00d4ff', risk: 'HIGH', x: 0, y: 0,
+                tickers: ['TSM', 'ASML', 'NVDA'], thesis: 'AI demand + Taiwan risk',
+                bottleneck: 'EUV lithography', flowRate: 78, price: 'ASP +15%', trend: 'up',
+                source: 'Taiwan 65%', processor: 'TSMC 54%', endUser: 'Data Centers'
+            },
+            {
+                id: 'rareearth', name: 'RARE EARTH', color: '#c678dd', risk: 'CRITICAL', x: 0, y: 0,
+                tickers: ['MP', 'UUUU'], thesis: 'China decoupling + EV demand',
+                bottleneck: 'Processing capacity', flowRate: 65, price: 'NdPr +8%', trend: 'flat',
+                source: 'China 70%', processor: 'China 85%', endUser: 'EV Motors/Defense'
+            },
+            {
+                id: 'defense', name: 'DEFENSE', color: '#ff4444', risk: 'CRITICAL', x: 0, y: 0,
+                tickers: ['LMT', 'RTX', 'NOC', 'GD'], thesis: 'Budget expansion + backlog',
+                bottleneck: 'Labor + titanium', flowRate: 85, price: '$886B FY25', trend: 'up',
+                source: 'US Contractors', processor: 'Prime Integrators', endUser: 'DoD/NATO'
+            },
+            {
+                id: 'shipping', name: 'SHIPPING', color: '#ffd700', risk: 'HIGH', x: 0, y: 0,
+                tickers: ['ZIM', 'DAC', 'GOGL'], thesis: 'Red Sea + Panama drought',
+                bottleneck: 'Canal capacity', flowRate: 72, price: 'Rates +180%', trend: 'up',
+                source: 'Asia Export', processor: 'Container Lines', endUser: 'US/EU Import'
+            },
+            {
+                id: 'lithium', name: 'LITHIUM', color: '#61dafb', risk: 'MEDIUM', x: 0, y: 0,
+                tickers: ['ALB', 'SQM', 'LTHM'], thesis: 'EV slowdown vs long-term demand',
+                bottleneck: 'Brine processing', flowRate: 55, price: '$12k/ton', trend: 'down',
+                source: 'Chile/Australia', processor: 'China 65%', endUser: 'EV Batteries'
+            },
+            {
+                id: 'energy', name: 'ENERGY', color: '#ff6600', risk: 'HIGH', x: 0, y: 0,
+                tickers: ['XOM', 'CVX', 'OXY'], thesis: 'OPEC+ cuts + underinvestment',
+                bottleneck: 'Refining capacity', flowRate: 82, price: 'WTI $78', trend: 'flat',
+                source: 'OPEC+ 40%', processor: 'US Refiners', endUser: 'Global Demand'
+            },
+            {
+                id: 'grid', name: 'POWER GRID', color: '#98c379', risk: 'CRITICAL', x: 0, y: 0,
+                tickers: ['NEE', 'ETN', 'PWR'], thesis: 'AI load + aging infrastructure',
+                bottleneck: 'Transformer supply', flowRate: 68, price: 'Capex +22%', trend: 'up',
+                source: 'Generation Mix', processor: 'Transmission', endUser: 'Data Centers'
+            }
         ];
 
         let supplyNodes = [];
@@ -10737,26 +10780,143 @@
             // ═══════════════════════════════════════════════════════════════
 
             const dependencies = [
-                [0, 4], // Semiconductor -> Pharma (chip shortage affects)
-                [1, 3], // Rare Earth -> Defense
-                [5, 7], // Lithium -> Grid
-                [2, 6], // Shipping -> Fertilizer
-                [0, 7], // Semiconductor -> Grid (data centers)
-                [1, 5], // Rare Earth -> Lithium (EV motors)
+                { from: 0, to: 7, label: 'NUCLEAR→GRID' },      // Uranium -> Grid (power generation)
+                { from: 1, to: 3, label: 'CHIPS→DEFENSE' },      // Semiconductor -> Defense
+                { from: 2, to: 3, label: 'RE→DEFENSE' },         // Rare Earth -> Defense
+                { from: 5, to: 7, label: 'Li→GRID' },            // Lithium -> Grid (storage)
+                { from: 0, to: 1, label: 'U→AI' },               // Uranium -> Semiconductor (data center power)
+                { from: 2, to: 5, label: 'RE→EV' },              // Rare Earth -> Lithium (EV motors)
+                { from: 4, to: 6, label: 'SHIP→OIL' },           // Shipping -> Energy
             ];
 
-            dependencies.forEach(([from, to], i) => {
-                const chainA = SUPPLY_CHAINS[from];
-                const chainB = SUPPLY_CHAINS[to];
+            dependencies.forEach((dep, i) => {
+                const chainA = SUPPLY_CHAINS[dep.from];
+                const chainB = SUPPLY_CHAINS[dep.to];
 
-                ctx.strokeStyle = '#ffffff15';
+                // Animated flow line
+                const flowProgress = (time * 0.3 + i * 0.15) % 1;
+
+                ctx.strokeStyle = '#ffffff18';
                 ctx.lineWidth = 1;
-                ctx.setLineDash([5, 5]);
+                ctx.setLineDash([4, 4]);
                 ctx.beginPath();
                 ctx.moveTo(chainA.x, chainA.y);
                 ctx.lineTo(chainB.x, chainB.y);
                 ctx.stroke();
                 ctx.setLineDash([]);
+
+                // Flow particle
+                const fx = chainA.x + (chainB.x - chainA.x) * flowProgress;
+                const fy = chainA.y + (chainB.y - chainA.y) * flowProgress;
+                ctx.fillStyle = chainA.color + 'aa';
+                ctx.beginPath();
+                ctx.arc(fx, fy, 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // COMMODITY INFO PANELS (Right side)
+            // ═══════════════════════════════════════════════════════════════
+
+            const panelX = canvas.width - 170;
+            const panelY = 60;
+            const panelWidth = 155;
+            const panelHeight = SUPPLY_CHAINS.length * 32 + 30;
+
+            ctx.fillStyle = '#0a0a15ee';
+            ctx.fillRect(panelX, panelY, panelWidth, panelHeight);
+            ctx.strokeStyle = '#00d4ff44';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(panelX, panelY, panelWidth, panelHeight);
+
+            ctx.fillStyle = '#00d4ff';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚡ BOTTLENECK STATUS', panelX + 8, panelY + 15);
+
+            SUPPLY_CHAINS.forEach((chain, i) => {
+                const rowY = panelY + 28 + i * 32;
+
+                // Chain name and ticker
+                ctx.fillStyle = chain.color;
+                ctx.font = 'bold 8px Fira Code';
+                ctx.fillText(chain.name, panelX + 8, rowY);
+
+                ctx.fillStyle = '#888';
+                ctx.font = '7px Fira Code';
+                ctx.fillText(chain.tickers.slice(0, 2).join('/'), panelX + 8, rowY + 10);
+
+                // Flow rate bar
+                const barX = panelX + 70;
+                const barWidth = 50;
+                ctx.fillStyle = '#222';
+                ctx.fillRect(barX, rowY - 5, barWidth, 6);
+
+                const flowWidth = barWidth * (chain.flowRate / 100);
+                const flowColor = chain.flowRate > 80 ? '#00ff88' : chain.flowRate > 60 ? '#ffd700' : '#ff4444';
+                ctx.fillStyle = flowColor;
+                ctx.fillRect(barX, rowY - 5, flowWidth, 6);
+
+                // Flow rate %
+                ctx.fillStyle = flowColor;
+                ctx.font = 'bold 7px Fira Code';
+                ctx.textAlign = 'right';
+                ctx.fillText(chain.flowRate + '%', panelX + panelWidth - 8, rowY);
+
+                // Price/trend
+                ctx.fillStyle = chain.trend === 'up' ? '#00ff88' : chain.trend === 'down' ? '#ff4444' : '#888';
+                ctx.font = '6px Fira Code';
+                ctx.textAlign = 'left';
+                const arrow = chain.trend === 'up' ? '▲' : chain.trend === 'down' ? '▼' : '►';
+                ctx.fillText(arrow + ' ' + chain.price, panelX + 70, rowY + 10);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // THESIS PANEL (Left side)
+            // ═══════════════════════════════════════════════════════════════
+
+            const thesisPanelX = 15;
+            const thesisPanelY = 60;
+            const thesisPanelWidth = 160;
+
+            // Only show top 4 critical chains
+            const criticalChains = SUPPLY_CHAINS.filter(c => c.risk === 'CRITICAL' || c.risk === 'HIGH').slice(0, 4);
+
+            ctx.fillStyle = '#0a0a15ee';
+            ctx.fillRect(thesisPanelX, thesisPanelY, thesisPanelWidth, criticalChains.length * 45 + 25);
+            ctx.strokeStyle = '#ffd70044';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(thesisPanelX, thesisPanelY, thesisPanelWidth, criticalChains.length * 45 + 25);
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('🎯 ACTIVE THESIS', thesisPanelX + 8, thesisPanelY + 15);
+
+            criticalChains.forEach((chain, i) => {
+                const rowY = thesisPanelY + 30 + i * 45;
+
+                // Chain indicator
+                ctx.fillStyle = chain.color;
+                ctx.beginPath();
+                ctx.arc(thesisPanelX + 12, rowY + 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Chain name
+                ctx.fillStyle = chain.color;
+                ctx.font = 'bold 8px Fira Code';
+                ctx.fillText(chain.name, thesisPanelX + 22, rowY + 8);
+
+                // Thesis snippet
+                ctx.fillStyle = '#aaa';
+                ctx.font = '6px Fira Code';
+                const thesisSnippet = chain.thesis.substring(0, 28) + '...';
+                ctx.fillText(thesisSnippet, thesisPanelX + 8, rowY + 20);
+
+                // Bottleneck
+                ctx.fillStyle = '#ff4444';
+                ctx.font = '6px Fira Code';
+                ctx.fillText('⚠ ' + chain.bottleneck, thesisPanelX + 8, rowY + 32);
             });
 
             // ═══════════════════════════════════════════════════════════════
