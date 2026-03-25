@@ -5935,6 +5935,120 @@
             const threatLevel = Math.floor((Math.sin(time * 0.5) + 1) * 2) + 3; // 3-7
             ctx.fillStyle = threatLevel > 5 ? '#ff0000' : '#ffaa00';
             ctx.fillText('DEFCON ' + threatLevel, canvas.width - 20, 48);
+
+            // ═══════════════════════════════════════════════════════════════
+            // WAR↔SUPPLY GEOPOLITICAL CONNECTIONS PANEL
+            // ═══════════════════════════════════════════════════════════════
+
+            // Define war-to-supply chain mappings
+            const WAR_SUPPLY_LINKS = [
+                { conflict: 'TAIWAN STRAIT', chains: ['CHIPS', 'RARE EARTH'], severity: 'CRITICAL',
+                  flow: 'Taiwan produces 65% of semiconductors. Blockade = global tech collapse.' },
+                { conflict: 'UKRAINE-RUSSIA', chains: ['URANIUM', 'ENERGY', 'DEFENSE'], severity: 'CRITICAL',
+                  flow: 'Russia 44% enrichment. EU energy shift. Defense budget surge.' },
+                { conflict: 'RED SEA / HOUTHIS', chains: ['SHIPPING', 'ENERGY'], severity: 'HIGH',
+                  flow: '12% global trade rerouted. Suez bypass adds 10+ days transit.' },
+                { conflict: 'IRAN NUCLEAR', chains: ['URANIUM', 'ENERGY'], severity: 'HIGH',
+                  flow: 'Strait of Hormuz choke point. 20% global oil transit risk.' },
+                { conflict: 'SOUTH CHINA SEA', chains: ['SHIPPING', 'RARE EARTH', 'DEFENSE'], severity: 'ELEVATED',
+                  flow: '$5T annual trade routes. China rare earth export leverage.' }
+            ];
+
+            const linkPanelWidth = 200;
+            const linkPanelHeight = WAR_SUPPLY_LINKS.length * 45 + 30;
+            const linkPanelX = canvas.width - linkPanelWidth - 15;
+            const linkPanelY = 70;
+
+            // Panel background
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(linkPanelX, linkPanelY, linkPanelWidth, linkPanelHeight);
+            ctx.strokeStyle = '#ff444466';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(linkPanelX, linkPanelY, linkPanelWidth, linkPanelHeight);
+
+            // Panel title
+            ctx.fillStyle = '#ff4444';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚡ WAR→SUPPLY IMPACT', linkPanelX + 8, linkPanelY + 15);
+
+            // Draw each war-supply connection
+            WAR_SUPPLY_LINKS.forEach((link, i) => {
+                const rowY = linkPanelY + 30 + i * 45;
+
+                // Severity indicator
+                const sevColors = { 'CRITICAL': '#ff0000', 'HIGH': '#ff6600', 'ELEVATED': '#ffaa00' };
+                ctx.fillStyle = sevColors[link.severity];
+                ctx.beginPath();
+                ctx.arc(linkPanelX + 12, rowY + 5, 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Pulsing effect for critical
+                if (link.severity === 'CRITICAL' && Math.sin(time * 6 + i) > 0) {
+                    ctx.strokeStyle = sevColors[link.severity] + '66';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(linkPanelX + 12, rowY + 5, 6 + Math.sin(time * 4) * 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Conflict name
+                ctx.fillStyle = '#ff6666';
+                ctx.font = '7px Fira Code';
+                ctx.fillText(link.conflict.substring(0, 18), linkPanelX + 22, rowY + 7);
+
+                // Arrow
+                ctx.fillStyle = '#ff444488';
+                ctx.fillText('→', linkPanelX + 125, rowY + 7);
+
+                // Affected chains
+                ctx.fillStyle = '#00ff88';
+                ctx.font = '6px Fira Code';
+                const chainsText = link.chains.join(', ').substring(0, 20);
+                ctx.fillText(chainsText, linkPanelX + 135, rowY + 7);
+
+                // Flow description (truncated)
+                ctx.fillStyle = '#666';
+                ctx.font = '6px Fira Code';
+                const flowText = link.flow.substring(0, 45) + (link.flow.length > 45 ? '...' : '');
+                ctx.fillText(flowText, linkPanelX + 8, rowY + 20);
+
+                // Animated connection line to map
+                const conflict = CONFLICTS.find(c => c.name === link.conflict);
+                if (conflict) {
+                    const conflictX = ((conflict.lng + 180) / 360) * canvas.width;
+                    const conflictY = ((90 - conflict.lat) / 180) * canvas.height;
+
+                    // Curved connection line
+                    const lineAlpha = 0.15 + Math.sin(time * 2 + i) * 0.1;
+                    ctx.strokeStyle = `rgba(255, 100, 100, ${lineAlpha})`;
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([3, 6]);
+                    ctx.beginPath();
+                    ctx.moveTo(linkPanelX, rowY + 10);
+                    const cpX = (linkPanelX + conflictX) / 2;
+                    const cpY = rowY - 30;
+                    ctx.quadraticCurveTo(cpX, cpY, conflictX, conflictY);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Data pulse along line
+                    const pulseT = (time * 0.5 + i * 0.2) % 1;
+                    const pX = (1-pulseT)*(1-pulseT)*linkPanelX + 2*(1-pulseT)*pulseT*cpX + pulseT*pulseT*conflictX;
+                    const pY = (1-pulseT)*(1-pulseT)*(rowY+10) + 2*(1-pulseT)*pulseT*cpY + pulseT*pulseT*conflictY;
+                    ctx.fillStyle = sevColors[link.severity] + 'aa';
+                    ctx.beginPath();
+                    ctx.arc(pX, pY, 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Bottom stats
+            ctx.fillStyle = '#ff444488';
+            ctx.font = '6px Fira Code';
+            const criticalCount = WAR_SUPPLY_LINKS.filter(l => l.severity === 'CRITICAL').length;
+            ctx.fillText(`CRITICAL: ${criticalCount} | CHOKE POINTS: 4 | EXPOSURE: HIGH`,
+                linkPanelX + 8, linkPanelY + linkPanelHeight - 8);
         }
 
         function drawContinentOutlines(ctx, canvas) {
