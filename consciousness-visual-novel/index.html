@@ -5043,6 +5043,129 @@
             ctx.fillStyle = '#666';
             ctx.font = '9px Fira Code';
             ctx.fillText('Ideas flowing between the greatest minds in history', 20, 48);
+
+            // ═══════════════════════════════════════════════════════════════
+            // MINDS↔LAWS CONNECTION PANEL
+            // Links each great mind to the hermetic laws they embody
+            // ═══════════════════════════════════════════════════════════════
+
+            // Define mind-to-law mappings
+            const MIND_LAW_LINKS = [
+                { mind: 'HERMES', laws: ['I. MENTALISM', 'II. CORRESPONDENCE', 'VII. GENDER'], primary: true,
+                  insight: 'The source. All 7 hermetic principles flow from Hermes Trismegistus.' },
+                { mind: 'SOROS', laws: ['IX. REFLEXIVITY', 'V. RHYTHM', 'XIII. EMERGENCE'], primary: false,
+                  insight: 'Reflexivity is his core thesis. Markets as self-fulfilling prophecies.' },
+                { mind: 'TALEB', laws: ['X. ANTIFRAGILITY', 'XV. POWER LAW', 'XII. ENTROPY'], primary: false,
+                  insight: 'Antifragility transcends resilience. Gains from disorder.' },
+                { mind: 'BUFFETT', laws: ['XVIII. COMPOUNDING', 'XIV. MEAN REVERSION', 'VIII. PARETO'], primary: false,
+                  insight: 'Compound interest is the eighth wonder. Value finds equilibrium.' },
+                { mind: 'NASH', laws: ['XVII. GAME THEORY', 'IV. POLARITY', 'VI. CAUSE & EFFECT'], primary: false,
+                  insight: 'Equilibrium emerges from strategic interaction.' },
+                { mind: 'SUN TZU', laws: ['XVI. INFO ASYMMETRY', 'XI. SECOND ORDER', 'III. VIBRATION'], primary: false,
+                  insight: 'Know what others don\'t. Anticipate the response to the response.' },
+                { mind: 'KEYNES', laws: ['V. RHYTHM', 'XX. CYCLES', 'VI. CAUSE & EFFECT'], primary: false,
+                  insight: 'Markets cycle. Timing is everything. Causation is complex.' },
+                { mind: 'LIVERMORE', laws: ['XIV. MEAN REVERSION', 'XIX. SCARCITY', 'XXI. OPTIONALITY'], primary: false,
+                  insight: 'The big money is made in the waiting. Position for asymmetry.' }
+            ];
+
+            const lawPanelWidth = 220;
+            const lawPanelHeight = MIND_LAW_LINKS.length * 40 + 35;
+            const lawPanelX = canvas.width - lawPanelWidth - 10;
+            const lawPanelY = 60;
+
+            // Panel background
+            ctx.fillStyle = '#0a0815ee';
+            ctx.fillRect(lawPanelX, lawPanelY, lawPanelWidth, lawPanelHeight);
+            ctx.strokeStyle = '#ffd70044';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(lawPanelX, lawPanelY, lawPanelWidth, lawPanelHeight);
+
+            // Panel title with dual icons
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('🧠 MINDS ↔ LAWS ⚖️', lawPanelX + 8, lawPanelY + 15);
+
+            ctx.fillStyle = '#888';
+            ctx.font = '6px Fira Code';
+            ctx.fillText('Thinkers and the principles they embody', lawPanelX + 8, lawPanelY + 26);
+
+            // Draw each mind-law connection
+            MIND_LAW_LINKS.forEach((link, i) => {
+                const rowY = lawPanelY + 35 + i * 40;
+                const mind = GREAT_MINDS.find(m => m.name === link.mind);
+                const mindColor = mind ? mind.color : '#ffd700';
+
+                // Mind indicator dot
+                ctx.fillStyle = mindColor;
+                ctx.beginPath();
+                ctx.arc(lawPanelX + 12, rowY + 6, 5, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Pulsing effect for Hermes (primary source)
+                if (link.primary && Math.sin(time * 3) > 0) {
+                    ctx.strokeStyle = mindColor + '88';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(lawPanelX + 12, rowY + 6, 8 + Math.sin(time * 4) * 2, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Mind name
+                ctx.fillStyle = mindColor;
+                ctx.font = 'bold 8px Fira Code';
+                ctx.textAlign = 'left';
+                ctx.fillText(link.mind, lawPanelX + 22, rowY + 9);
+
+                // Arrow
+                ctx.fillStyle = '#ffd70066';
+                ctx.fillText('→', lawPanelX + 75, rowY + 9);
+
+                // Laws (connected)
+                ctx.fillStyle = '#c678dd';
+                ctx.font = '7px Fira Code';
+                const lawsText = link.laws.join(', ').substring(0, 28);
+                ctx.fillText(lawsText, lawPanelX + 88, rowY + 9);
+
+                // Insight quote (truncated)
+                ctx.fillStyle = '#666';
+                ctx.font = '6px Fira Code';
+                const insightText = link.insight.substring(0, 50) + (link.insight.length > 50 ? '...' : '');
+                ctx.fillText(insightText, lawPanelX + 8, rowY + 22);
+
+                // Animated connection line to mind node on map
+                if (mind) {
+                    // Curved connection from panel to mind
+                    const lineAlpha = 0.1 + Math.sin(time * 1.5 + i * 0.5) * 0.08;
+                    ctx.strokeStyle = `rgba(255, 215, 0, ${lineAlpha})`;
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([2, 4]);
+                    ctx.beginPath();
+                    ctx.moveTo(lawPanelX, rowY + 10);
+                    const cpX = (lawPanelX + mind.x) / 2 - 50;
+                    const cpY = rowY - 20;
+                    ctx.quadraticCurveTo(cpX, cpY, mind.x + 30, mind.y);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Data pulse along line
+                    const pulseT = (time * 0.4 + i * 0.15) % 1;
+                    const pX = (1-pulseT)*(1-pulseT)*lawPanelX + 2*(1-pulseT)*pulseT*cpX + pulseT*pulseT*(mind.x + 30);
+                    const pY = (1-pulseT)*(1-pulseT)*(rowY+10) + 2*(1-pulseT)*pulseT*cpY + pulseT*pulseT*mind.y;
+                    ctx.fillStyle = mindColor + 'bb';
+                    ctx.beginPath();
+                    ctx.arc(pX, pY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // Bottom stats
+            ctx.fillStyle = '#ffd70066';
+            ctx.font = '6px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('MINDS: 10 | LAWS: 21 | CONNECTIONS: 24 | SYNTHESIS: ACTIVE',
+                lawPanelX + 8, lawPanelY + lawPanelHeight - 8);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
