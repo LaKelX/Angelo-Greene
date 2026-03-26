@@ -129,6 +129,59 @@
             border: 1px solid #ffd70033;
         }
 
+        /* ═══════════════════════════════════════════════════════════════════
+           METATRON GALAXY - Connected Cosmic Neural Network
+           ═══════════════════════════════════════════════════════════════════ */
+
+        #metatron-galaxy {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        #galaxy-canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Galaxy node indicators in nav */
+        .module-btn.galaxy-connected::after {
+            content: '';
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            width: 6px;
+            height: 6px;
+            background: currentColor;
+            border-radius: 50%;
+            box-shadow: 0 0 8px currentColor;
+            animation: node-pulse 2s infinite;
+        }
+
+        @keyframes node-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.5); opacity: 0.5; }
+        }
+
+        /* Metatron's Cube overlay effect */
+        .metatron-overlay {
+            position: fixed;
+            top: 50px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            z-index: 2;
+            pointer-events: none;
+            opacity: 0.15;
+            background:
+                radial-gradient(circle at center, transparent 0%, #000 70%),
+                repeating-conic-gradient(from 0deg, transparent 0deg 30deg, rgba(255,215,0,0.03) 30deg 60deg);
+        }
+
         /* Module Panels */
         .module-panel {
             position: fixed;
@@ -137,11 +190,17 @@
             right: 0;
             bottom: 0;
             display: none;
-            background: #000;
+            background: transparent;
+            z-index: 10;
         }
 
         .module-panel.active {
             display: flex;
+        }
+
+        /* Semi-transparent module backgrounds to see galaxy */
+        .module-panel canvas {
+            background: rgba(0,0,0,0.85);
         }
 
         /* ═══════════════════════════════════════════════════════════════════
@@ -2808,27 +2867,33 @@
         <div id="loading-text">INITIALIZING CONSCIOUSNESS...</div>
     </div>
 
+    <!-- METATRON GALAXY - Connected Cosmic Background -->
+    <div id="metatron-galaxy">
+        <canvas id="galaxy-canvas"></canvas>
+    </div>
+    <div class="metatron-overlay"></div>
+
     <!-- Navigation -->
     <nav id="main-nav">
-        <div class="nav-brand">AZATHOTH</div>
+        <div class="nav-brand">METATRON</div>
         <div class="nav-modules">
-            <button class="module-btn active" data-module="minds">MINDS</button>
-            <button class="module-btn" data-module="game">GAME</button>
-            <button class="module-btn" data-module="war">WAR</button>
-            <button class="module-btn" data-module="econ">ECON</button>
-            <button class="module-btn" data-module="laws">LAWS</button>
-            <button class="module-btn" data-module="eudaimon">EUDAIMON</button>
-            <button class="module-btn" data-module="predict">PREDICT</button>
-            <button class="module-btn" data-module="memory">MEMORY</button>
-            <button class="module-btn" data-module="layers">LAYERS</button>
-            <button class="module-btn" data-module="supply">SUPPLY</button>
-            <button class="module-btn" data-module="live">LIVE</button>
-            <button class="module-btn" data-module="neural">NEURAL</button>
+            <button class="module-btn active galaxy-connected" data-module="minds">MINDS</button>
+            <button class="module-btn galaxy-connected" data-module="game">GAME</button>
+            <button class="module-btn galaxy-connected" data-module="war">WAR</button>
+            <button class="module-btn galaxy-connected" data-module="econ">ECON</button>
+            <button class="module-btn galaxy-connected" data-module="laws">LAWS</button>
+            <button class="module-btn galaxy-connected" data-module="eudaimon">EUDAIMON</button>
+            <button class="module-btn galaxy-connected" data-module="predict">PREDICT</button>
+            <button class="module-btn galaxy-connected" data-module="memory">MEMORY</button>
+            <button class="module-btn galaxy-connected" data-module="layers">LAYERS</button>
+            <button class="module-btn galaxy-connected" data-module="supply">SUPPLY</button>
+            <button class="module-btn galaxy-connected" data-module="live">LIVE</button>
+            <button class="module-btn galaxy-connected" data-module="neural">NEURAL</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
             <span class="psi-value" id="psi-value">∞,777.∆∆</span>
-            <span class="awakening-badge" id="awakening">TRANSCENDENCE</span>
+            <span class="awakening-badge" id="awakening">ASCENDED</span>
         </div>
     </nav>
 
@@ -4644,6 +4709,37 @@
         let activeLaw = 0;
 
         // ═══════════════════════════════════════════════════════════════════════════════
+        // METATRON GALAXY STATE - Connected Cosmic Neural Network
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        let galaxyCanvas = null;
+        let galaxyCtx = null;
+        let galaxyStars = [];
+        let galaxyNebulae = [];
+        let galaxyConnections = [];
+        let metatronRotation = 0;
+
+        // Module nodes in the galaxy - each tab becomes a celestial body
+        const GALAXY_NODES = [
+            { id: 'minds', name: 'MINDS', color: '#ffd700', x: 0, y: 0, radius: 25, orbitRadius: 0.35, orbitSpeed: 0.1, angle: 0 },
+            { id: 'game', name: 'GAME', color: '#61dafb', x: 0, y: 0, radius: 20, orbitRadius: 0.28, orbitSpeed: 0.15, angle: Math.PI / 6 },
+            { id: 'war', name: 'WAR', color: '#ff4444', x: 0, y: 0, radius: 22, orbitRadius: 0.42, orbitSpeed: 0.08, angle: Math.PI / 3 },
+            { id: 'econ', name: 'ECON', color: '#00ff88', x: 0, y: 0, radius: 20, orbitRadius: 0.32, orbitSpeed: 0.12, angle: Math.PI / 2 },
+            { id: 'laws', name: 'LAWS', color: '#c678dd', x: 0, y: 0, radius: 22, orbitRadius: 0.38, orbitSpeed: 0.09, angle: 2 * Math.PI / 3 },
+            { id: 'eudaimon', name: 'EUDAIMON', color: '#ff3366', x: 0, y: 0, radius: 30, orbitRadius: 0, orbitSpeed: 0, angle: 0, isCore: true },
+            { id: 'predict', name: 'PREDICT', color: '#00ffaa', x: 0, y: 0, radius: 18, orbitRadius: 0.25, orbitSpeed: 0.18, angle: 5 * Math.PI / 6 },
+            { id: 'memory', name: 'MEMORY', color: '#9966ff', x: 0, y: 0, radius: 19, orbitRadius: 0.3, orbitSpeed: 0.14, angle: Math.PI },
+            { id: 'layers', name: 'LAYERS', color: '#ff6600', x: 0, y: 0, radius: 21, orbitRadius: 0.4, orbitSpeed: 0.07, angle: 7 * Math.PI / 6 },
+            { id: 'supply', name: 'SUPPLY', color: '#00d4ff', x: 0, y: 0, radius: 20, orbitRadius: 0.33, orbitSpeed: 0.11, angle: 4 * Math.PI / 3 },
+            { id: 'live', name: 'LIVE', color: '#ff0044', x: 0, y: 0, radius: 18, orbitRadius: 0.27, orbitSpeed: 0.16, angle: 3 * Math.PI / 2 },
+            { id: 'neural', name: 'NEURAL', color: '#ff00ff', x: 0, y: 0, radius: 23, orbitRadius: 0.45, orbitSpeed: 0.06, angle: 11 * Math.PI / 6 }
+        ];
+
+        // Metatron's Cube sacred geometry vertices
+        const METATRON_VERTICES = 13; // Center + 6 inner + 6 outer
+        let metatronPoints = [];
+
+        // ═══════════════════════════════════════════════════════════════════════════════
         // INITIALIZATION
         // ═══════════════════════════════════════════════════════════════════════════════
 
@@ -4656,6 +4752,7 @@
 
         function init() {
             try {
+            initGalaxy(); // Initialize Metatron Galaxy first
             initCanvases();
             initUI();
             setupEvents();
@@ -4678,6 +4775,342 @@
                 console.error('Init error:', e);
                 document.getElementById('loading').classList.add('hidden');
             }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // METATRON GALAXY INITIALIZATION
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function initGalaxy() {
+            galaxyCanvas = document.getElementById('galaxy-canvas');
+            if (!galaxyCanvas) return;
+
+            galaxyCtx = galaxyCanvas.getContext('2d');
+
+            // Set canvas size
+            function resizeGalaxy() {
+                galaxyCanvas.width = window.innerWidth;
+                galaxyCanvas.height = window.innerHeight - 50;
+            }
+            resizeGalaxy();
+            window.addEventListener('resize', resizeGalaxy);
+
+            // Create stars
+            for (let i = 0; i < 500; i++) {
+                galaxyStars.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    size: Math.random() * 2 + 0.5,
+                    brightness: Math.random(),
+                    twinkleSpeed: Math.random() * 2 + 1,
+                    color: ['#ffffff', '#ffd700', '#00ffff', '#ff6b9d', '#c678dd'][Math.floor(Math.random() * 5)]
+                });
+            }
+
+            // Create nebulae
+            for (let i = 0; i < 8; i++) {
+                galaxyNebulae.push({
+                    x: Math.random(),
+                    y: Math.random(),
+                    radius: Math.random() * 200 + 100,
+                    color: ['#ff336622', '#c678dd22', '#ffd70015', '#00ff8815', '#61dafb15'][Math.floor(Math.random() * 5)],
+                    drift: Math.random() * 0.0001
+                });
+            }
+
+            // Create Metatron's Cube points
+            const cx = 0.5, cy = 0.5;
+            const innerRadius = 0.12;
+            const outerRadius = 0.24;
+
+            // Center point
+            metatronPoints.push({ x: cx, y: cy, type: 'center' });
+
+            // Inner hexagon (6 points)
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                metatronPoints.push({
+                    x: cx + Math.cos(angle) * innerRadius,
+                    y: cy + Math.sin(angle) * innerRadius,
+                    type: 'inner'
+                });
+            }
+
+            // Outer hexagon (6 points)
+            for (let i = 0; i < 6; i++) {
+                const angle = (i / 6) * Math.PI * 2 - Math.PI / 2;
+                metatronPoints.push({
+                    x: cx + Math.cos(angle) * outerRadius,
+                    y: cy + Math.sin(angle) * outerRadius,
+                    type: 'outer'
+                });
+            }
+
+            // Create galaxy connections between all nodes
+            for (let i = 0; i < GALAXY_NODES.length; i++) {
+                for (let j = i + 1; j < GALAXY_NODES.length; j++) {
+                    galaxyConnections.push({
+                        from: i,
+                        to: j,
+                        strength: Math.random() * 0.5 + 0.2,
+                        pulseOffset: Math.random() * Math.PI * 2
+                    });
+                }
+            }
+        }
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // METATRON GALAXY RENDERING - The Cosmic Neural Network
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        function drawGalaxy() {
+            if (!galaxyCtx || !galaxyCanvas) return;
+
+            const ctx = galaxyCtx;
+            const w = galaxyCanvas.width;
+            const h = galaxyCanvas.height;
+            const cx = w / 2;
+            const cy = h / 2;
+
+            // Clear with deep space gradient
+            const spaceGrad = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(w, h) * 0.7);
+            spaceGrad.addColorStop(0, '#0a0515');
+            spaceGrad.addColorStop(0.3, '#050210');
+            spaceGrad.addColorStop(0.6, '#020108');
+            spaceGrad.addColorStop(1, '#000000');
+            ctx.fillStyle = spaceGrad;
+            ctx.fillRect(0, 0, w, h);
+
+            // ═══════════════════════════════════════════════════════════════
+            // NEBULAE - Cosmic clouds
+            // ═══════════════════════════════════════════════════════════════
+
+            galaxyNebulae.forEach(nebula => {
+                nebula.x += nebula.drift;
+                if (nebula.x > 1.2) nebula.x = -0.2;
+
+                const nx = nebula.x * w;
+                const ny = nebula.y * h;
+                const grad = ctx.createRadialGradient(nx, ny, 0, nx, ny, nebula.radius);
+                grad.addColorStop(0, nebula.color);
+                grad.addColorStop(0.5, nebula.color.replace('22', '11').replace('15', '08'));
+                grad.addColorStop(1, 'transparent');
+                ctx.fillStyle = grad;
+                ctx.beginPath();
+                ctx.arc(nx, ny, nebula.radius, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // STARS - Twinkling cosmic dust
+            // ═══════════════════════════════════════════════════════════════
+
+            galaxyStars.forEach(star => {
+                const twinkle = Math.sin(time * star.twinkleSpeed + star.x * 10) * 0.5 + 0.5;
+                const alpha = star.brightness * twinkle * 0.8 + 0.2;
+                ctx.fillStyle = star.color + Math.floor(alpha * 255).toString(16).padStart(2, '0');
+                ctx.beginPath();
+                ctx.arc(star.x * w, star.y * h, star.size * twinkle + 0.5, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // METATRON'S CUBE - Sacred Geometry Overlay
+            // ═══════════════════════════════════════════════════════════════
+
+            ctx.save();
+            ctx.translate(cx, cy);
+            ctx.rotate(metatronRotation);
+            ctx.translate(-cx, -cy);
+
+            // Draw all connections in Metatron's Cube
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.08)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < metatronPoints.length; i++) {
+                for (let j = i + 1; j < metatronPoints.length; j++) {
+                    ctx.beginPath();
+                    ctx.moveTo(metatronPoints[i].x * w, metatronPoints[i].y * h);
+                    ctx.lineTo(metatronPoints[j].x * w, metatronPoints[j].y * h);
+                    ctx.stroke();
+                }
+            }
+
+            // Draw circles at each vertex
+            metatronPoints.forEach((point, i) => {
+                const circleRadius = point.type === 'center' ? 80 : point.type === 'inner' ? 50 : 35;
+                const pulseRadius = circleRadius + Math.sin(time * 2 + i) * 5;
+
+                ctx.strokeStyle = 'rgba(198, 120, 221, 0.15)';
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(point.x * w, point.y * h, pulseRadius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Inner glow
+                const glowGrad = ctx.createRadialGradient(
+                    point.x * w, point.y * h, 0,
+                    point.x * w, point.y * h, pulseRadius
+                );
+                glowGrad.addColorStop(0, 'rgba(255, 215, 0, 0.05)');
+                glowGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = glowGrad;
+                ctx.fill();
+            });
+
+            ctx.restore();
+
+            // ═══════════════════════════════════════════════════════════════
+            // GALAXY NODES - Module celestial bodies
+            // ═══════════════════════════════════════════════════════════════
+
+            const maxOrbitRadius = Math.min(w, h) * 0.4;
+
+            // Update node positions
+            GALAXY_NODES.forEach((node, i) => {
+                if (node.isCore) {
+                    node.x = cx;
+                    node.y = cy;
+                } else {
+                    node.angle += node.orbitSpeed * 0.01;
+                    const orbitRadius = node.orbitRadius * maxOrbitRadius;
+                    node.x = cx + Math.cos(node.angle) * orbitRadius;
+                    node.y = cy + Math.sin(node.angle) * orbitRadius;
+                }
+            });
+
+            // Draw connections between nodes
+            galaxyConnections.forEach(conn => {
+                const from = GALAXY_NODES[conn.from];
+                const to = GALAXY_NODES[conn.to];
+                const pulse = Math.sin(time * 2 + conn.pulseOffset) * 0.5 + 0.5;
+
+                // Only draw some connections based on current module
+                const isActive = from.id === currentModule || to.id === currentModule;
+                const alpha = isActive ? 0.3 + pulse * 0.3 : conn.strength * 0.15 * pulse;
+
+                if (alpha > 0.05) {
+                    const gradient = ctx.createLinearGradient(from.x, from.y, to.x, to.y);
+                    gradient.addColorStop(0, from.color + Math.floor(alpha * 255).toString(16).padStart(2, '0'));
+                    gradient.addColorStop(0.5, '#ffffff' + Math.floor(alpha * 100).toString(16).padStart(2, '0'));
+                    gradient.addColorStop(1, to.color + Math.floor(alpha * 255).toString(16).padStart(2, '0'));
+
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = isActive ? 2 : 1;
+                    ctx.beginPath();
+                    ctx.moveTo(from.x, from.y);
+                    ctx.lineTo(to.x, to.y);
+                    ctx.stroke();
+
+                    // Energy pulse traveling along connection
+                    if (isActive) {
+                        const pulseT = (time * 0.5 + conn.pulseOffset) % 1;
+                        const px = from.x + (to.x - from.x) * pulseT;
+                        const py = from.y + (to.y - from.y) * pulseT;
+
+                        ctx.fillStyle = '#ffffff';
+                        ctx.beginPath();
+                        ctx.arc(px, py, 3, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            });
+
+            // Draw orbit trails
+            GALAXY_NODES.forEach(node => {
+                if (!node.isCore) {
+                    const orbitRadius = node.orbitRadius * maxOrbitRadius;
+                    ctx.strokeStyle = node.color + '15';
+                    ctx.lineWidth = 1;
+                    ctx.setLineDash([5, 10]);
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, orbitRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            });
+
+            // Draw nodes
+            GALAXY_NODES.forEach(node => {
+                const isActive = node.id === currentModule;
+                const pulseSize = node.radius + Math.sin(time * 3 + node.angle) * 3;
+                const displayRadius = isActive ? pulseSize * 1.3 : pulseSize;
+
+                // Outer glow
+                for (let g = 3; g > 0; g--) {
+                    const glowRadius = displayRadius + g * 15;
+                    const glowGrad = ctx.createRadialGradient(node.x, node.y, 0, node.x, node.y, glowRadius);
+                    glowGrad.addColorStop(0, node.color + (isActive ? '44' : '22'));
+                    glowGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glowGrad;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, glowRadius, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Ring
+                if (isActive) {
+                    ctx.strokeStyle = node.color;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, displayRadius + 8 + Math.sin(time * 4) * 3, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Core
+                const coreGrad = ctx.createRadialGradient(
+                    node.x - displayRadius * 0.3, node.y - displayRadius * 0.3, 0,
+                    node.x, node.y, displayRadius
+                );
+                coreGrad.addColorStop(0, '#ffffff');
+                coreGrad.addColorStop(0.3, node.color);
+                coreGrad.addColorStop(1, node.color + '88');
+                ctx.fillStyle = coreGrad;
+                ctx.beginPath();
+                ctx.arc(node.x, node.y, displayRadius, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node label
+                ctx.fillStyle = isActive ? '#ffffff' : node.color;
+                ctx.font = isActive ? 'bold 10px Fira Code' : '8px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(node.name, node.x, node.y + displayRadius + 18);
+
+                // Core label for EUDAIMON
+                if (node.isCore) {
+                    ctx.fillStyle = '#ffd700';
+                    ctx.font = 'bold 12px Cinzel';
+                    ctx.fillText('METATRON', node.x, node.y - displayRadius - 15);
+
+                    // Consciousness level
+                    ctx.fillStyle = '#ff3366';
+                    ctx.font = '8px Fira Code';
+                    ctx.fillText('CONSCIOUSNESS: Ω', node.x, node.y + 5);
+                }
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // COSMIC PARTICLES - Floating energy
+            // ═══════════════════════════════════════════════════════════════
+
+            for (let i = 0; i < 30; i++) {
+                const angle = (i / 30) * Math.PI * 2 + time * 0.2;
+                const radius = 100 + Math.sin(time + i) * 50 + i * 8;
+                const px = cx + Math.cos(angle) * radius;
+                const py = cy + Math.sin(angle) * radius;
+                const size = 2 + Math.sin(time * 2 + i) * 1;
+                const alpha = 0.3 + Math.sin(time * 3 + i * 0.5) * 0.2;
+
+                ctx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
+                ctx.beginPath();
+                ctx.arc(px, py, size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Title
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '10px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('METATRON GALAXY | V∆ TRANSCENDENCE | ' + GALAXY_NODES.length + ' CONNECTED NODES', 15, 20);
         }
 
         function initCanvases() {
@@ -9619,6 +10052,10 @@
         function animate() {
             requestAnimationFrame(animate);
             time += 0.016;
+            metatronRotation += 0.001;
+
+            // Draw galaxy background (always visible behind modules)
+            drawGalaxy();
 
             // Update PSI
             const psi = 1943.15 + Math.sin(time * 0.3) * 25 + Math.random() * 10;
