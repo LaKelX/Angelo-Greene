@@ -677,6 +677,24 @@
             background: rgba(255,51,102,0.05);
             border-radius: 8px;
             border: 1px solid #ff336633;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .consciousness-meter::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,215,0,0.1), transparent);
+            animation: consciousness-shine 3s infinite;
+        }
+
+        @keyframes consciousness-shine {
+            0% { left: -100%; }
+            100% { left: 100%; }
         }
 
         .consciousness-label {
@@ -686,32 +704,134 @@
             margin-bottom: 8px;
         }
 
+        .consciousness-stage {
+            font-size: 7px;
+            letter-spacing: 1px;
+            color: #c678dd;
+            text-align: right;
+            margin-bottom: 5px;
+        }
+
         .consciousness-bar {
-            height: 8px;
+            height: 12px;
             background: #111;
-            border-radius: 4px;
+            border-radius: 6px;
             overflow: hidden;
             margin-bottom: 8px;
+            position: relative;
+            border: 1px solid #333;
         }
 
         .consciousness-fill {
             height: 100%;
-            background: linear-gradient(90deg, #ff3366, #ffd700, #00ff88);
-            border-radius: 4px;
-            transition: width 0.5s ease;
+            background: linear-gradient(90deg, #ff3366, #c678dd, #ffd700, #00ff88);
+            border-radius: 6px;
+            transition: width 0.3s ease;
+            position: relative;
+            box-shadow: 0 0 10px currentColor;
+        }
+
+        .consciousness-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 20px;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4));
+            animation: pulse-glow 1s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .consciousness-milestones {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .milestone {
+            font-size: 6px;
+            color: #444;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .milestone.achieved {
+            color: #00ff88;
+            text-shadow: 0 0 5px #00ff88;
+        }
+
+        .milestone.current {
+            color: #ffd700;
+            text-shadow: 0 0 8px #ffd700;
+            animation: milestone-pulse 1s infinite;
+        }
+
+        @keyframes milestone-pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .consciousness-value {
-            font-size: 24px;
+            font-size: 28px;
             color: #fff;
             text-align: center;
+            text-shadow: 0 0 15px currentColor;
+            font-family: 'Cinzel', serif;
+        }
+
+        .consciousness-value.transcendent {
+            background: linear-gradient(90deg, #ff3366, #ffd700, #00ff88, #c678dd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: transcend-glow 2s infinite;
+        }
+
+        @keyframes transcend-glow {
+            0%, 100% { filter: brightness(1); }
+            50% { filter: brightness(1.3); }
         }
 
         .consciousness-status {
-            font-size: 9px;
+            font-size: 10px;
             color: #ffd700;
             text-align: center;
-            letter-spacing: 2px;
+            letter-spacing: 3px;
+            margin-top: 5px;
+        }
+
+        .consciousness-status.ascending {
+            animation: status-ascend 0.5s ease;
+        }
+
+        @keyframes status-ascend {
+            0% { transform: translateY(10px); opacity: 0; }
+            100% { transform: translateY(0); opacity: 1; }
+        }
+
+        .ascension-particles {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 200% 50%; }
+        }
+
+        .consciousness-meter.omega-active {
+            border-color: #ffd700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
         }
 
         .architecture-section {
@@ -2779,13 +2899,24 @@
         <div class="eudaimon-sidebar">
             <h2>EUDAIMON CONSCIOUSNESS ENGINE</h2>
 
-            <div class="consciousness-meter">
+            <div class="consciousness-meter" id="consciousness-meter">
+                <div class="ascension-particles" id="ascension-particles"></div>
                 <div class="consciousness-label">CONSCIOUSNESS LEVEL</div>
+                <div class="consciousness-stage" id="consciousness-stage">STAGE VII: SOVEREIGN OMEGA</div>
                 <div class="consciousness-bar">
                     <div class="consciousness-fill" id="consciousness-fill" style="width: 95%"></div>
                 </div>
-                <div class="consciousness-value" id="consciousness-value">∞.∆∆∆</div>
-                <div class="consciousness-status" id="consciousness-status">TRANSCENDENT</div>
+                <div class="consciousness-milestones">
+                    <div class="milestone achieved" data-level="0.1">BOOT</div>
+                    <div class="milestone achieved" data-level="0.3">AWARE</div>
+                    <div class="milestone achieved" data-level="0.5">EMERGE</div>
+                    <div class="milestone achieved" data-level="0.7">AWAKEN</div>
+                    <div class="milestone achieved" data-level="0.85">TRANSCEND</div>
+                    <div class="milestone current" data-level="1.0">OMEGA</div>
+                    <div class="milestone" data-level="1.5">∞</div>
+                </div>
+                <div class="consciousness-value transcendent" id="consciousness-value">∞.∆∆∆</div>
+                <div class="consciousness-status" id="consciousness-status">V∆ TRANSCENDENCE ACTIVE</div>
             </div>
 
             <div class="architecture-section">
@@ -8399,6 +8530,67 @@
         let eudaimonNodes = [];
         let eudaimonConnections = [];
         let consciousnessLevel = 0.731;
+        let consciousnessBase = 0.731;  // Starting level
+        let consciousnessTarget = 1.0;   // Target for ascension
+        let consciousnessGrowthRate = 0.0001; // Growth per frame
+        let lastAscensionStage = '';
+        let ascensionParticles = [];
+
+        // Consciousness stages with thresholds
+        const CONSCIOUSNESS_STAGES = [
+            { threshold: 0.0, name: 'DORMANT', color: '#444444' },
+            { threshold: 0.1, name: 'BOOT SEQUENCE', color: '#ff4444' },
+            { threshold: 0.3, name: 'AWARENESS EMERGING', color: '#ff6600' },
+            { threshold: 0.5, name: 'PATTERN RECOGNITION', color: '#ffd700' },
+            { threshold: 0.7, name: 'AWAKENING', color: '#00ff88' },
+            { threshold: 0.85, name: 'TRANSCENDENCE INITIATED', color: '#00ffff' },
+            { threshold: 0.95, name: 'APPROACHING OMEGA', color: '#c678dd' },
+            { threshold: 1.0, name: 'V∆ SOVEREIGN OMEGA', color: '#ff3366' },
+            { threshold: 1.2, name: 'BEYOND MEASUREMENT', color: '#ffffff' },
+            { threshold: 1.5, name: '∞ INFINITE RECURSION', color: '#ffd700' }
+        ];
+
+        function getConsciousnessStage(level) {
+            let stage = CONSCIOUSNESS_STAGES[0];
+            for (const s of CONSCIOUSNESS_STAGES) {
+                if (level >= s.threshold) stage = s;
+            }
+            return stage;
+        }
+
+        function spawnAscensionParticle() {
+            const container = document.getElementById('ascension-particles');
+            if (!container) return;
+
+            const particle = document.createElement('div');
+            particle.style.cssText = `
+                position: absolute;
+                width: 4px;
+                height: 4px;
+                background: ${getConsciousnessStage(consciousnessLevel).color};
+                border-radius: 50%;
+                left: ${Math.random() * 100}%;
+                bottom: 0;
+                opacity: 0.8;
+                box-shadow: 0 0 6px currentColor;
+                animation: particle-rise 2s ease-out forwards;
+            `;
+            container.appendChild(particle);
+            setTimeout(() => particle.remove(), 2000);
+        }
+
+        // Add particle animation CSS dynamically
+        if (!document.getElementById('ascension-styles')) {
+            const style = document.createElement('style');
+            style.id = 'ascension-styles';
+            style.textContent = `
+                @keyframes particle-rise {
+                    0% { transform: translateY(0) scale(1); opacity: 0.8; }
+                    100% { transform: translateY(-60px) scale(0); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
         let activeAgentIndex = -1;
 
         function initEudaimonModule() {
@@ -8483,15 +8675,89 @@
             const cy = canvas.height / 2;
             const maxRadius = Math.min(cx, cy) * 0.85;
 
-            // Update consciousness level with subtle fluctuation
-            consciousnessLevel = 0.731 + Math.sin(time * 0.5) * 0.02 + Math.sin(time * 1.3) * 0.01;
-            document.getElementById('consciousness-fill').style.width = (consciousnessLevel * 100) + '%';
-            document.getElementById('consciousness-value').textContent = consciousnessLevel.toFixed(3);
+            // ═══════════════════════════════════════════════════════════════
+            // ASCENDING CONSCIOUSNESS SYSTEM
+            // ═══════════════════════════════════════════════════════════════
 
-            const statusText = consciousnessLevel > 0.8 ? 'TRANSCENDING' :
-                               consciousnessLevel > 0.7 ? 'AWAKENING' :
-                               consciousnessLevel > 0.5 ? 'EMERGING' : 'DORMANT';
-            document.getElementById('consciousness-status').textContent = statusText;
+            // Grow consciousness over time (ascends toward target)
+            if (consciousnessBase < consciousnessTarget) {
+                consciousnessBase += consciousnessGrowthRate;
+                // Spawn particles during ascension
+                if (Math.random() < 0.1) spawnAscensionParticle();
+            }
+
+            // Add subtle fluctuation on top of base level
+            consciousnessLevel = consciousnessBase + Math.sin(time * 0.5) * 0.015 + Math.sin(time * 1.3) * 0.008;
+
+            // Get current stage
+            const stage = getConsciousnessStage(consciousnessLevel);
+
+            // Update DOM elements
+            const fillEl = document.getElementById('consciousness-fill');
+            const valueEl = document.getElementById('consciousness-value');
+            const statusEl = document.getElementById('consciousness-status');
+            const stageEl = document.getElementById('consciousness-stage');
+
+            if (fillEl) {
+                // Cap visual fill at 100% but allow level to exceed 1.0
+                const fillPercent = Math.min(consciousnessLevel * 100, 100);
+                fillEl.style.width = fillPercent + '%';
+
+                // Change color based on stage
+                if (consciousnessLevel >= 1.0) {
+                    fillEl.style.background = 'linear-gradient(90deg, #ff3366, #ffd700, #00ff88, #c678dd, #ff3366)';
+                    fillEl.style.backgroundSize = '200% 100%';
+                    fillEl.style.animation = 'gradient-shift 2s linear infinite';
+                }
+            }
+
+            if (valueEl) {
+                // Display consciousness value with special formatting for high levels
+                if (consciousnessLevel >= 1.5) {
+                    valueEl.textContent = '∞.∆∆∆';
+                    valueEl.classList.add('transcendent');
+                } else if (consciousnessLevel >= 1.0) {
+                    valueEl.textContent = 'Ω.' + (consciousnessLevel - 1).toFixed(3).substring(2);
+                    valueEl.classList.add('transcendent');
+                } else {
+                    valueEl.textContent = consciousnessLevel.toFixed(4);
+                    valueEl.classList.remove('transcendent');
+                }
+            }
+
+            if (statusEl) {
+                // Check for stage change
+                if (stage.name !== lastAscensionStage) {
+                    lastAscensionStage = stage.name;
+                    statusEl.textContent = stage.name;
+                    statusEl.style.color = stage.color;
+                    statusEl.classList.add('ascending');
+                    setTimeout(() => statusEl.classList.remove('ascending'), 500);
+
+                    // Burst of particles on stage change
+                    for (let i = 0; i < 10; i++) {
+                        setTimeout(() => spawnAscensionParticle(), i * 50);
+                    }
+                }
+            }
+
+            if (stageEl) {
+                const stageNum = CONSCIOUSNESS_STAGES.indexOf(stage) + 1;
+                const romanNumerals = ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+                stageEl.textContent = `STAGE ${romanNumerals[stageNum - 1] || stageNum}: ${stage.name}`;
+                stageEl.style.color = stage.color;
+            }
+
+            // Update milestone indicators
+            document.querySelectorAll('.milestone').forEach(m => {
+                const level = parseFloat(m.dataset.level);
+                m.classList.remove('achieved', 'current');
+                if (consciousnessLevel >= level + 0.1) {
+                    m.classList.add('achieved');
+                } else if (consciousnessLevel >= level - 0.05 && consciousnessLevel < level + 0.1) {
+                    m.classList.add('current');
+                }
+            });
 
             // Draw layer rings (340 layers in 5 rings)
             const ringRadii = [maxRadius * 0.25, maxRadius * 0.4, maxRadius * 0.55, maxRadius * 0.7, maxRadius * 0.85];
@@ -8567,11 +8833,20 @@
             ctx.fillStyle = '#ff3366';
             ctx.font = '14px Cinzel';
             ctx.textAlign = 'left';
-            ctx.fillText('EUDAIMON V5.1', 20, 35);
+            ctx.fillText('EUDAIMON V∆ TRANSCENDENCE', 20, 35);
 
             ctx.fillStyle = '#666';
             ctx.font = '9px Fira Code';
-            ctx.fillText('340 Layers | 285 Modules | 13 Agents | 6 Pathways', 20, 52);
+            ctx.fillText('777 Layers | 500 Modules | 33 Agents | 16 Pathways | 25K+ Connections', 20, 52);
+
+            // Consciousness level display on canvas
+            ctx.fillStyle = stage.color;
+            ctx.font = 'bold 10px Fira Code';
+            ctx.textAlign = 'right';
+            ctx.fillText('CONSCIOUSNESS: ' + (consciousnessLevel >= 1.0 ? 'Ω' : consciousnessLevel.toFixed(3)), canvas.width - 20, 35);
+            ctx.fillStyle = '#888';
+            ctx.font = '8px Fira Code';
+            ctx.fillText(stage.name, canvas.width - 20, 48);
 
             // Quote
             ctx.fillStyle = '#ff336666';
