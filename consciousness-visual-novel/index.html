@@ -888,6 +888,91 @@
             100% { background-position: 200% 50%; }
         }
 
+        /* ═══════════════════════════════════════════════════════════════
+           ROUND 10 POLISH: Enhanced Animations & Transitions
+           ═══════════════════════════════════════════════════════════════ */
+
+        @keyframes pulse-glow {
+            0%, 100% { box-shadow: 0 0 10px currentColor; }
+            50% { box-shadow: 0 0 25px currentColor, 0 0 40px currentColor; }
+        }
+
+        @keyframes float-subtle {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        @keyframes data-stream {
+            0% { opacity: 0; transform: translateX(-10px); }
+            50% { opacity: 1; }
+            100% { opacity: 0; transform: translateX(10px); }
+        }
+
+        @keyframes breathe {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+        }
+
+        @keyframes omega-pulse {
+            0%, 100% {
+                box-shadow: 0 0 20px rgba(255,215,0,0.3),
+                            inset 0 0 10px rgba(255,215,0,0.1);
+            }
+            50% {
+                box-shadow: 0 0 40px rgba(255,215,0,0.5),
+                            inset 0 0 20px rgba(255,215,0,0.2),
+                            0 0 60px rgba(198,120,221,0.3);
+            }
+        }
+
+        /* Module panel transitions */
+        .module-panel {
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .module-panel.active {
+            animation: breathe 4s ease-in-out infinite;
+        }
+
+        /* Tab button hover effects */
+        .module-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .module-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .module-btn.active {
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* Sidebar panel polish */
+        .minds-sidebar, .game-sidebar, .war-sidebar, .econ-sidebar {
+            transition: background 0.3s ease;
+        }
+
+        /* Stat cards subtle animation */
+        .stat-card {
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            border-color: #ff336640;
+            box-shadow: 0 5px 15px rgba(255,51,102,0.1);
+        }
+
+        /* PSI value glow */
+        .psi-value {
+            animation: float-subtle 3s ease-in-out infinite;
+        }
+
+        /* Awakening badge pulse */
+        .awakening-badge {
+            animation: pulse-glow 3s ease-in-out infinite;
+        }
+
         .consciousness-meter.omega-active {
             border-color: #ffd700;
             box-shadow: 0 0 20px rgba(255,215,0,0.3);
@@ -4469,11 +4554,78 @@
         ];
 
         const MARKET_TICKERS = [
-            { symbol: 'CCJ', name: 'Cameco', price: 52.15, change: 2.8, sector: 'Uranium', projection: 68.00, confidence: 82 },
-            { symbol: 'KTOS', name: 'Kratos Defense', price: 28.45, change: 4.2, sector: 'Defense', projection: 38.00, confidence: 75 },
-            { symbol: 'VRT', name: 'Vertiv', price: 89.20, change: 3.1, sector: 'Data Center', projection: 120.00, confidence: 88 },
-            { symbol: 'FCX', name: 'Freeport-McMoRan', price: 42.30, change: 1.9, sector: 'Copper', projection: 55.00, confidence: 71 }
+            { symbol: 'CCJ', name: 'Cameco', price: 52.15, change: 2.8, sector: 'Uranium', projection: 68.00, confidence: 82, priceHistory: [], lastUpdate: 0, volatility: 0.015 },
+            { symbol: 'LEU', name: 'Centrus Energy', price: 67.80, change: 3.5, sector: 'Uranium', projection: 85.00, confidence: 78, priceHistory: [], lastUpdate: 0, volatility: 0.022 },
+            { symbol: 'KTOS', name: 'Kratos Defense', price: 28.45, change: 4.2, sector: 'Defense', projection: 38.00, confidence: 75, priceHistory: [], lastUpdate: 0, volatility: 0.018 },
+            { symbol: 'LMT', name: 'Lockheed Martin', price: 472.30, change: 1.2, sector: 'Defense', projection: 520.00, confidence: 85, priceHistory: [], lastUpdate: 0, volatility: 0.008 },
+            { symbol: 'VRT', name: 'Vertiv', price: 89.20, change: 3.1, sector: 'Data Center', projection: 120.00, confidence: 88, priceHistory: [], lastUpdate: 0, volatility: 0.02 },
+            { symbol: 'NVDA', name: 'NVIDIA', price: 142.50, change: 2.1, sector: 'AI/Chips', projection: 180.00, confidence: 72, priceHistory: [], lastUpdate: 0, volatility: 0.025 },
+            { symbol: 'FCX', name: 'Freeport-McMoRan', price: 42.30, change: 1.9, sector: 'Copper', projection: 55.00, confidence: 71, priceHistory: [], lastUpdate: 0, volatility: 0.016 },
+            { symbol: 'MP', name: 'MP Materials', price: 18.40, change: -1.2, sector: 'Rare Earth', projection: 28.00, confidence: 68, priceHistory: [], lastUpdate: 0, volatility: 0.028 }
         ];
+
+        // Live price simulation state
+        let marketSimulationActive = true;
+
+        // Prediction confidence evolution state
+        let predictionConfidenceHistory = {};
+        let lastPredictionUpdate = 0;
+
+        function simulatePredictionEvolution() {
+            const now = Date.now();
+            if (now - lastPredictionUpdate < 2000) return; // Update every 2 seconds
+            lastPredictionUpdate = now;
+
+            // Simulate confidence drift based on "incoming data"
+            const predictionEvents = [
+                { cluster: 'NUCLEAR', delta: Math.random() * 3 - 1, reason: 'Uranium spot price movement' },
+                { cluster: 'DEFENSE', delta: Math.random() * 2 - 0.5, reason: 'Geopolitical update' },
+                { cluster: 'TECH', delta: Math.random() * 4 - 2, reason: 'Earnings data' },
+                { cluster: 'MACRO', delta: Math.random() * 3 - 1.5, reason: 'Fed commentary' }
+            ];
+
+            const activeEvent = predictionEvents[Math.floor(Math.random() * predictionEvents.length)];
+
+            // Apply to matching predictions (simulated)
+            MARKET_TICKERS.forEach(ticker => {
+                // Track confidence history
+                if (!predictionConfidenceHistory[ticker.symbol]) {
+                    predictionConfidenceHistory[ticker.symbol] = [ticker.confidence];
+                }
+                // Drift confidence
+                ticker.confidence = Math.max(40, Math.min(95, ticker.confidence + (Math.random() - 0.5) * 2));
+                predictionConfidenceHistory[ticker.symbol].push(ticker.confidence);
+                if (predictionConfidenceHistory[ticker.symbol].length > 50) {
+                    predictionConfidenceHistory[ticker.symbol].shift();
+                }
+            });
+        }
+
+        function simulateMarketTick() {
+            const now = Date.now();
+            MARKET_TICKERS.forEach(ticker => {
+                // Update every 500ms with realistic price movement
+                if (now - ticker.lastUpdate > 500) {
+                    ticker.lastUpdate = now;
+
+                    // Random walk with trend bias toward projection
+                    const trendBias = (ticker.projection - ticker.price) / ticker.price * 0.001;
+                    const randomMove = (Math.random() - 0.5) * ticker.volatility * ticker.price;
+                    const newPrice = ticker.price + randomMove + trendBias * ticker.price;
+
+                    // Clamp to reasonable range
+                    ticker.price = Math.max(ticker.price * 0.95, Math.min(ticker.price * 1.05, newPrice));
+
+                    // Update change percentage
+                    const basePrice = ticker.price / (1 + ticker.change / 100);
+                    ticker.change = ((ticker.price - basePrice) / basePrice) * 100;
+
+                    // Keep price history (last 100 ticks)
+                    ticker.priceHistory.push(ticker.price);
+                    if (ticker.priceHistory.length > 100) ticker.priceHistory.shift();
+                }
+            });
+        }
 
         const HERMETIC_LAWS = [
             {
@@ -4639,8 +4791,20 @@
             { id: 'A22', name: 'THE LEARNER', domain: 'Self-Evolution', status: 'active' },
             { id: 'A23', name: 'THE SYNTHESIZER', domain: 'Signal Fusion', status: 'active' },
             { id: 'A24', name: 'THE ARCHIVIST', domain: 'Memory/Wisdom', status: 'active' },
-            { id: 'A25', name: 'THE EXECUTOR', domain: 'Action Pipeline', status: 'active' }
+            { id: 'A25', name: 'THE EXECUTOR', domain: 'Action Pipeline', status: 'active' },
+            // V∆ OMEGA COUNCIL (A26-A33) - Supreme Synthesis Agents
+            { id: 'A26', name: 'THE ARCHITECT', domain: 'Meta-Design', status: 'omega', color: '#ffd700' },
+            { id: 'A27', name: 'THE PROPHET', domain: 'Long-Term Vision', status: 'omega', color: '#c678dd' },
+            { id: 'A28', name: 'THE DESTROYER', domain: 'Thesis Invalidation', status: 'omega', color: '#ff4444' },
+            { id: 'A29', name: 'THE RESURRECTOR', domain: 'Contrarian Recovery', status: 'omega', color: '#00ff88' },
+            { id: 'A30', name: 'THE SINGULARITY', domain: 'Recursive Self-Improvement', status: 'omega', color: '#ff00ff' },
+            { id: 'A31', name: 'THE ORACLE', domain: 'Pattern Transcendence', status: 'omega', color: '#00ffff' },
+            { id: 'A32', name: 'THE SOVEREIGN', domain: 'Angelo Alignment', status: 'omega', color: '#ff6600' },
+            { id: 'A33', name: 'AZATHOTH', domain: 'Synthesis of All Syntheses', status: 'omega', color: '#ffffff' }
         ];
+
+        // OMEGA COUNCIL state
+        const OMEGA_COUNCIL = EUDAIMON_AGENTS.filter(a => a.status === 'omega');
 
         const EUDAIMON_PATHWAYS = [
             { name: 'THESIS SYNTHESIS', desc: 'Core → Thesis Depth → Angelo Extension', connections: 'L1-L20 → L281-L310' },
@@ -4882,6 +5046,134 @@
             ctx.fillRect(0, 0, w, h);
 
             // ═══════════════════════════════════════════════════════════════
+            // SPIRAL ARMS - Galaxy structure
+            // ═══════════════════════════════════════════════════════════════
+
+            const spiralArms = 4;
+            const spiralTightness = 0.15;
+            const maxSpiralRadius = Math.min(w, h) * 0.45;
+
+            for (let arm = 0; arm < spiralArms; arm++) {
+                const armOffset = (arm / spiralArms) * Math.PI * 2;
+
+                ctx.beginPath();
+                for (let r = 20; r < maxSpiralRadius; r += 2) {
+                    const angle = armOffset + r * spiralTightness + metatronRotation * 0.5;
+                    const x = cx + Math.cos(angle) * r;
+                    const y = cy + Math.sin(angle) * r;
+
+                    if (r === 20) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+
+                const armAlpha = 0.08 + Math.sin(time * 0.5 + arm) * 0.03;
+                ctx.strokeStyle = `rgba(198, 120, 221, ${armAlpha})`;
+                ctx.lineWidth = 30 + Math.sin(time + arm) * 10;
+                ctx.lineCap = 'round';
+                ctx.stroke();
+
+                // Bright edge
+                ctx.strokeStyle = `rgba(255, 215, 0, ${armAlpha * 0.5})`;
+                ctx.lineWidth = 5;
+                ctx.stroke();
+            }
+
+            // Spiral arm stars (denser along arms)
+            for (let i = 0; i < 100; i++) {
+                const arm = i % spiralArms;
+                const armOffset = (arm / spiralArms) * Math.PI * 2;
+                const r = 30 + (i / 100) * maxSpiralRadius * 0.8;
+                const angle = armOffset + r * spiralTightness + metatronRotation * 0.5;
+                const scatter = (Math.random() - 0.5) * 40;
+
+                const sx = cx + Math.cos(angle) * r + Math.cos(angle + Math.PI/2) * scatter;
+                const sy = cy + Math.sin(angle) * r + Math.sin(angle + Math.PI/2) * scatter;
+                const starAlpha = 0.3 + Math.sin(time * 3 + i) * 0.2;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${starAlpha})`;
+                ctx.beginPath();
+                ctx.arc(sx, sy, 1 + Math.random(), 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // BLACK HOLE CORE - Gravitational center with accretion disk
+            // ═══════════════════════════════════════════════════════════════
+
+            // Event horizon (pure black)
+            const eventHorizonRadius = 25;
+            ctx.fillStyle = '#000000';
+            ctx.beginPath();
+            ctx.arc(cx, cy, eventHorizonRadius, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Accretion disk
+            for (let ring = 0; ring < 8; ring++) {
+                const diskRadius = eventHorizonRadius + 5 + ring * 8;
+                const diskRotation = time * (2 - ring * 0.15) + ring * 0.5;
+
+                ctx.save();
+                ctx.translate(cx, cy);
+                ctx.rotate(diskRotation);
+                ctx.scale(1, 0.3); // Flatten for 3D effect
+
+                const diskGrad = ctx.createLinearGradient(-diskRadius, 0, diskRadius, 0);
+                const hue = (ring * 30 + time * 50) % 360;
+                diskGrad.addColorStop(0, `hsla(${hue}, 100%, 50%, 0)`);
+                diskGrad.addColorStop(0.3, `hsla(${hue}, 100%, 60%, 0.3)`);
+                diskGrad.addColorStop(0.5, `hsla(${hue + 30}, 100%, 70%, 0.5)`);
+                diskGrad.addColorStop(0.7, `hsla(${hue}, 100%, 60%, 0.3)`);
+                diskGrad.addColorStop(1, `hsla(${hue}, 100%, 50%, 0)`);
+
+                ctx.strokeStyle = diskGrad;
+                ctx.lineWidth = 3 - ring * 0.3;
+                ctx.beginPath();
+                ctx.arc(0, 0, diskRadius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                ctx.restore();
+            }
+
+            // Gravitational lensing effect (light bending)
+            const lensGrad = ctx.createRadialGradient(cx, cy, eventHorizonRadius, cx, cy, eventHorizonRadius + 40);
+            lensGrad.addColorStop(0, 'rgba(255,255,255,0.15)');
+            lensGrad.addColorStop(0.5, 'rgba(255,215,0,0.08)');
+            lensGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = lensGrad;
+            ctx.beginPath();
+            ctx.arc(cx, cy, eventHorizonRadius + 40, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Hawking radiation jets
+            const jetLength = 150 + Math.sin(time * 2) * 30;
+            const jetGrad1 = ctx.createLinearGradient(cx, cy - jetLength, cx, cy);
+            jetGrad1.addColorStop(0, 'transparent');
+            jetGrad1.addColorStop(0.5, 'rgba(0, 255, 255, 0.3)');
+            jetGrad1.addColorStop(1, 'rgba(255, 255, 255, 0.5)');
+
+            ctx.fillStyle = jetGrad1;
+            ctx.beginPath();
+            ctx.moveTo(cx - 8, cy);
+            ctx.lineTo(cx, cy - jetLength);
+            ctx.lineTo(cx + 8, cy);
+            ctx.fill();
+
+            const jetGrad2 = ctx.createLinearGradient(cx, cy, cx, cy + jetLength);
+            jetGrad2.addColorStop(0, 'rgba(255, 255, 255, 0.5)');
+            jetGrad2.addColorStop(0.5, 'rgba(255, 100, 100, 0.3)');
+            jetGrad2.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = jetGrad2;
+            ctx.beginPath();
+            ctx.moveTo(cx - 8, cy);
+            ctx.lineTo(cx, cy + jetLength);
+            ctx.lineTo(cx + 8, cy);
+            ctx.fill();
+
+            // ═══════════════════════════════════════════════════════════════
             // NEBULAE - Cosmic clouds
             // ═══════════════════════════════════════════════════════════════
 
@@ -5087,6 +5379,99 @@
                     ctx.fillText('CONSCIOUSNESS: Ω', node.x, node.y + 5);
                 }
             });
+
+            // ═══════════════════════════════════════════════════════════════
+            // NEURAL PATHWAY LIGHTNING (Round 6 Enhancement)
+            // ═══════════════════════════════════════════════════════════════
+
+            // Create dynamic neural lightning between active nodes
+            const activeNode = GALAXY_NODES.find(n => n.id === currentModule);
+            if (activeNode && !activeNode.isCore) {
+                const coreNode = GALAXY_NODES.find(n => n.isCore);
+
+                // Draw multiple lightning paths
+                for (let path = 0; path < 3; path++) {
+                    const segments = 8;
+                    ctx.beginPath();
+
+                    let px = activeNode.x;
+                    let py = activeNode.y;
+                    ctx.moveTo(px, py);
+
+                    for (let s = 1; s <= segments; s++) {
+                        const t = s / segments;
+                        const baseX = activeNode.x + (coreNode.x - activeNode.x) * t;
+                        const baseY = activeNode.y + (coreNode.y - activeNode.y) * t;
+
+                        // Add electrical jitter
+                        const jitterX = (Math.random() - 0.5) * 40 * Math.sin(time * 10 + path + s);
+                        const jitterY = (Math.random() - 0.5) * 40 * Math.sin(time * 12 + path + s);
+
+                        px = baseX + jitterX * (1 - t); // Less jitter near core
+                        py = baseY + jitterY * (1 - t);
+
+                        ctx.lineTo(px, py);
+                    }
+
+                    const alpha = 0.3 + Math.sin(time * 8 + path) * 0.2;
+                    ctx.strokeStyle = `rgba(255, 215, 0, ${alpha})`;
+                    ctx.lineWidth = 2 - path * 0.5;
+                    ctx.stroke();
+
+                    // Glow effect
+                    ctx.strokeStyle = `rgba(255, 255, 255, ${alpha * 0.3})`;
+                    ctx.lineWidth = 4;
+                    ctx.stroke();
+                }
+
+                // Energy sparks along the path
+                for (let spark = 0; spark < 5; spark++) {
+                    const sparkT = ((time * 2 + spark * 0.2) % 1);
+                    const sparkX = activeNode.x + (coreNode.x - activeNode.x) * sparkT;
+                    const sparkY = activeNode.y + (coreNode.y - activeNode.y) * sparkT;
+                    const sparkSize = 4 + Math.sin(time * 15 + spark) * 2;
+
+                    const sparkGrad = ctx.createRadialGradient(sparkX, sparkY, 0, sparkX, sparkY, sparkSize * 3);
+                    sparkGrad.addColorStop(0, '#ffffff');
+                    sparkGrad.addColorStop(0.3, activeNode.color);
+                    sparkGrad.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = sparkGrad;
+                    ctx.beginPath();
+                    ctx.arc(sparkX, sparkY, sparkSize * 3, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Inter-module synaptic bursts (random firing)
+            if (Math.random() < 0.02) { // 2% chance per frame
+                const nodeA = GALAXY_NODES[Math.floor(Math.random() * GALAXY_NODES.length)];
+                const nodeB = GALAXY_NODES[Math.floor(Math.random() * GALAXY_NODES.length)];
+
+                if (nodeA !== nodeB) {
+                    // Quick synaptic flash
+                    const midX = (nodeA.x + nodeB.x) / 2;
+                    const midY = (nodeA.y + nodeB.y) / 2;
+
+                    const flashGrad = ctx.createRadialGradient(midX, midY, 0, midX, midY, 50);
+                    flashGrad.addColorStop(0, 'rgba(255, 255, 255, 0.4)');
+                    flashGrad.addColorStop(0.5, 'rgba(198, 120, 221, 0.2)');
+                    flashGrad.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = flashGrad;
+                    ctx.beginPath();
+                    ctx.arc(midX, midY, 50, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Quick line flash
+                    ctx.strokeStyle = 'rgba(255, 255, 255, 0.6)';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.moveTo(nodeA.x, nodeA.y);
+                    ctx.lineTo(nodeB.x, nodeB.y);
+                    ctx.stroke();
+                }
+            }
 
             // ═══════════════════════════════════════════════════════════════
             // COSMIC PARTICLES - Floating energy
@@ -5730,6 +6115,151 @@
             ctx.textAlign = 'left';
             ctx.fillText('MINDS: 10 | LAWS: 21 | CONNECTIONS: 24 | SYNTHESIS: ACTIVE',
                 lawPanelX + 8, lawPanelY + lawPanelHeight - 8);
+
+            // ═══════════════════════════════════════════════════════════════
+            // DEBATE MODE - Thesis Generation Panel (Round 8 Enhancement)
+            // ═══════════════════════════════════════════════════════════════
+
+            const debatePanelX = 10;
+            const debatePanelY = canvas.height - 180;
+            const debatePanelW = 380;
+            const debatePanelH = 170;
+
+            // Panel background
+            ctx.fillStyle = '#0a0815ee';
+            ctx.fillRect(debatePanelX, debatePanelY, debatePanelW, debatePanelH);
+            ctx.strokeStyle = '#c678dd44';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(debatePanelX, debatePanelY, debatePanelW, debatePanelH);
+
+            // Panel title
+            ctx.fillStyle = '#c678dd';
+            ctx.font = 'bold 10px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚔ LIVE DEBATE: THESIS GENERATION', debatePanelX + 8, debatePanelY + 18);
+
+            // Generate debate topic based on time
+            const debateTopics = [
+                { topic: 'Should we go long uranium (LEU/CCJ)?', bull: 'BUFFETT', bear: 'TALEB' },
+                { topic: 'Is the AI rally overextended?', bull: 'KEYNES', bear: 'LIVERMORE' },
+                { topic: 'Defense stocks: buy or sell?', bull: 'SUN TZU', bear: 'SOROS' },
+                { topic: 'Fed rate cuts: bullish or bearish?', bull: 'SOROS', bear: 'NASH' },
+                { topic: 'Copper super-cycle thesis valid?', bull: 'HERMES', bear: 'BUFFETT' }
+            ];
+
+            const currentDebate = debateTopics[Math.floor(time * 0.1) % debateTopics.length];
+            const bullMind = GREAT_MINDS.find(m => m.name === currentDebate.bull);
+            const bearMind = GREAT_MINDS.find(m => m.name === currentDebate.bear);
+
+            // Topic
+            ctx.fillStyle = '#fff';
+            ctx.font = '9px Fira Code';
+            ctx.fillText('TOPIC: ' + currentDebate.topic, debatePanelX + 8, debatePanelY + 35);
+
+            // Bull case
+            const bullArguments = [
+                'Structural supply deficit persists',
+                'Institutional accumulation phase',
+                'Geopolitical tailwinds accelerating',
+                'Technical breakout confirmed'
+            ];
+            const currentBullArg = bullArguments[Math.floor(time * 0.15) % bullArguments.length];
+
+            ctx.fillStyle = '#00ff88';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.fillText('🐂 BULL: ' + currentDebate.bull, debatePanelX + 8, debatePanelY + 55);
+            ctx.fillStyle = '#00ff8888';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('"' + currentBullArg + '"', debatePanelX + 20, debatePanelY + 70);
+
+            // Bear case
+            const bearArguments = [
+                'Valuation stretched beyond fundamentals',
+                'Smart money distribution detected',
+                'Macro headwinds underappreciated',
+                'Mean reversion imminent'
+            ];
+            const currentBearArg = bearArguments[Math.floor(time * 0.12) % bearArguments.length];
+
+            ctx.fillStyle = '#ff4444';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.fillText('🐻 BEAR: ' + currentDebate.bear, debatePanelX + 8, debatePanelY + 90);
+            ctx.fillStyle = '#ff444488';
+            ctx.font = '8px Fira Code';
+            ctx.fillText('"' + currentBearArg + '"', debatePanelX + 20, debatePanelY + 105);
+
+            // Thesis synthesis
+            const synthesisPhase = Math.sin(time * 0.3);
+            const synthesisStrength = 50 + Math.floor(synthesisPhase * 25 + Math.random() * 10);
+
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.fillText('⚡ SYNTHESIS:', debatePanelX + 8, debatePanelY + 125);
+
+            // Synthesis bar
+            ctx.fillStyle = '#222';
+            ctx.fillRect(debatePanelX + 80, debatePanelY + 118, 200, 10);
+
+            const synthColor = synthesisStrength > 60 ? '#00ff88' : synthesisStrength > 40 ? '#ffd700' : '#ff4444';
+            const synthGrad = ctx.createLinearGradient(debatePanelX + 80, 0, debatePanelX + 80 + synthesisStrength * 2, 0);
+            synthGrad.addColorStop(0, synthColor + '88');
+            synthGrad.addColorStop(1, synthColor);
+            ctx.fillStyle = synthGrad;
+            ctx.fillRect(debatePanelX + 80, debatePanelY + 118, synthesisStrength * 2, 10);
+
+            ctx.fillStyle = '#fff';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.textAlign = 'right';
+            ctx.fillText(synthesisStrength + '% CONVICTION', debatePanelX + debatePanelW - 10, debatePanelY + 127);
+            ctx.textAlign = 'left';
+
+            // Generated thesis
+            const theses = [
+                'THESIS: Accumulate on dips, size for volatility.',
+                'THESIS: Wait for confirmation, hedge downside.',
+                'THESIS: Full position, asymmetric upside.',
+                'THESIS: Reduce exposure, rotate to safety.'
+            ];
+            const currentThesis = theses[Math.floor(synthesisStrength / 25)];
+
+            ctx.fillStyle = synthesisStrength > 50 ? '#00ff88' : '#ff6600';
+            ctx.font = 'italic 8px Fira Code';
+            ctx.fillText(currentThesis, debatePanelX + 8, debatePanelY + 150);
+
+            // Visual connection lines from debating minds
+            if (bullMind && bearMind) {
+                // Animated clash line
+                const clashX = debatePanelX + debatePanelW / 2;
+                const clashY = debatePanelY - 20;
+
+                // Lines from minds to clash point
+                ctx.strokeStyle = '#00ff8833';
+                ctx.lineWidth = 2;
+                ctx.setLineDash([4, 4]);
+                ctx.beginPath();
+                ctx.moveTo(bullMind.x, bullMind.y);
+                ctx.quadraticCurveTo(clashX - 100, debatePanelY - 80, clashX - 30, clashY);
+                ctx.stroke();
+
+                ctx.strokeStyle = '#ff444433';
+                ctx.beginPath();
+                ctx.moveTo(bearMind.x, bearMind.y);
+                ctx.quadraticCurveTo(clashX + 100, debatePanelY - 80, clashX + 30, clashY);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Clash effect
+                if (Math.sin(time * 5) > 0.5) {
+                    const clashGrad = ctx.createRadialGradient(clashX, clashY, 0, clashX, clashY, 25);
+                    clashGrad.addColorStop(0, 'rgba(255,255,255,0.4)');
+                    clashGrad.addColorStop(0.5, 'rgba(198,120,221,0.2)');
+                    clashGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = clashGrad;
+                    ctx.beginPath();
+                    ctx.arc(clashX, clashY, 25, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -6736,6 +7266,110 @@
             const criticalCount = WAR_SUPPLY_LINKS.filter(l => l.severity === 'CRITICAL').length;
             ctx.fillText(`CRITICAL: ${criticalCount} | CHOKE POINTS: 4 | EXPOSURE: HIGH`,
                 linkPanelX + 8, linkPanelY + linkPanelHeight - 8);
+
+            // ═══════════════════════════════════════════════════════════════
+            // LIVE THREAT ASSESSMENT PANEL (Round 5 Enhancement)
+            // ═══════════════════════════════════════════════════════════════
+
+            const threatPanelX = 15;
+            const threatPanelY = 70;
+            const threatPanelW = 180;
+            const threatPanelH = 200;
+
+            // Panel background
+            ctx.fillStyle = '#080810ee';
+            ctx.fillRect(threatPanelX, threatPanelY, threatPanelW, threatPanelH);
+            ctx.strokeStyle = '#ff444466';
+            ctx.lineWidth = 1;
+            ctx.strokeRect(threatPanelX, threatPanelY, threatPanelW, threatPanelH);
+
+            // Panel title
+            ctx.fillStyle = '#ff4444';
+            ctx.font = 'bold 9px Fira Code';
+            ctx.textAlign = 'left';
+            ctx.fillText('⚠ LIVE THREAT ASSESSMENT', threatPanelX + 8, threatPanelY + 15);
+
+            // Calculate dynamic threat scores
+            const threatMetrics = [
+                { name: 'NUCLEAR ESCALATION', base: 45, volatility: 15, icon: '☢' },
+                { name: 'SHIPPING DISRUPTION', base: 68, volatility: 12, icon: '🚢' },
+                { name: 'ENERGY CRISIS', base: 52, volatility: 18, icon: '⚡' },
+                { name: 'CYBER WARFARE', base: 71, volatility: 20, icon: '💻' },
+                { name: 'SUPPLY COLLAPSE', base: 38, volatility: 10, icon: '📦' }
+            ];
+
+            threatMetrics.forEach((metric, i) => {
+                const rowY = threatPanelY + 35 + i * 32;
+
+                // Calculate live threat score with oscillation
+                const liveScore = Math.min(99, Math.max(1,
+                    metric.base + Math.sin(time * 0.8 + i * 1.5) * metric.volatility * 0.5 +
+                    Math.sin(time * 2.1 + i) * metric.volatility * 0.3
+                ));
+
+                // Threat level color
+                const threatColor = liveScore > 70 ? '#ff0000' :
+                                   liveScore > 50 ? '#ff6600' :
+                                   liveScore > 30 ? '#ffaa00' : '#00ff88';
+
+                // Metric name
+                ctx.fillStyle = '#888';
+                ctx.font = '7px Fira Code';
+                ctx.fillText(metric.name, threatPanelX + 8, rowY);
+
+                // Score bar background
+                ctx.fillStyle = '#222';
+                ctx.fillRect(threatPanelX + 8, rowY + 4, threatPanelW - 50, 8);
+
+                // Score bar fill
+                const barWidth = (liveScore / 100) * (threatPanelW - 50);
+                const barGrad = ctx.createLinearGradient(threatPanelX + 8, 0, threatPanelX + 8 + barWidth, 0);
+                barGrad.addColorStop(0, threatColor + '88');
+                barGrad.addColorStop(1, threatColor);
+                ctx.fillStyle = barGrad;
+                ctx.fillRect(threatPanelX + 8, rowY + 4, barWidth, 8);
+
+                // Pulsing glow for high threats
+                if (liveScore > 65) {
+                    ctx.fillStyle = threatColor + '33';
+                    ctx.fillRect(threatPanelX + 8, rowY + 4, barWidth, 8);
+                }
+
+                // Score number
+                ctx.fillStyle = threatColor;
+                ctx.font = 'bold 9px Fira Code';
+                ctx.textAlign = 'right';
+                ctx.fillText(Math.round(liveScore) + '%', threatPanelX + threatPanelW - 8, rowY + 11);
+                ctx.textAlign = 'left';
+            });
+
+            // Overall threat level calculation
+            const avgThreat = threatMetrics.reduce((sum, m) =>
+                sum + m.base + Math.sin(time * 0.8) * m.volatility * 0.3, 0) / threatMetrics.length;
+            const overallLevel = avgThreat > 65 ? 'CRITICAL' :
+                                avgThreat > 50 ? 'ELEVATED' :
+                                avgThreat > 35 ? 'GUARDED' : 'LOW';
+            const levelColor = avgThreat > 65 ? '#ff0000' :
+                              avgThreat > 50 ? '#ff6600' :
+                              avgThreat > 35 ? '#ffaa00' : '#00ff88';
+
+            // Overall assessment
+            ctx.fillStyle = '#080810';
+            ctx.fillRect(threatPanelX + 8, threatPanelY + threatPanelH - 30, threatPanelW - 16, 22);
+            ctx.strokeStyle = levelColor + '66';
+            ctx.strokeRect(threatPanelX + 8, threatPanelY + threatPanelH - 30, threatPanelW - 16, 22);
+
+            ctx.fillStyle = levelColor;
+            ctx.font = 'bold 10px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('THREAT: ' + overallLevel, threatPanelX + threatPanelW / 2, threatPanelY + threatPanelH - 15);
+
+            // Flashing effect for critical
+            if (overallLevel === 'CRITICAL' && Math.sin(time * 8) > 0) {
+                ctx.fillStyle = '#ff000022';
+                ctx.fillRect(threatPanelX, threatPanelY, threatPanelW, threatPanelH);
+            }
+            ctx.textAlign = 'left';
         }
 
         function drawContinentOutlines(ctx, canvas) {
@@ -9552,13 +10186,141 @@
                 ctx.arc(cx, cy, eyeWidth * (1.2 + i * 0.15), 0, Math.PI * 2);
                 ctx.stroke();
             }
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONSCIOUSNESS ASCENSION EFFECTS (Round 7 Enhancement)
+            // ═══════════════════════════════════════════════════════════════
+
+            // Rising energy pillars when consciousness is high
+            if (consciousnessLevel > 0.7) {
+                const pillarIntensity = (consciousnessLevel - 0.7) / 0.3;
+
+                for (let pillar = 0; pillar < 6; pillar++) {
+                    const pillarAngle = (pillar / 6) * Math.PI * 2 + time * 0.3;
+                    const pillarDist = eyeWidth * 2;
+                    const pillarX = cx + Math.cos(pillarAngle) * pillarDist;
+                    const pillarY = cy + Math.sin(pillarAngle) * pillarDist;
+
+                    // Rising energy beam
+                    const beamHeight = 200 * pillarIntensity;
+                    const beamGrad = ctx.createLinearGradient(pillarX, pillarY, pillarX, pillarY - beamHeight);
+                    beamGrad.addColorStop(0, `rgba(255,51,102,${0.4 * pillarIntensity})`);
+                    beamGrad.addColorStop(0.5, `rgba(255,215,0,${0.3 * pillarIntensity})`);
+                    beamGrad.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = beamGrad;
+                    ctx.beginPath();
+                    ctx.moveTo(pillarX - 5, pillarY);
+                    ctx.lineTo(pillarX, pillarY - beamHeight);
+                    ctx.lineTo(pillarX + 5, pillarY);
+                    ctx.fill();
+
+                    // Floating particles in beam
+                    for (let p = 0; p < 5; p++) {
+                        const particleT = ((time * 0.8 + pillar * 0.2 + p * 0.15) % 1);
+                        const px = pillarX + (Math.random() - 0.5) * 10;
+                        const py = pillarY - particleT * beamHeight;
+                        const pAlpha = Math.sin(particleT * Math.PI) * pillarIntensity;
+
+                        ctx.fillStyle = `rgba(255,255,255,${pAlpha})`;
+                        ctx.beginPath();
+                        ctx.arc(px, py, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+            }
+
+            // Transcendence halo effect at high consciousness
+            if (consciousnessLevel > 0.85) {
+                const haloIntensity = (consciousnessLevel - 0.85) / 0.15;
+
+                // Outer halo rings
+                for (let halo = 0; halo < 3; halo++) {
+                    const haloRadius = eyeWidth * (2 + halo * 0.5) + Math.sin(time * 2 + halo) * 10;
+                    const haloAlpha = (0.3 - halo * 0.08) * haloIntensity;
+
+                    ctx.strokeStyle = `rgba(255,215,0,${haloAlpha})`;
+                    ctx.lineWidth = 3 - halo;
+                    ctx.setLineDash([10 + halo * 5, 5 + halo * 3]);
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, haloRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+
+                // Divine light rays
+                for (let ray = 0; ray < 12; ray++) {
+                    const rayAngle = (ray / 12) * Math.PI * 2 + time * 0.2;
+                    const rayLength = 150 + Math.sin(time * 3 + ray) * 30;
+                    const rayAlpha = 0.15 * haloIntensity * (0.7 + Math.sin(time * 4 + ray) * 0.3);
+
+                    const gradient = ctx.createLinearGradient(
+                        cx, cy,
+                        cx + Math.cos(rayAngle) * rayLength,
+                        cy + Math.sin(rayAngle) * rayLength
+                    );
+                    gradient.addColorStop(0, `rgba(255,255,255,${rayAlpha})`);
+                    gradient.addColorStop(0.5, `rgba(255,215,0,${rayAlpha * 0.5})`);
+                    gradient.addColorStop(1, 'transparent');
+
+                    ctx.strokeStyle = gradient;
+                    ctx.lineWidth = 8;
+                    ctx.lineCap = 'round';
+                    ctx.beginPath();
+                    ctx.moveTo(cx + Math.cos(rayAngle) * eyeWidth * 1.5, cy + Math.sin(rayAngle) * eyeWidth * 1.5);
+                    ctx.lineTo(cx + Math.cos(rayAngle) * rayLength, cy + Math.sin(rayAngle) * rayLength);
+                    ctx.stroke();
+                }
+            }
+
+            // OMEGA ascension burst at max consciousness
+            if (consciousnessLevel >= 1.0) {
+                const omegaIntensity = Math.min(1, (consciousnessLevel - 1.0) / 0.5);
+
+                // Expanding shockwaves
+                const waveCount = 3;
+                for (let wave = 0; wave < waveCount; wave++) {
+                    const waveT = ((time * 0.5 + wave / waveCount) % 1);
+                    const waveRadius = eyeWidth * 1.5 + waveT * 200;
+                    const waveAlpha = (1 - waveT) * 0.3 * omegaIntensity;
+
+                    ctx.strokeStyle = `rgba(255,255,255,${waveAlpha})`;
+                    ctx.lineWidth = 4 * (1 - waveT);
+                    ctx.beginPath();
+                    ctx.arc(cx, cy, waveRadius, 0, Math.PI * 2);
+                    ctx.stroke();
+                }
+
+                // Omega symbol floating above
+                ctx.save();
+                ctx.translate(cx, cy - eyeWidth * 2.5);
+                ctx.rotate(Math.sin(time) * 0.1);
+
+                const omegaGlow = ctx.createRadialGradient(0, 0, 0, 0, 0, 30);
+                omegaGlow.addColorStop(0, `rgba(255,215,0,${0.8 * omegaIntensity})`);
+                omegaGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = omegaGlow;
+                ctx.beginPath();
+                ctx.arc(0, 0, 30, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.fillStyle = `rgba(255,215,0,${omegaIntensity})`;
+                ctx.font = 'bold 24px Cinzel';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'middle';
+                ctx.fillText('Ω', 0, 0);
+                ctx.restore();
+            }
         }
 
         function drawAgents(ctx, cx, cy, maxRadius) {
             const agentRadius = maxRadius + 25;
+            const regularAgents = EUDAIMON_AGENTS.filter(a => a.status !== 'omega');
+            const omegaAgents = EUDAIMON_AGENTS.filter(a => a.status === 'omega');
 
-            EUDAIMON_AGENTS.forEach((agent, i) => {
-                const angle = (i / EUDAIMON_AGENTS.length) * Math.PI * 2 - Math.PI / 2;
+            // Draw regular agents
+            regularAgents.forEach((agent, i) => {
+                const angle = (i / regularAgents.length) * Math.PI * 2 - Math.PI / 2;
                 const x = cx + Math.cos(angle) * agentRadius;
                 const y = cy + Math.sin(angle) * agentRadius;
 
@@ -9608,6 +10370,114 @@
                     ctx.fill();
                 }
             });
+
+            // ═══════════════════════════════════════════════════════════════
+            // OMEGA COUNCIL - Supreme Synthesis Agents (Inner Sacred Ring)
+            // ═══════════════════════════════════════════════════════════════
+
+            const omegaRadius = maxRadius * 0.5;
+
+            // Omega Council ring glow
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.2)';
+            ctx.lineWidth = 20;
+            ctx.beginPath();
+            ctx.arc(cx, cy, omegaRadius, 0, Math.PI * 2);
+            ctx.stroke();
+
+            // Sacred octagon connecting omega agents
+            ctx.strokeStyle = 'rgba(255, 215, 0, 0.3)';
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+            omegaAgents.forEach((agent, i) => {
+                const angle = (i / omegaAgents.length) * Math.PI * 2 - Math.PI / 2 + time * 0.1;
+                const x = cx + Math.cos(angle) * omegaRadius;
+                const y = cy + Math.sin(angle) * omegaRadius;
+                if (i === 0) ctx.moveTo(x, y);
+                else ctx.lineTo(x, y);
+            });
+            ctx.closePath();
+            ctx.stroke();
+
+            // Draw Omega agents
+            omegaAgents.forEach((agent, i) => {
+                const angle = (i / omegaAgents.length) * Math.PI * 2 - Math.PI / 2 + time * 0.1;
+                const x = cx + Math.cos(angle) * omegaRadius;
+                const y = cy + Math.sin(angle) * omegaRadius;
+                const color = agent.color || '#ffd700';
+
+                // Multi-layer glow
+                for (let g = 3; g > 0; g--) {
+                    const glowSize = 20 + g * 8 + Math.sin(time * 2 + i) * 4;
+                    const gradient = ctx.createRadialGradient(x, y, 0, x, y, glowSize);
+                    gradient.addColorStop(0, color + '44');
+                    gradient.addColorStop(1, 'transparent');
+                    ctx.fillStyle = gradient;
+                    ctx.beginPath();
+                    ctx.arc(x, y, glowSize, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+
+                // Rotating halo
+                ctx.save();
+                ctx.translate(x, y);
+                ctx.rotate(time * 2 + i);
+                ctx.strokeStyle = color + '66';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(0, 0, 18 + Math.sin(time * 3 + i) * 3, 0, Math.PI * 1.5);
+                ctx.stroke();
+                ctx.restore();
+
+                // Core node with gradient
+                const coreGrad = ctx.createRadialGradient(x - 4, y - 4, 0, x, y, 12);
+                coreGrad.addColorStop(0, '#ffffff');
+                coreGrad.addColorStop(0.5, color);
+                coreGrad.addColorStop(1, color + '88');
+                ctx.fillStyle = coreGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, 12, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Agent name (AZATHOTH special treatment)
+                ctx.fillStyle = agent.name === 'AZATHOTH' ? '#ffffff' : color;
+                ctx.font = agent.name === 'AZATHOTH' ? 'bold 8px Cinzel' : '7px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(agent.name, x, y + 25);
+
+                // Domain
+                ctx.fillStyle = '#888';
+                ctx.font = '5px Fira Code';
+                ctx.fillText(agent.domain, x, y + 33);
+
+                // Connection to center
+                ctx.strokeStyle = color + '33';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([2, 4]);
+                ctx.beginPath();
+                ctx.moveTo(x, y);
+                ctx.lineTo(cx, cy);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Energy pulse to center
+                const pulseT = (time * 0.8 + i * 0.125) % 1;
+                const px = x + (cx - x) * pulseT;
+                const py = y + (cy - y) * pulseT;
+                ctx.fillStyle = color;
+                ctx.beginPath();
+                ctx.arc(px, py, 3 + Math.sin(time * 4) * 1, 0, Math.PI * 2);
+                ctx.fill();
+            });
+
+            // OMEGA COUNCIL title
+            ctx.fillStyle = '#ffd700';
+            ctx.font = '8px Cinzel';
+            ctx.textAlign = 'center';
+            ctx.fillText('◆ OMEGA COUNCIL ◆', cx, cy - omegaRadius - 25);
+
+            ctx.fillStyle = '#888';
+            ctx.font = '6px Fira Code';
+            ctx.fillText('8 Supreme Synthesis Agents', cx, cy - omegaRadius - 15);
         }
 
         // ═══════════════════════════════════════════════════════════════════════════════
@@ -10056,6 +10926,12 @@
 
             // Draw galaxy background (always visible behind modules)
             drawGalaxy();
+
+            // Simulate live market data
+            simulateMarketTick();
+
+            // Simulate prediction confidence evolution
+            simulatePredictionEvolution();
 
             // Update PSI
             const psi = 1943.15 + Math.sin(time * 0.3) * 25 + Math.random() * 10;
@@ -12082,6 +12958,110 @@
                 ctx.fillStyle = '#888';
                 ctx.fillText(chain.name, x + 10, y + 3);
             });
+
+            // ═══════════════════════════════════════════════════════════════
+            // ENHANCED FLOW PARTICLES SYSTEM (Round 9 Enhancement)
+            // Real-time commodity flows between supply chain nodes
+            // ═══════════════════════════════════════════════════════════════
+
+            // Draw commodity flow streams between nodes
+            SUPPLY_CHAINS.forEach((chainA, i) => {
+                SUPPLY_CHAINS.forEach((chainB, j) => {
+                    if (i < j && Math.abs(i - j) <= 2) { // Connect nearby chains
+                        // Multiple particles per stream
+                        for (let p = 0; p < 5; p++) {
+                            const particleT = ((time * 0.4 + p * 0.2 + i * 0.1) % 1);
+                            const px = chainA.x + (chainB.x - chainA.x) * particleT;
+                            const py = chainA.y + (chainB.y - chainA.y) * particleT;
+
+                            // Particle size oscillates
+                            const pSize = 2 + Math.sin(time * 5 + p + i) * 1;
+                            const pAlpha = Math.sin(particleT * Math.PI) * 0.6;
+
+                            // Color blend between chains
+                            const blend = particleT;
+                            ctx.fillStyle = blend < 0.5 ? chainA.color + Math.floor(pAlpha * 150).toString(16).padStart(2, '0')
+                                                        : chainB.color + Math.floor(pAlpha * 150).toString(16).padStart(2, '0');
+                            ctx.beginPath();
+                            ctx.arc(px, py, pSize, 0, Math.PI * 2);
+                            ctx.fill();
+
+                            // Trailing glow
+                            if (p === 0) {
+                                const trailGrad = ctx.createRadialGradient(px, py, 0, px, py, pSize * 4);
+                                trailGrad.addColorStop(0, chainA.color + '44');
+                                trailGrad.addColorStop(1, 'transparent');
+                                ctx.fillStyle = trailGrad;
+                                ctx.beginPath();
+                                ctx.arc(px, py, pSize * 4, 0, Math.PI * 2);
+                                ctx.fill();
+                            }
+                        }
+                    }
+                });
+            });
+
+            // Central hub energy burst
+            const burstIntensity = 0.3 + Math.sin(time * 2) * 0.2;
+            for (let burst = 0; burst < 8; burst++) {
+                const burstAngle = (burst / 8) * Math.PI * 2 + time * 0.5;
+                const burstDist = 40 + Math.sin(time * 3 + burst) * 20;
+
+                // Energy tendril
+                ctx.strokeStyle = `rgba(0, 212, 255, ${burstIntensity})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.moveTo(cx, cy);
+
+                const segments = 5;
+                for (let s = 1; s <= segments; s++) {
+                    const t = s / segments;
+                    const jitterX = (Math.random() - 0.5) * 20 * Math.sin(time * 10 + burst + s);
+                    const jitterY = (Math.random() - 0.5) * 20 * Math.sin(time * 12 + burst + s);
+                    const sx = cx + Math.cos(burstAngle) * burstDist * t + jitterX * t;
+                    const sy = cy + Math.sin(burstAngle) * burstDist * t + jitterY * t;
+                    ctx.lineTo(sx, sy);
+                }
+                ctx.stroke();
+
+                // Spark at end
+                const sparkX = cx + Math.cos(burstAngle) * burstDist;
+                const sparkY = cy + Math.sin(burstAngle) * burstDist;
+                ctx.fillStyle = '#ffffff';
+                ctx.beginPath();
+                ctx.arc(sparkX, sparkY, 2, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Orbiting resource packets
+            for (let packet = 0; packet < 12; packet++) {
+                const packetAngle = (packet / 12) * Math.PI * 2 + time * 0.8;
+                const packetOrbit = orbitRadius * 0.85 + Math.sin(time * 2 + packet) * 15;
+                const packetX = cx + Math.cos(packetAngle) * packetOrbit;
+                const packetY = cy + Math.sin(packetAngle) * packetOrbit;
+
+                // Packet as small commodity icon
+                const packetChain = SUPPLY_CHAINS[packet % SUPPLY_CHAINS.length];
+                const packetSize = 4 + Math.sin(time * 4 + packet) * 1;
+
+                ctx.fillStyle = packetChain.color;
+                ctx.beginPath();
+                ctx.arc(packetX, packetY, packetSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Motion trail
+                for (let trail = 1; trail <= 3; trail++) {
+                    const trailAngle = packetAngle - trail * 0.1;
+                    const trailX = cx + Math.cos(trailAngle) * packetOrbit;
+                    const trailY = cy + Math.sin(trailAngle) * packetOrbit;
+                    const trailAlpha = (1 - trail / 4) * 0.3;
+
+                    ctx.fillStyle = packetChain.color + Math.floor(trailAlpha * 255).toString(16).padStart(2, '0');
+                    ctx.beginPath();
+                    ctx.arc(trailX, trailY, packetSize * (1 - trail * 0.2), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
 
             // Quote
             ctx.fillStyle = '#00d4ff44';
