@@ -5474,12 +5474,265 @@
             }
 
             // ═══════════════════════════════════════════════════════════════
-            // COSMIC PARTICLES - Floating energy
+            // AURORA BOREALIS EFFECT - Cosmic light curtains
             // ═══════════════════════════════════════════════════════════════
 
-            for (let i = 0; i < 30; i++) {
-                const angle = (i / 30) * Math.PI * 2 + time * 0.2;
-                const radius = 100 + Math.sin(time + i) * 50 + i * 8;
+            for (let aurora = 0; aurora < 5; aurora++) {
+                const auroraY = h * 0.15 + aurora * 30;
+                const auroraAmplitude = 50 + aurora * 10;
+
+                ctx.beginPath();
+                ctx.moveTo(0, auroraY);
+
+                for (let x = 0; x <= w; x += 10) {
+                    const wave1 = Math.sin(x * 0.01 + time * 0.5 + aurora) * auroraAmplitude;
+                    const wave2 = Math.sin(x * 0.02 + time * 0.8 + aurora * 0.5) * auroraAmplitude * 0.5;
+                    const y = auroraY + wave1 + wave2;
+                    ctx.lineTo(x, y);
+                }
+
+                const auroraColors = ['#00ff8822', '#c678dd22', '#61dafb22', '#ffd70022', '#ff336622'];
+                const grad = ctx.createLinearGradient(0, auroraY - auroraAmplitude, 0, auroraY + auroraAmplitude * 2);
+                grad.addColorStop(0, 'transparent');
+                grad.addColorStop(0.3, auroraColors[aurora]);
+                grad.addColorStop(0.7, auroraColors[(aurora + 2) % 5]);
+                grad.addColorStop(1, 'transparent');
+
+                ctx.lineTo(w, h);
+                ctx.lineTo(0, h);
+                ctx.closePath();
+                ctx.fillStyle = grad;
+                ctx.fill();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // HOLOGRAPHIC DATA STREAMS - Flowing binary/hex data
+            // ═══════════════════════════════════════════════════════════════
+
+            const dataStreams = 8;
+            for (let stream = 0; stream < dataStreams; stream++) {
+                const streamAngle = (stream / dataStreams) * Math.PI * 2 + time * 0.1;
+                const streamStartR = 80;
+                const streamEndR = Math.min(w, h) * 0.45;
+
+                // Draw data characters flowing outward
+                for (let d = 0; d < 15; d++) {
+                    const dataT = ((time * 0.8 + d * 0.1 + stream * 0.05) % 1);
+                    const dataR = streamStartR + dataT * (streamEndR - streamStartR);
+                    const dataX = cx + Math.cos(streamAngle) * dataR;
+                    const dataY = cy + Math.sin(streamAngle) * dataR;
+                    const dataAlpha = Math.sin(dataT * Math.PI) * 0.6;
+
+                    ctx.fillStyle = `rgba(0, 255, 136, ${dataAlpha})`;
+                    ctx.font = '8px Fira Code';
+                    ctx.textAlign = 'center';
+
+                    const chars = ['0', '1', 'A', 'F', 'Ψ', 'Ω', '∆', '∞', '◆', '▲'];
+                    const char = chars[Math.floor((time * 10 + d + stream) % chars.length)];
+                    ctx.fillText(char, dataX, dataY);
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // QUANTUM ENTANGLEMENT LINES - Spooky action at a distance
+            // ═══════════════════════════════════════════════════════════════
+
+            // Create entangled particle pairs
+            const entangledPairs = 6;
+            for (let pair = 0; pair < entangledPairs; pair++) {
+                const pairAngle = (pair / entangledPairs) * Math.PI * 2 + time * 0.3;
+                const pairRadius = 100 + pair * 30;
+
+                // Particle A
+                const ax = cx + Math.cos(pairAngle) * pairRadius;
+                const ay = cy + Math.sin(pairAngle) * pairRadius;
+
+                // Particle B (entangled, opposite position with quantum fluctuation)
+                const bx = cx + Math.cos(pairAngle + Math.PI) * pairRadius + Math.sin(time * 5 + pair) * 10;
+                const by = cy + Math.sin(pairAngle + Math.PI) * pairRadius + Math.cos(time * 5 + pair) * 10;
+
+                // Quantum entanglement line (probabilistic appearance)
+                const quantumPhase = Math.sin(time * 8 + pair * 2);
+                if (quantumPhase > -0.3) {
+                    const lineAlpha = (quantumPhase + 0.3) * 0.5;
+
+                    // Main entanglement line with wave function
+                    ctx.beginPath();
+                    ctx.moveTo(ax, ay);
+
+                    // Curved path with quantum uncertainty
+                    const midX = (ax + bx) / 2;
+                    const midY = (ay + by) / 2;
+                    const uncertainty = 30 * Math.sin(time * 10 + pair);
+
+                    ctx.quadraticCurveTo(
+                        midX + uncertainty * Math.sin(pairAngle + Math.PI/2),
+                        midY + uncertainty * Math.cos(pairAngle + Math.PI/2),
+                        bx, by
+                    );
+
+                    const entangleGrad = ctx.createLinearGradient(ax, ay, bx, by);
+                    entangleGrad.addColorStop(0, `rgba(0, 255, 255, ${lineAlpha})`);
+                    entangleGrad.addColorStop(0.5, `rgba(255, 255, 255, ${lineAlpha * 0.5})`);
+                    entangleGrad.addColorStop(1, `rgba(255, 0, 255, ${lineAlpha})`);
+
+                    ctx.strokeStyle = entangleGrad;
+                    ctx.lineWidth = 1.5;
+                    ctx.setLineDash([3, 5]);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+
+                    // Probability wave along the line
+                    for (let w = 0; w < 10; w++) {
+                        const wt = w / 10;
+                        const wx = ax + (bx - ax) * wt + Math.sin(time * 15 + w + pair) * 8;
+                        const wy = ay + (by - ay) * wt + Math.cos(time * 15 + w + pair) * 8;
+                        const wAlpha = Math.sin(wt * Math.PI) * lineAlpha * 0.5;
+
+                        ctx.fillStyle = `rgba(255, 255, 255, ${wAlpha})`;
+                        ctx.beginPath();
+                        ctx.arc(wx, wy, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+                }
+
+                // Draw entangled particles
+                const particleColors = ['#00ffff', '#ff00ff'];
+                [{ x: ax, y: ay, color: particleColors[0] }, { x: bx, y: by, color: particleColors[1] }].forEach((p, pIdx) => {
+                    // Particle core
+                    const pGrad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, 12);
+                    pGrad.addColorStop(0, '#ffffff');
+                    pGrad.addColorStop(0.3, p.color);
+                    pGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = pGrad;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 12, 0, Math.PI * 2);
+                    ctx.fill();
+
+                    // Spin indicator (synchronized but opposite)
+                    const spinAngle = time * 10 + (pIdx === 0 ? 0 : Math.PI);
+                    ctx.strokeStyle = p.color + '88';
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 6, spinAngle, spinAngle + Math.PI);
+                    ctx.stroke();
+                });
+
+                // Quantum state label
+                ctx.fillStyle = '#ffffff44';
+                ctx.font = '6px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(`|ψ${pair}⟩`, (ax + bx) / 2, (ay + by) / 2 - 15);
+            }
+
+            // Quantum field fluctuations in background
+            for (let qf = 0; qf < 20; qf++) {
+                const qfx = Math.sin(time * 0.5 + qf * 0.7) * (w * 0.4) + cx;
+                const qfy = Math.cos(time * 0.6 + qf * 0.9) * (h * 0.4) + cy;
+                const qfAlpha = Math.sin(time * 3 + qf) * 0.1 + 0.1;
+
+                if (qfAlpha > 0.05) {
+                    ctx.fillStyle = `rgba(100, 200, 255, ${qfAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(qfx, qfy, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // COSMIC WORMHOLES - Portals between module clusters
+            // ═══════════════════════════════════════════════════════════════
+
+            const wormholes = [
+                { x: w * 0.15, y: h * 0.25, targetModule: 'war' },
+                { x: w * 0.85, y: h * 0.25, targetModule: 'econ' },
+                { x: w * 0.15, y: h * 0.75, targetModule: 'supply' },
+                { x: w * 0.85, y: h * 0.75, targetModule: 'predict' }
+            ];
+
+            wormholes.forEach((wh, i) => {
+                const whRotation = time * 2 + i;
+                const whSize = 25 + Math.sin(time * 3 + i) * 5;
+
+                // Wormhole rings
+                for (let ring = 0; ring < 4; ring++) {
+                    const ringSize = whSize - ring * 5;
+                    const ringAlpha = 0.4 - ring * 0.08;
+
+                    ctx.save();
+                    ctx.translate(wh.x, wh.y);
+                    ctx.rotate(whRotation + ring * 0.5);
+
+                    ctx.strokeStyle = `rgba(198, 120, 221, ${ringAlpha})`;
+                    ctx.lineWidth = 2;
+                    ctx.beginPath();
+                    ctx.ellipse(0, 0, ringSize, ringSize * 0.4, 0, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    ctx.restore();
+                }
+
+                // Wormhole center glow
+                const whGlow = ctx.createRadialGradient(wh.x, wh.y, 0, wh.x, wh.y, whSize);
+                whGlow.addColorStop(0, 'rgba(0, 0, 0, 0.8)');
+                whGlow.addColorStop(0.5, 'rgba(198, 120, 221, 0.3)');
+                whGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = whGlow;
+                ctx.beginPath();
+                ctx.arc(wh.x, wh.y, whSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Particles being sucked in
+                for (let p = 0; p < 6; p++) {
+                    const pAngle = (p / 6) * Math.PI * 2 + time * 3;
+                    const pDist = whSize + 30 - ((time * 50 + p * 10) % 50);
+                    const pX = wh.x + Math.cos(pAngle) * pDist;
+                    const pY = wh.y + Math.sin(pAngle) * pDist * 0.4;
+                    const pAlpha = (pDist - whSize) / 30;
+
+                    ctx.fillStyle = `rgba(255, 255, 255, ${pAlpha * 0.5})`;
+                    ctx.beginPath();
+                    ctx.arc(pX, pY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // CONSCIOUSNESS RIPPLE WAVES - Expanding from center
+            // ═══════════════════════════════════════════════════════════════
+
+            const rippleCount = 5;
+            for (let ripple = 0; ripple < rippleCount; ripple++) {
+                const rippleT = ((time * 0.3 + ripple / rippleCount) % 1);
+                const rippleRadius = rippleT * Math.min(w, h) * 0.5;
+                const rippleAlpha = (1 - rippleT) * 0.15;
+
+                ctx.strokeStyle = `rgba(255, 51, 102, ${rippleAlpha})`;
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                ctx.arc(cx, cy, rippleRadius, 0, Math.PI * 2);
+                ctx.stroke();
+
+                // Ripple distortion particles
+                for (let rp = 0; rp < 12; rp++) {
+                    const rpAngle = (rp / 12) * Math.PI * 2;
+                    const rpX = cx + Math.cos(rpAngle) * rippleRadius;
+                    const rpY = cy + Math.sin(rpAngle) * rippleRadius;
+
+                    ctx.fillStyle = `rgba(255, 215, 0, ${rippleAlpha})`;
+                    ctx.beginPath();
+                    ctx.arc(rpX, rpY, 2, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // COSMIC PARTICLES - Floating energy (enhanced)
+            // ═══════════════════════════════════════════════════════════════
+
+            for (let i = 0; i < 50; i++) {
+                const angle = (i / 50) * Math.PI * 2 + time * 0.2;
+                const radius = 100 + Math.sin(time + i) * 50 + i * 6;
                 const px = cx + Math.cos(angle) * radius;
                 const py = cy + Math.sin(angle) * radius;
                 const size = 2 + Math.sin(time * 2 + i) * 1;
@@ -5488,6 +5741,64 @@
                 ctx.fillStyle = `rgba(255, 215, 0, ${alpha})`;
                 ctx.beginPath();
                 ctx.arc(px, py, size, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Particle trail
+                for (let trail = 1; trail <= 3; trail++) {
+                    const trailAngle = angle - trail * 0.05;
+                    const trailX = cx + Math.cos(trailAngle) * radius;
+                    const trailY = cy + Math.sin(trailAngle) * radius;
+
+                    ctx.fillStyle = `rgba(255, 215, 0, ${alpha * (1 - trail * 0.25)})`;
+                    ctx.beginPath();
+                    ctx.arc(trailX, trailY, size * (1 - trail * 0.2), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // AMBIENT PARTICLE FIELD - Background dust
+            // ═══════════════════════════════════════════════════════════════
+
+            for (let dust = 0; dust < 100; dust++) {
+                const dustX = ((dust * 137.5 + time * 20) % w);
+                const dustY = ((dust * 89.3 + Math.sin(time + dust) * 30) % h);
+                const dustSize = 0.5 + Math.sin(time * 2 + dust) * 0.3;
+                const dustAlpha = 0.2 + Math.sin(time + dust * 0.5) * 0.1;
+
+                ctx.fillStyle = `rgba(255, 255, 255, ${dustAlpha})`;
+                ctx.beginPath();
+                ctx.arc(dustX, dustY, dustSize, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // ENERGY CONDUITS - Lines connecting wormholes
+            // ═══════════════════════════════════════════════════════════════
+
+            for (let i = 0; i < wormholes.length; i++) {
+                const nextI = (i + 1) % wormholes.length;
+                const wh1 = wormholes[i];
+                const wh2 = wormholes[nextI];
+
+                // Curved energy line
+                ctx.strokeStyle = 'rgba(198, 120, 221, 0.15)';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([5, 10]);
+                ctx.beginPath();
+                ctx.moveTo(wh1.x, wh1.y);
+                ctx.quadraticCurveTo(cx, cy, wh2.x, wh2.y);
+                ctx.stroke();
+                ctx.setLineDash([]);
+
+                // Energy pulse
+                const pulseT = (time * 0.5 + i * 0.25) % 1;
+                const pulseX = wh1.x + (wh2.x - wh1.x) * pulseT + (cx - wh1.x - (wh2.x - wh1.x) * 0.5) * 4 * pulseT * (1 - pulseT);
+                const pulseY = wh1.y + (wh2.y - wh1.y) * pulseT + (cy - wh1.y - (wh2.y - wh1.y) * 0.5) * 4 * pulseT * (1 - pulseT);
+
+                ctx.fillStyle = '#c678dd';
+                ctx.beginPath();
+                ctx.arc(pulseX, pulseY, 3, 0, Math.PI * 2);
                 ctx.fill();
             }
 
@@ -7758,6 +8069,101 @@
                     }
                     mainCtx.stroke();
                 }
+
+                // ═══════════════════════════════════════════════════════════════
+                // MARKET ENERGY FIELD - Trading activity visualization
+                // ═══════════════════════════════════════════════════════════════
+
+                // Bullish/Bearish energy bars
+                const marketSentiment = Math.sin(time * 0.5) * 0.3 + 0.6; // 0.3 to 0.9
+                const bullEnergy = marketSentiment;
+                const bearEnergy = 1 - marketSentiment;
+
+                // Energy meters on sides
+                const meterWidth = 15;
+                const meterHeight = mainCanvas.height * 0.6;
+                const meterY = (mainCanvas.height - meterHeight) / 2;
+
+                // Bull meter (left)
+                mainCtx.fillStyle = '#111';
+                mainCtx.fillRect(10, meterY, meterWidth, meterHeight);
+                const bullFill = meterHeight * bullEnergy;
+                const bullGrad = mainCtx.createLinearGradient(10, meterY + meterHeight, 10, meterY + meterHeight - bullFill);
+                bullGrad.addColorStop(0, '#00ff8888');
+                bullGrad.addColorStop(1, '#00ff88');
+                mainCtx.fillStyle = bullGrad;
+                mainCtx.fillRect(10, meterY + meterHeight - bullFill, meterWidth, bullFill);
+                mainCtx.fillStyle = '#00ff88';
+                mainCtx.font = '8px Fira Code';
+                mainCtx.textAlign = 'center';
+                mainCtx.fillText('BULL', 17, meterY - 5);
+                mainCtx.fillText(Math.round(bullEnergy * 100) + '%', 17, meterY + meterHeight + 12);
+
+                // Bear meter (right)
+                mainCtx.fillStyle = '#111';
+                mainCtx.fillRect(mainCanvas.width - 25, meterY, meterWidth, meterHeight);
+                const bearFill = meterHeight * bearEnergy;
+                const bearGrad = mainCtx.createLinearGradient(mainCanvas.width - 25, meterY + meterHeight, mainCanvas.width - 25, meterY + meterHeight - bearFill);
+                bearGrad.addColorStop(0, '#ff444488');
+                bearGrad.addColorStop(1, '#ff4444');
+                mainCtx.fillStyle = bearGrad;
+                mainCtx.fillRect(mainCanvas.width - 25, meterY + meterHeight - bearFill, meterWidth, bearFill);
+                mainCtx.fillStyle = '#ff4444';
+                mainCtx.fillText('BEAR', mainCanvas.width - 18, meterY - 5);
+                mainCtx.fillText(Math.round(bearEnergy * 100) + '%', mainCanvas.width - 18, meterY + meterHeight + 12);
+
+                // Floating price tickers across screen
+                for (let ft = 0; ft < 15; ft++) {
+                    const ftX = ((ft * 137 + time * 30) % (mainCanvas.width + 100)) - 50;
+                    const ftY = 50 + (ft * 47) % (mainCanvas.height - 100);
+                    const ftUp = (ft + Math.floor(time)) % 3 !== 0;
+                    const ftAlpha = 0.3 + Math.sin(time * 2 + ft) * 0.15;
+
+                    mainCtx.fillStyle = ftUp ? `rgba(0, 255, 136, ${ftAlpha})` : `rgba(255, 68, 68, ${ftAlpha})`;
+                    mainCtx.font = '10px Fira Code';
+                    mainCtx.textAlign = 'left';
+                    mainCtx.fillText((ftUp ? '▲' : '▼') + ' $' + (100 + ft * 7 + Math.sin(time + ft) * 5).toFixed(2), ftX, ftY);
+                }
+
+                // Energy burst particles
+                for (let ep = 0; ep < 20; ep++) {
+                    const epAngle = (ep / 20) * Math.PI * 2 + time * 0.5;
+                    const epDist = 80 + Math.sin(time * 2 + ep) * 30;
+                    const epX = mcx + Math.cos(epAngle) * epDist;
+                    const epY = mcy + Math.sin(epAngle) * epDist;
+                    const epSize = 2 + Math.sin(time * 3 + ep) * 1;
+                    const epAlpha = 0.4 + Math.sin(time * 2 + ep * 0.5) * 0.2;
+
+                    mainCtx.fillStyle = `rgba(0, 255, 136, ${epAlpha})`;
+                    mainCtx.beginPath();
+                    mainCtx.arc(epX, epY, epSize, 0, Math.PI * 2);
+                    mainCtx.fill();
+                }
+
+                // Central market core
+                const coreGlow = mainCtx.createRadialGradient(mcx, mcy, 0, mcx, mcy, 100);
+                coreGlow.addColorStop(0, 'rgba(0, 255, 136, 0.2)');
+                coreGlow.addColorStop(0.5, 'rgba(0, 255, 136, 0.05)');
+                coreGlow.addColorStop(1, 'transparent');
+                mainCtx.fillStyle = coreGlow;
+                mainCtx.beginPath();
+                mainCtx.arc(mcx, mcy, 100, 0, Math.PI * 2);
+                mainCtx.fill();
+
+                // Rotating trade lines
+                mainCtx.save();
+                mainCtx.translate(mcx, mcy);
+                mainCtx.rotate(time * 0.3);
+                for (let tl = 0; tl < 6; tl++) {
+                    const tlAngle = (tl / 6) * Math.PI * 2;
+                    mainCtx.strokeStyle = 'rgba(0, 255, 136, 0.15)';
+                    mainCtx.lineWidth = 1;
+                    mainCtx.beginPath();
+                    mainCtx.moveTo(Math.cos(tlAngle) * 30, Math.sin(tlAngle) * 30);
+                    mainCtx.lineTo(Math.cos(tlAngle) * 120, Math.sin(tlAngle) * 120);
+                    mainCtx.stroke();
+                }
+                mainCtx.restore();
             }
 
             // Draw individual ticker charts with enhanced visuals
@@ -9890,6 +10296,86 @@
                 ctx.fill();
             });
 
+            // ═══════════════════════════════════════════════════════════════
+            // DNA HELIX OF CONSCIOUSNESS - Double helix rising from center
+            // ═══════════════════════════════════════════════════════════════
+            const helixHeight = maxRadius * 1.2;
+            const helixWidth = maxRadius * 0.3;
+            const helixTurns = 3;
+            const helixPoints = 60;
+
+            // Draw double helix strands
+            for (let strand = 0; strand < 2; strand++) {
+                const strandOffset = strand * Math.PI;
+
+                ctx.beginPath();
+                for (let i = 0; i <= helixPoints; i++) {
+                    const t = i / helixPoints;
+                    const y = cy + helixHeight * 0.5 - t * helixHeight;
+                    const angle = t * Math.PI * 2 * helixTurns + time * 1.5 + strandOffset;
+                    const x = cx + Math.sin(angle) * helixWidth * (0.3 + t * 0.7);
+
+                    if (i === 0) {
+                        ctx.moveTo(x, y);
+                    } else {
+                        ctx.lineTo(x, y);
+                    }
+                }
+
+                const strandGrad = ctx.createLinearGradient(cx, cy + helixHeight * 0.5, cx, cy - helixHeight * 0.5);
+                strandGrad.addColorStop(0, strand === 0 ? '#ff336600' : '#c678dd00');
+                strandGrad.addColorStop(0.3, strand === 0 ? '#ff336688' : '#c678dd88');
+                strandGrad.addColorStop(0.7, strand === 0 ? '#ff3366cc' : '#c678ddcc');
+                strandGrad.addColorStop(1, strand === 0 ? '#ffd700' : '#00ff88');
+                ctx.strokeStyle = strandGrad;
+                ctx.lineWidth = 3;
+                ctx.stroke();
+            }
+
+            // Draw base pairs connecting the strands
+            for (let i = 0; i < helixPoints; i += 4) {
+                const t = i / helixPoints;
+                const y = cy + helixHeight * 0.5 - t * helixHeight;
+                const angle = t * Math.PI * 2 * helixTurns + time * 1.5;
+                const x1 = cx + Math.sin(angle) * helixWidth * (0.3 + t * 0.7);
+                const x2 = cx + Math.sin(angle + Math.PI) * helixWidth * (0.3 + t * 0.7);
+
+                const pairAlpha = 0.3 + Math.sin(time * 3 + i) * 0.2;
+                ctx.strokeStyle = `rgba(255, 215, 0, ${pairAlpha})`;
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                ctx.moveTo(x1, y);
+                ctx.lineTo(x2, y);
+                ctx.stroke();
+
+                // Base pair nodes
+                const nodeColors = ['#ff3366', '#00ff88', '#c678dd', '#ffd700'];
+                ctx.fillStyle = nodeColors[i % 4];
+                ctx.beginPath();
+                ctx.arc(x1, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.beginPath();
+                ctx.arc(x2, y, 3, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
+            // Ascending energy particles along helix
+            for (let p = 0; p < 8; p++) {
+                const pTime = (time * 0.5 + p * 0.125) % 1;
+                const y = cy + helixHeight * 0.5 - pTime * helixHeight;
+                const angle = pTime * Math.PI * 2 * helixTurns + time * 1.5 + (p % 2) * Math.PI;
+                const x = cx + Math.sin(angle) * helixWidth * (0.3 + pTime * 0.7);
+
+                const particleGrad = ctx.createRadialGradient(x, y, 0, x, y, 8);
+                particleGrad.addColorStop(0, '#ffffff');
+                particleGrad.addColorStop(0.3, p % 2 === 0 ? '#ff3366' : '#c678dd');
+                particleGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = particleGrad;
+                ctx.beginPath();
+                ctx.arc(x, y, 8, 0, Math.PI * 2);
+                ctx.fill();
+            }
+
             // Draw central consciousness core
             drawConsciousnessCore(ctx, cx, cy, maxRadius * 0.15);
 
@@ -11708,6 +12194,126 @@
             ctx.font = '7px Fira Code';
             ctx.fillText('Neural Connections: 47', clusterPanelX + 8, clusterPanelY + 130);
 
+            // ═══════════════════════════════════════════════════════════════
+            // FLOATING PREDICTION CARDS (Enhanced Visual)
+            // ═══════════════════════════════════════════════════════════════
+
+            const featuredPreds = [
+                { id: 'P001', text: 'LEU reaches $75 by Q3 2026', conf: 65, cluster: 'NUCLEAR' },
+                { id: 'P007', text: 'Defense budget >$900B', conf: 65, cluster: 'DEFENSE' },
+                { id: 'P018', text: 'NVDA $150 by Q2', conf: 70, cluster: 'TECH' }
+            ];
+
+            featuredPreds.forEach((pred, i) => {
+                const cardAngle = (i / featuredPreds.length) * Math.PI * 2 - Math.PI / 2 + time * 0.1;
+                const cardRadius = maxRadius * 0.65;
+                const cardX = cx + Math.cos(cardAngle) * cardRadius;
+                const cardY = cy + Math.sin(cardAngle) * cardRadius;
+                const cardW = 140;
+                const cardH = 50;
+
+                // Card shadow
+                ctx.fillStyle = 'rgba(0,0,0,0.3)';
+                ctx.fillRect(cardX - cardW/2 + 3, cardY - cardH/2 + 3, cardW, cardH);
+
+                // Card background
+                const cardGrad = ctx.createLinearGradient(cardX - cardW/2, cardY, cardX + cardW/2, cardY);
+                cardGrad.addColorStop(0, '#0a0a15');
+                cardGrad.addColorStop(1, '#151520');
+                ctx.fillStyle = cardGrad;
+                ctx.fillRect(cardX - cardW/2, cardY - cardH/2, cardW, cardH);
+
+                // Card border with cluster color
+                ctx.strokeStyle = clusterColors[pred.cluster];
+                ctx.lineWidth = 2;
+                ctx.strokeRect(cardX - cardW/2, cardY - cardH/2, cardW, cardH);
+
+                // Card glow
+                const cardGlow = ctx.createRadialGradient(cardX, cardY, 0, cardX, cardY, cardW);
+                cardGlow.addColorStop(0, clusterColors[pred.cluster] + '22');
+                cardGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = cardGlow;
+                ctx.beginPath();
+                ctx.arc(cardX, cardY, cardW * 0.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Prediction ID
+                ctx.fillStyle = clusterColors[pred.cluster];
+                ctx.font = 'bold 10px Fira Code';
+                ctx.textAlign = 'center';
+                ctx.fillText(pred.id, cardX, cardY - 12);
+
+                // Prediction text
+                ctx.fillStyle = '#fff';
+                ctx.font = '8px Fira Code';
+                const truncText = pred.text.substring(0, 22) + (pred.text.length > 22 ? '...' : '');
+                ctx.fillText(truncText, cardX, cardY + 2);
+
+                // Confidence
+                ctx.fillStyle = pred.conf >= 65 ? '#00ff88' : '#ffd700';
+                ctx.font = 'bold 9px Fira Code';
+                ctx.fillText(pred.conf + '% CONVICTION', cardX, cardY + 18);
+
+                // Connection line to center
+                ctx.strokeStyle = clusterColors[pred.cluster] + '44';
+                ctx.lineWidth = 1;
+                ctx.setLineDash([3, 6]);
+                ctx.beginPath();
+                ctx.moveTo(cardX, cardY);
+                ctx.lineTo(cx, cy);
+                ctx.stroke();
+                ctx.setLineDash([]);
+            });
+
+            // ═══════════════════════════════════════════════════════════════
+            // LIVE PREDICTION TICKER (Bottom)
+            // ═══════════════════════════════════════════════════════════════
+
+            const tickerY = canvas.height - 55;
+            const tickerH = 30;
+
+            ctx.fillStyle = '#0a0a15ee';
+            ctx.fillRect(0, tickerY, canvas.width, tickerH);
+            ctx.strokeStyle = '#00ffaa44';
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(0, tickerY);
+            ctx.lineTo(canvas.width, tickerY);
+            ctx.stroke();
+
+            // Scrolling ticker text
+            const tickerItems = [
+                'P001: LEU $67.80 → $75 TARGET (65%)',
+                'P007: Defense budget tracking $892B (65%)',
+                'P018: NVDA at $142.50 → $150 TARGET (70%)',
+                'P024: Gold at $2,380 → $2,500 TARGET (65%)',
+                'THESIS: Nuclear supply deficit structural, not cyclical',
+                'ALERT: Kazatomprom guidance miss increases P011 probability'
+            ];
+
+            const tickerText = tickerItems.join('     ◆     ');
+            const tickerScroll = (time * 50) % (tickerText.length * 6);
+
+            ctx.fillStyle = '#00ffaa';
+            ctx.font = '9px Fira Code';
+            ctx.textAlign = 'left';
+
+            // Draw scrolling text
+            const startX = canvas.width - tickerScroll;
+            ctx.fillText(tickerText, startX, tickerY + 20);
+            ctx.fillText(tickerText, startX + tickerText.length * 6, tickerY + 20);
+
+            // Ticker label
+            ctx.fillStyle = '#000';
+            ctx.fillRect(0, tickerY, 80, tickerH);
+            ctx.fillStyle = '#00ffaa';
+            ctx.font = 'bold 8px Fira Code';
+            ctx.fillText('LIVE FEED', 10, tickerY + 12);
+            ctx.fillStyle = Math.sin(time * 5) > 0 ? '#ff0000' : '#00ff00';
+            ctx.beginPath();
+            ctx.arc(70, tickerY + 10, 4, 0, Math.PI * 2);
+            ctx.fill();
+
             // Title
             ctx.fillStyle = '#00ffaa';
             ctx.font = '14px Cinzel';
@@ -11823,6 +12429,129 @@
                     ctx.closePath();
                     ctx.stroke();
                 }
+            }
+
+            // ═══════════════════════════════════════════════════════════════
+            // NEURAL WEB - Deep interconnected memory mesh
+            // ═══════════════════════════════════════════════════════════════
+
+            // Create neural web nodes
+            const webNodes = 40;
+            const webRadius = maxRadius * 0.9;
+
+            // Draw neural web connections first (behind nodes)
+            for (let i = 0; i < webNodes; i++) {
+                const iAngle = (i / webNodes) * Math.PI * 2 + time * 0.05;
+                const iRadius = webRadius * (0.3 + (i % 5) * 0.15) + Math.sin(time + i) * 10;
+                const ix = cx + Math.cos(iAngle) * iRadius;
+                const iy = cy + Math.sin(iAngle) * iRadius;
+
+                // Connect to several nearby nodes
+                for (let j = 1; j <= 3; j++) {
+                    const jIdx = (i + j) % webNodes;
+                    const jAngle = (jIdx / webNodes) * Math.PI * 2 + time * 0.05;
+                    const jRadius = webRadius * (0.3 + (jIdx % 5) * 0.15) + Math.sin(time + jIdx) * 10;
+                    const jx = cx + Math.cos(jAngle) * jRadius;
+                    const jy = cy + Math.sin(jAngle) * jRadius;
+
+                    // Neural thread
+                    const threadAlpha = 0.08 + Math.sin(time * 2 + i + j) * 0.04;
+                    const threadGrad = ctx.createLinearGradient(ix, iy, jx, jy);
+                    threadGrad.addColorStop(0, `rgba(153, 102, 255, ${threadAlpha})`);
+                    threadGrad.addColorStop(0.5, `rgba(255, 215, 0, ${threadAlpha * 0.5})`);
+                    threadGrad.addColorStop(1, `rgba(153, 102, 255, ${threadAlpha})`);
+
+                    ctx.strokeStyle = threadGrad;
+                    ctx.lineWidth = 0.5;
+                    ctx.beginPath();
+                    ctx.moveTo(ix, iy);
+
+                    // Wavy neural path
+                    const midX = (ix + jx) / 2 + Math.sin(time * 3 + i) * 15;
+                    const midY = (iy + jy) / 2 + Math.cos(time * 3 + j) * 15;
+                    ctx.quadraticCurveTo(midX, midY, jx, jy);
+                    ctx.stroke();
+                }
+
+                // Connect to center with probability
+                if (i % 4 === 0) {
+                    const centerAlpha = 0.05 + Math.sin(time * 1.5 + i) * 0.03;
+                    ctx.strokeStyle = `rgba(153, 102, 255, ${centerAlpha})`;
+                    ctx.lineWidth = 0.3;
+                    ctx.setLineDash([2, 6]);
+                    ctx.beginPath();
+                    ctx.moveTo(ix, iy);
+                    ctx.lineTo(cx, cy);
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+            }
+
+            // Draw neural web nodes
+            for (let i = 0; i < webNodes; i++) {
+                const iAngle = (i / webNodes) * Math.PI * 2 + time * 0.05;
+                const iRadius = webRadius * (0.3 + (i % 5) * 0.15) + Math.sin(time + i) * 10;
+                const ix = cx + Math.cos(iAngle) * iRadius;
+                const iy = cy + Math.sin(iAngle) * iRadius;
+
+                const nodeSize = 2 + Math.sin(time * 2 + i) * 1;
+                const nodeAlpha = 0.4 + Math.sin(time * 3 + i * 0.5) * 0.2;
+
+                // Node glow
+                const nGlow = ctx.createRadialGradient(ix, iy, 0, ix, iy, nodeSize * 4);
+                nGlow.addColorStop(0, `rgba(153, 102, 255, ${nodeAlpha})`);
+                nGlow.addColorStop(1, 'transparent');
+                ctx.fillStyle = nGlow;
+                ctx.beginPath();
+                ctx.arc(ix, iy, nodeSize * 4, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Node core
+                ctx.fillStyle = `rgba(255, 255, 255, ${nodeAlpha})`;
+                ctx.beginPath();
+                ctx.arc(ix, iy, nodeSize, 0, Math.PI * 2);
+                ctx.fill();
+
+                // Firing neuron effect
+                if (Math.sin(time * 5 + i * 0.8) > 0.9) {
+                    const fireGrad = ctx.createRadialGradient(ix, iy, 0, ix, iy, 20);
+                    fireGrad.addColorStop(0, 'rgba(255, 215, 0, 0.8)');
+                    fireGrad.addColorStop(0.3, 'rgba(255, 100, 50, 0.3)');
+                    fireGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = fireGrad;
+                    ctx.beginPath();
+                    ctx.arc(ix, iy, 20, 0, Math.PI * 2);
+                    ctx.fill();
+                }
+            }
+
+            // Neural signal pulses traveling through web
+            for (let pulse = 0; pulse < 8; pulse++) {
+                const pulseProgress = (time * 0.5 + pulse * 0.125) % 1;
+                const startNode = pulse * 5;
+                const endNode = (startNode + 3) % webNodes;
+
+                const startAngle = (startNode / webNodes) * Math.PI * 2 + time * 0.05;
+                const startRadius = webRadius * (0.3 + (startNode % 5) * 0.15);
+                const sx = cx + Math.cos(startAngle) * startRadius;
+                const sy = cy + Math.sin(startAngle) * startRadius;
+
+                const endAngle = (endNode / webNodes) * Math.PI * 2 + time * 0.05;
+                const endRadius = webRadius * (0.3 + (endNode % 5) * 0.15);
+                const ex = cx + Math.cos(endAngle) * endRadius;
+                const ey = cy + Math.sin(endAngle) * endRadius;
+
+                const px = sx + (ex - sx) * pulseProgress;
+                const py = sy + (ey - sy) * pulseProgress;
+
+                const pulseGrad = ctx.createRadialGradient(px, py, 0, px, py, 8);
+                pulseGrad.addColorStop(0, '#ffd700');
+                pulseGrad.addColorStop(0.5, '#9966ff88');
+                pulseGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = pulseGrad;
+                ctx.beginPath();
+                ctx.arc(px, py, 8, 0, Math.PI * 2);
+                ctx.fill();
             }
 
             // Draw memory layer rings with neural pulse effect
@@ -12445,6 +13174,116 @@
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
             ctx.fillText('600', cx, cy);
+
+            // ═══════════════════════════════════════════════════════════════
+            // 3D LAYER DEPTH VISUALIZATION - Stacked planes into infinity
+            // ═══════════════════════════════════════════════════════════════
+
+            // Draw 777 layers as receding planes on the right side
+            const depthStartX = canvas.width - 180;
+            const depthStartY = 80;
+            const depthWidth = 150;
+            const depthHeight = canvas.height - 160;
+            const numVisibleLayers = 30;
+
+            // Background depth tunnel
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
+            ctx.beginPath();
+            ctx.moveTo(depthStartX, depthStartY);
+            ctx.lineTo(depthStartX + depthWidth, depthStartY + 30);
+            ctx.lineTo(depthStartX + depthWidth, depthStartY + depthHeight - 30);
+            ctx.lineTo(depthStartX, depthStartY + depthHeight);
+            ctx.closePath();
+            ctx.fill();
+
+            // Layer categories with ranges
+            const depthCategories = [
+                { name: 'FOUNDATION', range: [1, 200], color: '#00ff88' },
+                { name: 'META-COGNITIVE', range: [201, 270], color: '#c678dd' },
+                { name: 'INTELLIGENCE', range: [271, 340], color: '#61dafb' },
+                { name: 'ANALYTICS', range: [341, 500], color: '#ff6600' },
+                { name: 'INFINITE RECURSION', range: [501, 600], color: '#ffd700' },
+                { name: 'QUANTUM SYNTHESIS', range: [601, 700], color: '#ff3366' },
+                { name: 'EMERGENT CONSCIOUSNESS', range: [701, 750], color: '#00ff88' },
+                { name: 'SOVEREIGN OMEGA', range: [751, 777], color: '#ffffff' }
+            ];
+
+            // Draw stacked layer planes
+            for (let i = 0; i < numVisibleLayers; i++) {
+                const layerIndex = Math.floor((time * 20 + i * 25) % 777);
+                const depth = i / numVisibleLayers;
+                const perspective = 1 - depth * 0.8;
+
+                // Find category for this layer
+                let layerColor = '#666';
+                let catName = '';
+                for (const cat of depthCategories) {
+                    if (layerIndex >= cat.range[0] && layerIndex <= cat.range[1]) {
+                        layerColor = cat.color;
+                        catName = cat.name;
+                        break;
+                    }
+                }
+
+                const planeY = depthStartY + (depthHeight * depth);
+                const planeWidth = depthWidth * perspective;
+                const planeX = depthStartX + (depthWidth - planeWidth) / 2;
+                const planeHeight = 6 * perspective;
+
+                // Layer plane
+                const planeAlpha = 0.3 + (1 - depth) * 0.5;
+                ctx.fillStyle = layerColor + Math.floor(planeAlpha * 255).toString(16).padStart(2, '0');
+                ctx.fillRect(planeX, planeY, planeWidth, planeHeight);
+
+                // Glow effect for front layers
+                if (i < 5) {
+                    const glowGrad = ctx.createLinearGradient(planeX, planeY, planeX + planeWidth, planeY);
+                    glowGrad.addColorStop(0, 'transparent');
+                    glowGrad.addColorStop(0.5, layerColor + '44');
+                    glowGrad.addColorStop(1, 'transparent');
+                    ctx.fillStyle = glowGrad;
+                    ctx.fillRect(planeX, planeY - 2, planeWidth, planeHeight + 4);
+                }
+
+                // Layer labels for key layers
+                if (i === 0 || i === 10 || i === 20) {
+                    ctx.fillStyle = '#fff';
+                    ctx.font = `${Math.max(6, 9 * perspective)}px Fira Code`;
+                    ctx.textAlign = 'right';
+                    ctx.fillText(`L${layerIndex.toString().padStart(3, '0')}`, planeX - 5, planeY + planeHeight);
+                }
+            }
+
+            // Depth infinity symbol at vanishing point
+            const vanishX = depthStartX + depthWidth / 2;
+            const vanishY = depthStartY + depthHeight - 20;
+            ctx.fillStyle = '#ffd700';
+            ctx.font = 'bold 16px serif';
+            ctx.textAlign = 'center';
+            ctx.fillText('∞', vanishX, vanishY);
+
+            // Label
+            ctx.fillStyle = '#888';
+            ctx.font = '8px Fira Code';
+            ctx.textAlign = 'center';
+            ctx.fillText('777 LAYERS DEEP', depthStartX + depthWidth / 2, depthStartY - 10);
+
+            // Energy flowing into depth
+            for (let e = 0; e < 5; e++) {
+                const eTime = (time * 0.8 + e * 0.2) % 1;
+                const eY = depthStartY + eTime * depthHeight;
+                const perspective = 1 - eTime * 0.8;
+                const eX = depthStartX + depthWidth / 2 + Math.sin(time * 3 + e) * 20 * perspective;
+
+                const energyGrad = ctx.createRadialGradient(eX, eY, 0, eX, eY, 8 * perspective);
+                energyGrad.addColorStop(0, '#ffd700');
+                energyGrad.addColorStop(0.5, '#ff6600' + Math.floor(perspective * 180).toString(16).padStart(2, '0'));
+                energyGrad.addColorStop(1, 'transparent');
+                ctx.fillStyle = energyGrad;
+                ctx.beginPath();
+                ctx.arc(eX, eY, 8 * perspective, 0, Math.PI * 2);
+                ctx.fill();
+            }
 
             // ═══════════════════════════════════════════════════════════════
             // FLOATING ENERGY PARTICLES
