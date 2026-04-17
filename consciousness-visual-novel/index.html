@@ -16,77 +16,81 @@
             color: #00ff88;
         }
 
-        /* Navigation */
+        /* ═══════════════════════════════════════════════════════════════════
+           DESKTOP-APP LAYOUT — left vertical dock, clean chrome
+           ═══════════════════════════════════════════════════════════════════ */
         #main-nav {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            height: 50px;
-            background: linear-gradient(180deg, rgba(0,0,0,0.98) 0%, rgba(5,0,15,0.95) 100%);
-            border-bottom: 1px solid #00ff8830;
+            bottom: 0;
+            width: 68px;
+            background: linear-gradient(180deg, #05080f 0%, #02030a 100%);
+            border-right: 1px solid #1a2332;
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            align-items: stretch;
             z-index: 1000;
-            padding: 0 20px;
+            padding: 10px 0;
         }
 
         .nav-brand {
             font-family: 'Cinzel', serif;
-            font-size: 14px;
-            letter-spacing: 6px;
+            font-size: 7px;
+            letter-spacing: 3px;
             background: linear-gradient(90deg, #ffd700, #c678dd, #00ff88);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            margin-right: 40px;
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            margin: 8px auto 14px;
+            padding: 4px 0;
+            opacity: 0.65;
         }
 
         .nav-modules {
             display: flex;
-            gap: 5px;
-            overflow-x: auto;
-            flex-wrap: nowrap;
-            max-width: calc(100vw - 300px);
+            flex-direction: column;
+            gap: 3px;
+            overflow-y: auto;
+            flex: 1;
+            padding: 0 6px;
         }
-
-        .nav-modules::-webkit-scrollbar {
-            height: 3px;
-        }
-
-        .nav-modules::-webkit-scrollbar-track {
-            background: #111;
-        }
-
-        .nav-modules::-webkit-scrollbar-thumb {
-            background: #333;
-        }
+        .nav-modules::-webkit-scrollbar { width: 2px; }
+        .nav-modules::-webkit-scrollbar-track { background: transparent; }
+        .nav-modules::-webkit-scrollbar-thumb { background: #1a2332; }
 
         .module-btn {
-            padding: 10px 16px;
+            position: relative;
+            padding: 9px 0;
             background: transparent;
-            border: 1px solid #333;
-            color: #555;
+            border: 1px solid transparent;
+            color: #4a5260;
             font-family: 'Fira Code', monospace;
-            font-size: 10px;
+            font-size: 8px;
             letter-spacing: 1px;
             cursor: pointer;
-            transition: all 0.3s;
-            border-radius: 3px;
-            white-space: nowrap;
-            flex-shrink: 0;
+            transition: color 0.15s, background 0.15s, border-color 0.15s;
+            border-radius: 4px;
+            text-align: center;
+            width: 100%;
         }
-
         .module-btn:hover {
-            border-color: #666;
-            color: #888;
-            background: rgba(255,255,255,0.02);
+            color: #cfd8dc;
+            background: rgba(255,255,255,0.03);
         }
-
         .module-btn.active {
-            border-color: var(--module-color, #00ff88);
             color: var(--module-color, #00ff88);
-            background: rgba(0,255,136,0.08);
-            box-shadow: 0 0 15px rgba(0,255,136,0.1);
+            background: rgba(255,255,255,0.04);
+            border-color: color-mix(in srgb, var(--module-color, #00ff88) 40%, transparent);
+        }
+        .module-btn.active::before {
+            content: '';
+            position: absolute;
+            left: -6px; top: 22%; bottom: 22%;
+            width: 2px;
+            background: var(--module-color, #00ff88);
+            border-radius: 0 2px 2px 0;
         }
 
         .module-btn[data-module="minds"] { --module-color: #ffd700; }
@@ -101,107 +105,51 @@
         .module-btn[data-module="supply"] { --module-color: #00d4ff; }
         .module-btn[data-module="live"] { --module-color: #ff0044; }
         .module-btn[data-module="neural"] { --module-color: #ff00ff; }
+        .module-btn[data-module="globe"] { --module-color: #4fc3f7; }
 
         .nav-psi {
-            margin-left: auto;
+            margin-top: auto;
             display: flex;
+            flex-direction: column;
             align-items: center;
-            gap: 12px;
+            gap: 4px;
+            padding: 10px 4px;
+            border-top: 1px solid #1a2332;
         }
-
-        .psi-value {
-            font-size: 16px;
-            color: #fff;
-        }
-
-        .psi-label {
-            color: #c678dd;
-            font-size: 18px;
-        }
-
+        .psi-label { color: #c678dd; font-size: 14px; }
+        .psi-value { color: #fff; font-size: 9px; letter-spacing: 1px; word-break: break-all; text-align: center; }
         .awakening-badge {
-            padding: 4px 12px;
-            border-radius: 12px;
-            font-size: 8px;
+            padding: 3px 5px;
+            border-radius: 4px;
+            font-size: 6px;
             letter-spacing: 1px;
-            background: rgba(255,215,0,0.15);
+            background: rgba(255,215,0,0.08);
             color: #ffd700;
-            border: 1px solid #ffd70033;
+            border: 1px solid #ffd70022;
+            text-align: center;
         }
 
-        /* ═══════════════════════════════════════════════════════════════════
-           METATRON GALAXY - Connected Cosmic Neural Network
-           ═══════════════════════════════════════════════════════════════════ */
+        /* Kill the pulsing node indicators on tab buttons */
+        .module-btn.galaxy-connected::after { display: none; }
+        @keyframes node-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1); } }
 
-        #metatron-galaxy {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 1;
-            pointer-events: none;
-        }
+        /* Hide Metatron galaxy + overlay for a clean desktop-app feel */
+        #metatron-galaxy, .metatron-overlay { display: none !important; }
+        #galaxy-canvas { width: 100%; height: 100%; }
 
-        #galaxy-canvas {
-            width: 100%;
-            height: 100%;
-        }
-
-        /* Galaxy node indicators in nav */
-        .module-btn.galaxy-connected::after {
-            content: '';
-            position: absolute;
-            top: -2px;
-            right: -2px;
-            width: 6px;
-            height: 6px;
-            background: currentColor;
-            border-radius: 50%;
-            box-shadow: 0 0 8px currentColor;
-            animation: node-pulse 2s infinite;
-        }
-
-        @keyframes node-pulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.5); opacity: 0.5; }
-        }
-
-        /* Metatron's Cube overlay effect */
-        .metatron-overlay {
-            position: fixed;
-            top: 50px;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            z-index: 2;
-            pointer-events: none;
-            opacity: 0.15;
-            background:
-                radial-gradient(circle at center, transparent 0%, #000 70%),
-                repeating-conic-gradient(from 0deg, transparent 0deg 30deg, rgba(255,215,0,0.03) 30deg 60deg);
-        }
-
-        /* Module Panels */
+        /* Module panels fill area to the right of the dock */
         .module-panel {
             position: fixed;
-            top: 50px;
-            left: 0;
+            top: 0;
+            left: 68px;
             right: 0;
             bottom: 0;
             display: none;
-            background: transparent;
+            background: #02040a;
             z-index: 10;
         }
-
-        .module-panel.active {
-            display: flex;
-        }
-
-        /* Semi-transparent module backgrounds to see galaxy */
-        .module-panel canvas {
-            background: rgba(0,0,0,0.85);
-        }
+        .module-panel.active { display: flex; }
+        .module-panel canvas { background: #02040a; }
 
         /* ═══════════════════════════════════════════════════════════════════
            MINDS MODULE - Great minds bouncing ideas
@@ -931,7 +879,7 @@
         }
 
         .module-panel.active {
-            animation: breathe 4s ease-in-out infinite;
+            /* breathe animation removed — was scaling every panel 1.0↔1.02 on a 4s loop */
         }
 
         /* Tab button hover effects */
@@ -944,7 +892,7 @@
         }
 
         .module-btn.active {
-            animation: pulse-glow 2s ease-in-out infinite;
+            /* pulse-glow removed — static active state for desktop-app feel */
         }
 
         /* Sidebar panel polish */
@@ -963,15 +911,9 @@
             box-shadow: 0 5px 15px rgba(255,51,102,0.1);
         }
 
-        /* PSI value glow */
-        .psi-value {
-            animation: float-subtle 3s ease-in-out infinite;
-        }
-
-        /* Awakening badge pulse */
-        .awakening-badge {
-            animation: pulse-glow 3s ease-in-out infinite;
-        }
+        /* Kill floaty animations — static chrome */
+        .psi-value { animation: none; }
+        .awakening-badge { animation: none; }
 
         .consciousness-meter.omega-active {
             border-color: #ffd700;
@@ -2834,22 +2776,8 @@
         /* ═══════════════════════════════════════════════════════════════════
            HOLOGRAPHIC HAND / NEURAL CONDUIT
            ═══════════════════════════════════════════════════════════════════ */
-        #neural-conduit {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: 500;
-            opacity: 0;
-            transition: opacity 0.5s;
-        }
-
-        #neural-conduit.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        /* Neural conduit cursor-follower disabled — was adding visual noise */
+        #neural-conduit { display: none !important; }
 
         #neural-canvas {
             width: 100%;
@@ -2942,6 +2870,9 @@
         .conduit-stat-label { color: #666; }
         .conduit-stat-value { color: #c678dd; }
     </style>
+
+    <!-- GLOBE MODULE: 3D interactive world map (bundles Three.js) -->
+    <script src="https://unpkg.com/globe.gl@2.35.0"></script>
 </head>
 <body>
     <!-- Loading -->
@@ -2962,18 +2893,17 @@
     <nav id="main-nav">
         <div class="nav-brand">METATRON</div>
         <div class="nav-modules">
-            <button class="module-btn active galaxy-connected" data-module="minds">MINDS</button>
+            <button class="module-btn active galaxy-connected" data-module="globe">CMD</button>
+            <button class="module-btn galaxy-connected" data-module="minds">MINDS</button>
             <button class="module-btn galaxy-connected" data-module="game">GAME</button>
-            <button class="module-btn galaxy-connected" data-module="war">WAR</button>
             <button class="module-btn galaxy-connected" data-module="econ">ECON</button>
             <button class="module-btn galaxy-connected" data-module="laws">LAWS</button>
-            <button class="module-btn galaxy-connected" data-module="eudaimon">EUDAIMON</button>
-            <button class="module-btn galaxy-connected" data-module="predict">PREDICT</button>
-            <button class="module-btn galaxy-connected" data-module="memory">MEMORY</button>
-            <button class="module-btn galaxy-connected" data-module="layers">LAYERS</button>
-            <button class="module-btn galaxy-connected" data-module="supply">SUPPLY</button>
-            <button class="module-btn galaxy-connected" data-module="live">LIVE</button>
-            <button class="module-btn galaxy-connected" data-module="neural">NEURAL</button>
+            <button class="module-btn galaxy-connected" data-module="eudaimon">EUDM</button>
+            <button class="module-btn galaxy-connected" data-module="predict">PRED</button>
+            <button class="module-btn galaxy-connected" data-module="memory">MEM</button>
+            <button class="module-btn galaxy-connected" data-module="layers">LAYR</button>
+            <button class="module-btn galaxy-connected" data-module="supply">SPLY</button>
+            <button class="module-btn galaxy-connected" data-module="neural">NRL</button>
         </div>
         <div class="nav-psi">
             <span class="psi-label">Ψ</span>
@@ -2983,7 +2913,7 @@
     </nav>
 
     <!-- MINDS MODULE -->
-    <div class="module-panel active" id="minds-panel">
+    <div class="module-panel" id="minds-panel">
         <div class="minds-container">
             <canvas id="minds-canvas"></canvas>
             <div class="minds-sidebar">
@@ -4394,6 +4324,193 @@
         </div>
     </div>
 
+    <!-- GLOBE MODULE - 3D Earth + global supply chain intelligence -->
+    <style>
+        #globe-panel { display: none; background: radial-gradient(ellipse at center, #020711 0%, #000 85%); }
+        #globe-panel.active { display: block; }
+        #globe-container { position: absolute; top: 0; left: 240px; right: 340px; bottom: 0; overflow: hidden; }
+        #globe-container canvas { display: block; }
+        .globe-sidebar {
+            position: absolute; top: 0; right: 0; bottom: 0; width: 340px;
+            background: linear-gradient(180deg, rgba(4,12,24,0.96) 0%, rgba(0,0,0,0.98) 100%);
+            border-left: 1px solid #4fc3f755; padding: 18px 18px 24px;
+            overflow-y: auto; font-family: 'Fira Code', monospace; color: #cfe8ff;
+        }
+        .globe-sidebar h2 {
+            font-family: 'Cinzel', serif; font-size: 14px; letter-spacing: 4px;
+            color: #4fc3f7; margin-bottom: 4px; text-transform: uppercase;
+        }
+        .globe-sidebar .globe-subtitle { font-size: 9px; color: #4fc3f790; letter-spacing: 2px; margin-bottom: 14px; }
+        .globe-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-bottom: 14px; }
+        .globe-legend .lg { font-size: 9px; display: flex; align-items: center; gap: 6px; color: #cfe8ff99; }
+        .globe-legend .dot { width: 9px; height: 9px; border-radius: 50%; box-shadow: 0 0 6px currentColor; }
+        .globe-filters { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 14px; }
+        .globe-filter {
+            padding: 4px 8px; font-size: 9px; border: 1px solid #4fc3f744; border-radius: 3px;
+            background: transparent; color: #4fc3f7; cursor: pointer; letter-spacing: 1px;
+            font-family: 'Fira Code', monospace; transition: all 0.18s;
+        }
+        .globe-filter:hover { background: #4fc3f720; }
+        .globe-filter.active { background: #4fc3f7; color: #000; border-color: #4fc3f7; }
+        .globe-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px; }
+        .globe-stat { background: rgba(79,195,247,0.06); border: 1px solid #4fc3f730; border-radius: 4px; padding: 8px; text-align: center; }
+        .globe-stat .val { display: block; font-size: 18px; color: #4fc3f7; font-weight: 700; }
+        .globe-stat .lbl { display: block; font-size: 7px; color: #cfe8ff80; letter-spacing: 1.5px; margin-top: 2px; }
+        .globe-detail {
+            background: rgba(79,195,247,0.05); border: 1px solid #4fc3f740; border-radius: 6px;
+            padding: 12px; min-height: 180px; font-size: 11px; line-height: 1.55;
+        }
+        .globe-detail .d-ticker { color: #ffd700; font-size: 16px; font-weight: 700; letter-spacing: 2px; }
+        .globe-detail .d-name { color: #fff; font-size: 12px; margin-bottom: 8px; }
+        .globe-detail .d-row { display: flex; justify-content: space-between; font-size: 9px; margin: 3px 0; color: #cfe8ff99; }
+        .globe-detail .d-row span:last-child { color: #4fc3f7; }
+        .globe-detail .d-thesis { margin-top: 10px; padding-top: 10px; border-top: 1px solid #4fc3f725; font-size: 10px; color: #cfe8ffcc; }
+        .globe-detail .d-placeholder { color: #4fc3f766; font-size: 10px; font-style: italic; text-align: center; padding: 30px 10px; }
+        .globe-hero {
+            font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 3px; text-align: center;
+            color: #4fc3f799; margin-top: 14px; padding: 10px;
+            background: rgba(79,195,247,0.04); border-top: 1px solid #4fc3f720; border-bottom: 1px solid #4fc3f720;
+        }
+        .globe-overlay-tag {
+            position: absolute; top: 12px; left: 14px; z-index: 5;
+            font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 4px; color: #4fc3f7cc;
+            pointer-events: none; text-shadow: 0 0 12px #4fc3f7;
+        }
+        .globe-overlay-hint {
+            position: absolute; bottom: 12px; left: 254px; z-index: 5;
+            font-family: 'Fira Code', monospace; font-size: 9px; color: #4fc3f77a;
+            pointer-events: none; letter-spacing: 1.5px;
+        }
+        /* LEFT RAIL — WAR theaters + portfolio positions */
+        .command-warrail {
+            position: absolute; top: 0; left: 0; bottom: 0; width: 240px;
+            background: linear-gradient(180deg, rgba(4,10,20,0.96) 0%, rgba(0,0,0,0.98) 100%);
+            border-right: 1px solid #1a2332;
+            padding: 16px 14px 20px; overflow-y: auto;
+            font-family: 'Fira Code', monospace;
+        }
+        .command-warrail .cr-title {
+            font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+            color: #ff4444; margin-bottom: 10px; text-transform: uppercase;
+        }
+        .theater-card {
+            background: rgba(255,68,68,0.04); border: 1px solid #ff444425;
+            border-left: 3px solid #ff4444;
+            border-radius: 3px; padding: 8px 10px; margin-bottom: 6px;
+            cursor: pointer; transition: background 0.15s, border-color 0.15s;
+        }
+        .theater-card:hover { background: rgba(255,68,68,0.08); }
+        .theater-card .tc-name { font-size: 10px; color: #fff; letter-spacing: 1.5px; }
+        .theater-card .tc-status {
+            font-size: 7px; letter-spacing: 1px; color: #ff4444; margin-top: 2px;
+        }
+        .theater-card.status-critical { border-left-color: #ff0033; }
+        .theater-card.status-critical .tc-status { color: #ff3355; }
+        .theater-card.status-active   { border-left-color: #ff6600; }
+        .theater-card.status-active   .tc-status { color: #ff9a44; }
+        .theater-card.status-elevated { border-left-color: #ffcc00; }
+        .theater-card.status-elevated .tc-status { color: #ffd44a; }
+        .theater-card.status-monitoring { border-left-color: #9966ff; }
+        .theater-card.status-monitoring .tc-status { color: #b591ff; }
+
+        .position-card {
+            background: rgba(0,255,136,0.03); border: 1px solid #00ff8820;
+            border-left: 3px solid #00ff88;
+            border-radius: 3px; padding: 7px 10px; margin-bottom: 5px;
+            display: flex; justify-content: space-between; align-items: center;
+            cursor: pointer;
+        }
+        .position-card:hover { background: rgba(0,255,136,0.06); }
+        .position-card.pnl-neg { border-left-color: #ff4444; background: rgba(255,68,68,0.03); }
+        .position-card .pc-tkr { color: #fff; font-size: 11px; letter-spacing: 1px; }
+        .position-card .pc-pnl { font-size: 9px; }
+        .position-card.pnl-pos .pc-pnl { color: #00ff88; }
+        .position-card.pnl-neg .pc-pnl { color: #ff6677; }
+
+        /* LIVE feed inside the right sidebar */
+        .globe-live-feed {
+            margin-top: 14px; padding-top: 12px;
+            border-top: 1px solid #4fc3f720;
+        }
+        .globe-live-feed .lf-title {
+            font-family: 'Cinzel', serif; font-size: 9px; letter-spacing: 3px;
+            color: #ff0044; margin-bottom: 8px; text-transform: uppercase;
+            display: flex; align-items: center; gap: 6px;
+        }
+        .globe-live-feed .lf-dot {
+            width: 6px; height: 6px; border-radius: 50%;
+            background: #ff0044; box-shadow: 0 0 6px #ff0044;
+        }
+        .feed-item {
+            background: rgba(255,0,68,0.03); border-left: 2px solid #ff0044;
+            padding: 6px 9px; margin-bottom: 5px; border-radius: 2px;
+        }
+        .feed-item .fi-ticker { color: #ffd700; font-size: 9px; font-weight: 700; }
+        .feed-item .fi-headline { color: #cfe8ff; font-size: 10px; line-height: 1.4; margin-top: 2px; }
+        .feed-item .fi-time { color: #4fc3f770; font-size: 7px; letter-spacing: 1px; margin-top: 3px; }
+    </style>
+    <div class="module-panel active" id="globe-panel">
+        <!-- LEFT RAIL: WAR theaters (merged from WAR module) -->
+        <div class="command-warrail">
+            <div class="cr-title">CONFLICT THEATERS</div>
+            <div id="command-theaters"></div>
+            <div class="cr-title" style="margin-top:14px;">POSITIONS</div>
+            <div id="command-positions"></div>
+        </div>
+
+        <div id="globe-container">
+            <div class="globe-overlay-tag">EUDAIMON · COMMAND</div>
+            <div class="globe-overlay-hint">DRAG TO ROTATE · SCROLL TO ZOOM · CLICK NODE TO INSPECT</div>
+        </div>
+        <div class="globe-sidebar">
+            <h2>BOTTLENECK CARTOGRAPHY</h2>
+            <div class="globe-subtitle">SUPPLY-CHAIN INTELLIGENCE</div>
+
+            <div class="globe-stats">
+                <div class="globe-stat"><span class="val" id="globe-node-count">0</span><span class="lbl">NODES</span></div>
+                <div class="globe-stat"><span class="val" id="globe-arc-count">0</span><span class="lbl">FLOWS</span></div>
+                <div class="globe-stat"><span class="val" id="globe-choke-count">0</span><span class="lbl">CHOKEPOINTS</span></div>
+            </div>
+
+            <div class="globe-legend">
+                <div class="lg"><span class="dot" style="color:#ff3b3b;background:#ff3b3b"></span>Adversary flow</div>
+                <div class="lg"><span class="dot" style="color:#ffd700;background:#ffd700"></span>Validated trade</div>
+                <div class="lg"><span class="dot" style="color:#4fc3f7;background:#4fc3f7"></span>Critical flow</div>
+                <div class="lg"><span class="dot" style="color:#00ff88;background:#00ff88"></span>US / Ally asset</div>
+                <div class="lg"><span class="dot" style="color:#ff00aa;background:#ff00aa"></span>Chokepoint</div>
+                <div class="lg"><span class="dot" style="color:#c678dd;background:#c678dd"></span>Adversary asset</div>
+            </div>
+
+            <div class="globe-filters" id="globe-filters">
+                <button class="globe-filter active" data-cmdty="ALL">ALL</button>
+                <button class="globe-filter" data-cmdty="ANTIMONY">Sb</button>
+                <button class="globe-filter" data-cmdty="REE">REE</button>
+                <button class="globe-filter" data-cmdty="URANIUM">U</button>
+                <button class="globe-filter" data-cmdty="HALEU">HALEU</button>
+                <button class="globe-filter" data-cmdty="COPPER">Cu</button>
+                <button class="globe-filter" data-cmdty="TUNGSTEN">W</button>
+                <button class="globe-filter" data-cmdty="SEMI">Chips</button>
+                <button class="globe-filter" data-cmdty="NIOBIUM">Nb</button>
+            </div>
+
+            <div class="globe-detail" id="globe-detail">
+                <div class="d-placeholder">
+                    Click a node on the globe to inspect.<br><br>
+                    Each marker is a facility, mine, refinery, fab, or choke-strait. Arcs show commodity flow — red arcs are adversary-controlled routes that validate the bottleneck thesis.
+                </div>
+            </div>
+
+            <div class="globe-live-feed">
+                <div class="lf-title"><span class="lf-dot"></span>LIVE INTEL</div>
+                <div id="command-live-feed"></div>
+            </div>
+
+            <div class="globe-hero">
+                "THE MONEY IS MADE OWNING BOTTLENECKS<br>NOT END PRODUCTS."
+            </div>
+        </div>
+    </div>
+
     <script>
         // ═══════════════════════════════════════════════════════════════════════════════
         // AZATHOTH COMMAND CENTER - INTERACTIVE INTELLIGENCE MODULES
@@ -4942,6 +5059,7 @@
             initLiveModule();
             initNeuralModule();
             initNeuralConduit();
+            initGlobeModule();
             animate();
             } catch(e) {
                 console.error('Init error:', e);
@@ -14623,6 +14741,390 @@
                     }
                 }
             });
+        }
+
+
+        // ═══════════════════════════════════════════════════════════════════════════════
+        // GLOBE MODULE - 3D interactive world map + bottleneck supply-chain cartography
+        // Data reflects Eudaimon thesis state through Apr 17, 2026
+        // ═══════════════════════════════════════════════════════════════════════════════
+
+        // Node role → color for globe points
+        const GLOBE_ROLE_COLORS = {
+            US:          '#00ff88', // US/ally asset — green
+            ADVERSARY:   '#c678dd', // China/Russia/Iran — purple
+            CHOKEPOINT:  '#ff00aa', // strait / canal
+            CUSTOMER:    '#ffd700', // DoD, FAB customers
+            NEUTRAL:     '#4fc3f7'  // everything else
+        };
+
+        const GLOBE_NODES = [
+            // ── ADVERSARY CONCENTRATION (China / Russia) ─────────────────────
+            { id:'BAYAN_OBO', lat:41.77, lng:109.97, name:'Bayan Obo REE',        country:'China',  role:'ADVERSARY', cmdty:['REE'],               ticker:null,    size:1.4, thesis:'60%+ of global light rare earth supply. The reason MP exists.' },
+            { id:'HUNAN_SB',  lat:28.24, lng:112.94, name:'Hunan Antimony Mines', country:'China',  role:'ADVERSARY', cmdty:['ANTIMONY'],          ticker:null,    size:1.3, thesis:'48% of world antimony. China restricted exports Nov 2025 — PPTA/UAMY repricing.' },
+            { id:'JIANGXI_W', lat:26.80, lng:115.90, name:'Jiangxi Tungsten',     country:'China',  role:'ADVERSARY', cmdty:['TUNGSTEN'],          ticker:null,    size:1.2, thesis:'80% world tungsten. 2025 export controls sent prices +200%.' },
+            { id:'GANZHOU_HREE', lat:25.85, lng:114.94, name:'Ganzhou Heavy REE', country:'China',  role:'ADVERSARY', cmdty:['REE'],               ticker:null,    size:1.1, thesis:'Dysprosium / terbium chokepoint. Defense-critical.' },
+            { id:'RUSSIA_UF6', lat:56.50, lng:60.60,  name:'Urals Enrichment',    country:'Russia', role:'ADVERSARY', cmdty:['HALEU','URANIUM'],   ticker:null,    size:1.2, thesis:'Historical HALEU source. US ban routed demand to LEU Ohio.' },
+            { id:'KAZATOM',   lat:43.22, lng:67.49,  name:'Kazatomprom',         country:'Kazakhstan', role:'ADVERSARY', cmdty:['URANIUM'],       ticker:null,    size:1.1, thesis:'~40% world uranium. Sulfuric acid constraints = 2026 production miss.' },
+
+            // ── US / ALLY ASSETS (the trade) ────────────────────────────────
+            { id:'PPTA_STIB', lat:44.97, lng:-115.32, name:'Stibnite (PPTA)',    country:'USA',    role:'US', cmdty:['ANTIMONY','GOLD'],          ticker:'PPTA',  size:1.5, thesis:'Only US antimony source. $2.7B EXIM loan advanced. FID imminent Spring 2026. NPV $3.5B @ $3,250 gold.' },
+            { id:'UAMY_MT',   lat:47.50, lng:-111.30, name:'UAMY Montana',        country:'USA',    role:'US', cmdty:['ANTIMONY'],                 ticker:'UAMY',  size:1.2, thesis:'$245M DLA contract. Revenue +163% YoY.' },
+            { id:'MP_PASS',   lat:35.48, lng:-115.53, name:'Mountain Pass (MP)', country:'USA',    role:'US', cmdty:['REE'],                       ticker:'MP',    size:1.5, thesis:'Only US rare earth mine. $400M DoD equity stake. 2027 China REE ban = forced buyer.' },
+            { id:'USAR_WY',   lat:41.00, lng:-107.50, name:'USA Rare Earth',      country:'USA',    role:'US', cmdty:['REE'],                       ticker:'USAR',  size:1.1, thesis:'Heavy REE hedge against China dysprosium choke.' },
+            { id:'NB_ELK',    lat:40.30, lng:-95.78,  name:'Elk Creek (NB)',      country:'USA',    role:'US', cmdty:['NIOBIUM'],                   ticker:'NB',    size:1.1, thesis:'Only US niobium + scandium project. Critical mineral steel alloys.' },
+            { id:'LEU_OHIO',  lat:39.03, lng:-82.99,  name:'LEU Piketon',         country:'USA',    role:'US', cmdty:['HALEU'],                     ticker:'LEU',   size:1.5, thesis:'ONLY US HALEU producer. $900M DOE contract. Fluor EPC partnership. SMR fuel monopoly.' },
+            { id:'FCX_MOR',   lat:33.08, lng:-109.37, name:'Morenci Copper (FCX)', country:'USA',   role:'US', cmdty:['COPPER'],                    ticker:'FCX',   size:1.3, thesis:'Largest US copper mine. $500B AI capex needs copper. Supercycle thesis.' },
+            { id:'BWXT_VA',   lat:37.41, lng:-79.14,  name:'BWXT Lynchburg',      country:'USA',    role:'US', cmdty:['NUCLEAR'],                   ticker:'BWXT',  size:1.2, thesis:'Naval nuclear sole supplier. Every US Navy sub & carrier for 70 years. $6B backlog.' },
+            { id:'CCJ_CIGAR', lat:58.05, lng:-104.50, name:'Cigar Lake (CCJ)',    country:'Canada', role:'US', cmdty:['URANIUM'],                   ticker:'CCJ',   size:1.3, thesis:'Top-tier western uranium. 35-40% uncontracted 2026 = pricing upside.' },
+            { id:'UUUU_UT',   lat:37.58, lng:-109.49, name:'White Mesa (UUUU)',   country:'USA',    role:'US', cmdty:['URANIUM','REE'],             ticker:'UUUU',  size:1.1, thesis:'Uranium + REE dual play. Only US mill processing both. Zero China/Russia exposure.' },
+            { id:'CRML_GRL',  lat:60.20, lng:-45.90,  name:'Tanbreez (CRML)',     country:'Greenland', role:'US', cmdty:['REE'],                    ticker:'CRML',  size:1.1, thesis:'27% HREE ratio with dysprosium/terbium. $1.5B Saudi JV. Only non-China HREE at scale.' },
+            { id:'HWM_MI',    lat:43.41, lng:-86.34,  name:'Howmet Whitehall',    country:'USA',    role:'US', cmdty:['AEROSPACE'],                 ticker:'HWM',   size:1.2, thesis:'Titanium aerospace vertical integration. Gold-standard engine superalloys.' },
+            { id:'FSLR_OH',   lat:41.55, lng:-83.62,  name:'First Solar Perrysburg', country:'USA', role:'US', cmdty:['SOLAR'],                    ticker:'FSLR',  size:1.1, thesis:'ONLY US solar manufacturer. CdTe, not Chinese silicon. 50% tariff fortress.' },
+            { id:'HII_NN',    lat:36.99, lng:-76.43,  name:'Huntington Ingalls',  country:'USA',    role:'US', cmdty:['NAVAL'],                     ticker:'HII',   size:1.1, thesis:'SOLE aircraft carrier builder. $57B backlog.' },
+            { id:'ASML_VEL',  lat:51.42, lng:5.43,    name:'ASML Veldhoven',      country:'Netherlands', role:'US', cmdty:['SEMI'],                 ticker:'ASML',  size:1.5, thesis:'100% global EUV lithography monopoly. $400M per High-NA machine. $38.8B backlog.' },
+            { id:'TSMC_HSIN', lat:24.77, lng:120.99,  name:'TSMC Hsinchu',        country:'Taiwan', role:'US', cmdty:['SEMI'],                      ticker:'TSM',   size:1.5, thesis:'90% of global 3nm/5nm production. Bigger chokepoint than antimony.' },
+            { id:'SKHY_ICHN', lat:37.27, lng:127.45,  name:'SK Hynix Icheon',     country:'S. Korea', role:'US', cmdty:['SEMI'],                    ticker:'HXSCL', size:1.2, thesis:'HBM memory leader. Sold out through 2026.' },
+            { id:'PENTAGON',  lat:38.87, lng:-77.06,  name:'Pentagon / DoD',      country:'USA',    role:'CUSTOMER', cmdty:['DEFENSE'],             ticker:null,    size:1.4, thesis:'Ultimate forced buyer. $245M sole-source antimony. $13.4B autonomy budget. $1.5T FY27 budget.' },
+            { id:'NVDA_SC',   lat:37.37, lng:-121.96, name:'NVIDIA Santa Clara',  country:'USA',    role:'CUSTOMER', cmdty:['SEMI'],                ticker:'NVDA',  size:1.3, thesis:'Downstream of ASML→TSMC. 90% AI chip share. $300B 2026 backlog.' },
+            { id:'CHUQUI',    lat:-22.32, lng:-68.90, name:'Chuquicamata',        country:'Chile',  role:'NEUTRAL', cmdty:['COPPER'],               ticker:null,    size:1.1, thesis:'World largest open-pit copper mine. Allied supply.' },
+            { id:'NIOBEC',    lat:48.10, lng:-71.60,  name:'Niobec Quebec',       country:'Canada', role:'US', cmdty:['NIOBIUM'],                   ticker:null,    size:1.0, thesis:'Major non-Brazil niobium source. Steel alloy critical.' },
+            { id:'ALMTF_PT',  lat:40.61, lng:-7.97,   name:'Panasqueira Mine',    country:'Portugal', role:'US', cmdty:['TUNGSTEN'],               ticker:'ALMTF', size:1.0, thesis:'Largest non-China tungsten reserve outside Russia.' }
+        ];
+
+        // Chokepoints rendered as pulsing rings
+        const GLOBE_CHOKEPOINTS = [
+            { id:'HORMUZ',   lat:26.57, lng:56.25, name:'Strait of Hormuz',    note:'20% global oil. Brent $103 on blockade.' },
+            { id:'MALACCA',  lat:3.00,  lng:101.50, name:'Strait of Malacca',  note:'80% China energy imports transit here.' },
+            { id:'TAIWAN_S', lat:24.50, lng:119.00, name:'Taiwan Strait',      note:'90% advanced semiconductors. The ultimate chokepoint.' },
+            { id:'SUEZ',     lat:30.50, lng:32.30,  name:'Suez Canal',         note:'12% world trade.' },
+            { id:'PANAMA',   lat:9.08,  lng:-79.68, name:'Panama Canal',       note:'Drought-constrained. Reshoring accelerator.' },
+            { id:'BAB_MAND', lat:12.58, lng:43.33,  name:'Bab el-Mandeb',      note:'Red Sea ingress. Houthi strikes ongoing.' }
+        ];
+
+        // Arcs: commodity flows. color codes: red=adversary, gold=validated, blue=critical, green=ally
+        const GLOBE_ARCS = [
+            // adversary outflows (red)
+            { from:'BAYAN_OBO',  to:'NVDA_SC',   cmdty:'REE',      flow:'adversary' },
+            { from:'HUNAN_SB',   to:'PENTAGON',  cmdty:'ANTIMONY', flow:'adversary' },
+            { from:'JIANGXI_W',  to:'PENTAGON',  cmdty:'TUNGSTEN', flow:'adversary' },
+            { from:'GANZHOU_HREE', to:'PENTAGON', cmdty:'REE',    flow:'adversary' },
+            { from:'RUSSIA_UF6', to:'LEU_OHIO',  cmdty:'HALEU',    flow:'adversary' },
+            { from:'KAZATOM',    to:'CCJ_CIGAR', cmdty:'URANIUM',  flow:'adversary' },
+
+            // validated US bottleneck trades (gold)
+            { from:'PPTA_STIB', to:'PENTAGON',  cmdty:'ANTIMONY', flow:'validated' },
+            { from:'UAMY_MT',   to:'PENTAGON',  cmdty:'ANTIMONY', flow:'validated' },
+            { from:'MP_PASS',   to:'PENTAGON',  cmdty:'REE',      flow:'validated' },
+            { from:'LEU_OHIO',  to:'BWXT_VA',   cmdty:'HALEU',    flow:'validated' },
+            { from:'CRML_GRL',  to:'PENTAGON',  cmdty:'REE',      flow:'validated' },
+            { from:'NB_ELK',    to:'PENTAGON',  cmdty:'NIOBIUM',  flow:'validated' },
+
+            // critical semi supply chain (blue)
+            { from:'ASML_VEL',  to:'TSMC_HSIN', cmdty:'SEMI',     flow:'critical' },
+            { from:'TSMC_HSIN', to:'NVDA_SC',   cmdty:'SEMI',     flow:'critical' },
+            { from:'SKHY_ICHN', to:'NVDA_SC',   cmdty:'SEMI',     flow:'critical' },
+
+            // allied resource flows (green)
+            { from:'CCJ_CIGAR', to:'LEU_OHIO',  cmdty:'URANIUM',  flow:'ally' },
+            { from:'UUUU_UT',   to:'LEU_OHIO',  cmdty:'URANIUM',  flow:'ally' },
+            { from:'CHUQUI',    to:'FCX_MOR',   cmdty:'COPPER',   flow:'ally' },
+            { from:'NIOBEC',    to:'NB_ELK',    cmdty:'NIOBIUM',  flow:'ally' },
+            { from:'ALMTF_PT',  to:'PENTAGON',  cmdty:'TUNGSTEN', flow:'ally' },
+            { from:'HWM_MI',    to:'PENTAGON',  cmdty:'AEROSPACE',flow:'ally' },
+            { from:'FSLR_OH',   to:'PENTAGON',  cmdty:'SOLAR',    flow:'ally' }
+        ];
+
+        const FLOW_COLORS = {
+            adversary: ['rgba(255,59,59,0.05)','rgba(255,59,59,0.9)'],
+            validated: ['rgba(255,215,0,0.05)','rgba(255,215,0,0.95)'],
+            critical:  ['rgba(79,195,247,0.05)','rgba(79,195,247,0.95)'],
+            ally:      ['rgba(0,255,136,0.05)','rgba(0,255,136,0.85)']
+        };
+
+        let globeInstance = null;
+        let globeInitialized = false;
+        let globeActiveCmdty = 'ALL';
+
+        // ── Portfolio positions (Apr 17, 2026 Webull snapshot) ──────────────
+        const COMMAND_POSITIONS = [
+            { ticker:'CEG',  contract:'$300C May15 \'26',  last:18.50, avg:17.10, dayPnl:16.06, lat:41.43, lng:-81.85, thesis:'+16% day — 29 days to expiry. Decision NOW.' },
+            { ticker:'PPTA', contract:'Stock',             last:31.51, avg:null,  dayPnl:2.3,   lat:44.97, lng:-115.32, thesis:'S+ crown jewel. $2.7B EXIM loan. FID imminent Spring 2026.' },
+            { ticker:'UAMY', contract:'$10C Aug21 \'26',   last:2.98,  avg:2.80,  dayPnl:-0.83, lat:47.50, lng:-111.30, thesis:'Strong hold. $245M DLA contract.' },
+            { ticker:'NB',   contract:'$5C Jan15 \'27',    last:2.33,  avg:2.33,  dayPnl:-0.21, lat:40.30, lng:-95.78, thesis:'LEAP. Only US niobium.' },
+            { ticker:'BLDR', contract:'$85C Jun18 \'26',   last:9.45,  avg:10.80, dayPnl:7.39,  lat:38.63, lng:-90.20, thesis:'Hold. Stop at $80.' },
+            { ticker:'SO',   contract:'$95C Sep18 \'26',   last:4.60,  avg:5.70,  dayPnl:-11.54,lat:33.75, lng:-84.39, thesis:'Hold through Apr 30 earnings.' }
+        ];
+
+        // Live intel headlines — pulled from recent Eudaimon state (Apr 2026)
+        const COMMAND_FEED = [
+            { ticker:'HORMUZ',   headline:'Strait blockade holds. Brent $103, Iran escalation ongoing.', time:'1h' },
+            { ticker:'PPTA',     headline:'Analyst target raised to $41. FID expected Spring 2026.',     time:'2h' },
+            { ticker:'CEG',      headline:'$300C +16% — 29 days to expiry. Roll/sell decision pending.', time:'3h' },
+            { ticker:'ROP',      headline:'Earnings Apr 23 — Deltek guidance = cyclical vs structural test.', time:'5h' },
+            { ticker:'TARIFFS',  headline:'Sec 232: 50% steel, 25% derivatives, 15% grid equipment live.',time:'6h' },
+            { ticker:'CHINA',    headline:'50% retaliation threat over Iran air defense shipment.',      time:'8h' },
+            { ticker:'VRSN',     headline:'40/40 bottleneck score. .com registry monopoly. Forever hold.',time:'12h'},
+            { ticker:'PROJECT VAULT', headline:'$12B critical minerals strategic reserve confirmed.',   time:'1d' }
+        ];
+
+        function initGlobeModule() {
+            // Click handler for returning to tab (and first build if not yet initialized)
+            document.querySelector('[data-module="globe"]').addEventListener('click', () => {
+                if (globeInitialized) {
+                    setTimeout(() => {
+                        if (!globeInstance) return;
+                        const c = document.getElementById('globe-container');
+                        globeInstance.width(c.clientWidth); globeInstance.height(c.clientHeight);
+                    }, 60);
+                    return;
+                }
+                setTimeout(() => { buildGlobe(); globeInitialized = true; }, 80);
+            });
+            // Default-active case: build the globe on boot since CMD is the landing tab
+            const panel = document.getElementById('globe-panel');
+            if (panel && panel.classList.contains('active')) {
+                setTimeout(() => { if (!globeInitialized) { buildGlobe(); globeInitialized = true; } }, 300);
+            }
+        }
+
+        function buildGlobe() {
+            const container = document.getElementById('globe-container');
+            if (!container || typeof Globe !== 'function') {
+                console.warn('[GLOBE] globe.gl failed to load — check network/CDN.');
+                return;
+            }
+
+            // Resolve node lookups for arcs
+            const nodeById = Object.fromEntries(GLOBE_NODES.map(n => [n.id, n]));
+            const arcsFull = GLOBE_ARCS.map(a => {
+                const s = nodeById[a.from], e = nodeById[a.to];
+                if (!s || !e) return null;
+                return { ...a, startLat:s.lat, startLng:s.lng, endLat:e.lat, endLng:e.lng, color: FLOW_COLORS[a.flow] };
+            }).filter(Boolean);
+
+            // Portfolio positions rendered as gold/red pins (color by P/L)
+            const positionPoints = COMMAND_POSITIONS.map(p => ({
+                id:'POS_'+p.ticker, name:p.ticker + ' · ' + (p.contract || ''), ticker:p.ticker,
+                country:'USA', role:'POSITION', cmdty:['POSITION'],
+                lat:p.lat, lng:p.lng, size:1.2,
+                ptColor: p.dayPnl >= 0 ? '#ffd700' : '#ff6677',
+                ptAlt: 0.025, ptRadius: 0.7, isChoke:false, isPosition:true,
+                thesis: p.thesis + ' — Last $' + p.last.toFixed(2) + ' · ' + (p.dayPnl>=0?'+':'') + p.dayPnl.toFixed(2) + '%'
+            }));
+
+            const points = [
+                ...GLOBE_NODES.map(n => ({
+                    ...n,
+                    ptColor: GLOBE_ROLE_COLORS[n.role] || GLOBE_ROLE_COLORS.NEUTRAL,
+                    ptAlt: 0.01 + n.size * 0.012,
+                    ptRadius: 0.35 + n.size * 0.25,
+                    isChoke: false
+                })),
+                ...GLOBE_CHOKEPOINTS.map(c => ({
+                    ...c, role:'CHOKEPOINT', cmdty:['CHOKEPOINT'],
+                    ptColor: GLOBE_ROLE_COLORS.CHOKEPOINT,
+                    ptAlt: 0.015, ptRadius: 0.55, size: 1.0, isChoke: true,
+                    thesis: c.note
+                })),
+                ...positionPoints
+            ];
+
+            globeInstance = Globe()(container)
+                .globeImageUrl('//unpkg.com/three-globe/example/img/earth-night.jpg')
+                .bumpImageUrl('//unpkg.com/three-globe/example/img/earth-topology.png')
+                .backgroundColor('rgba(0,0,0,0)')
+                .showAtmosphere(true)
+                .atmosphereColor('#4fc3f7')
+                .atmosphereAltitude(0.22)
+                // Points (nodes + chokepoints)
+                .pointsData(points)
+                .pointLat('lat').pointLng('lng')
+                .pointAltitude('ptAlt')
+                .pointRadius('ptRadius')
+                .pointColor('ptColor')
+                .pointLabel(d => `
+                    <div style="font-family:'Fira Code',monospace;background:rgba(0,10,20,0.92);border:1px solid ${d.ptColor};padding:8px 10px;border-radius:4px;color:#fff;font-size:11px;max-width:240px;">
+                        <div style="color:${d.ptColor};font-weight:700;letter-spacing:1.5px;">${d.name}</div>
+                        <div style="color:#888;font-size:9px;margin-top:2px;">${d.country || ''} · ${(d.cmdty||[]).join(', ')}</div>
+                        ${d.ticker ? `<div style="color:#ffd700;font-size:12px;margin-top:4px;">${d.ticker}</div>` : ''}
+                    </div>`)
+                .onPointClick(d => renderGlobeDetail(d))
+                // Arcs (flows)
+                .arcsData(arcsFull)
+                .arcStartLat('startLat').arcStartLng('startLng')
+                .arcEndLat('endLat').arcEndLng('endLng')
+                .arcColor('color')
+                .arcAltitude(0.002)
+                .arcAltitudeAutoScale(0)
+                .arcStroke(0.55)
+                .arcDashLength(1)
+                .arcDashGap(0)
+                .arcDashAnimateTime(0)
+                .arcLabel(d => `
+                    <div style="font-family:'Fira Code',monospace;background:rgba(0,10,20,0.9);padding:6px 9px;border-radius:3px;color:#fff;font-size:10px;">
+                        ${nodeById[d.from].name} → ${nodeById[d.to].name}<br>
+                        <span style="color:#4fc3f7;">${d.cmdty}</span> · <span style="color:#888;">${d.flow}</span>
+                    </div>`)
+                // Conflict theaters rendered as static red heat rings
+                .ringsData(typeof CONFLICTS !== 'undefined' ? CONFLICTS : [])
+                .ringLat('lat').ringLng('lng')
+                .ringColor(d => t => {
+                    const base = d.status === 'critical' ? [255,51,85] :
+                                 d.status === 'active'   ? [255,100,44] :
+                                 d.status === 'elevated' ? [255,204,0]  : [153,102,255];
+                    return `rgba(${base[0]},${base[1]},${base[2]},${0.5 * (1 - t)})`;
+                })
+                .ringMaxRadius(3)
+                .ringPropagationSpeed(0)
+                .ringRepeatPeriod(0);
+
+            // Size to container
+            globeInstance.width(container.clientWidth);
+            globeInstance.height(container.clientHeight);
+
+            // Initial camera pose — tilt toward US/Asia chokepoints
+            globeInstance.pointOfView({ lat: 25, lng: -30, altitude: 2.4 }, 0);
+
+            // Gentle auto-rotate on — globe can move, but nothing else on the site should.
+            const controls = globeInstance.controls();
+            if (controls) {
+                controls.autoRotate = true;
+                controls.autoRotateSpeed = 0.3;
+                controls.enableDamping = true;
+                controls.dampingFactor = 0.08;
+            }
+
+            // Stats
+            document.getElementById('globe-node-count').textContent = GLOBE_NODES.length;
+            document.getElementById('globe-arc-count').textContent  = GLOBE_ARCS.length;
+            document.getElementById('globe-choke-count').textContent = GLOBE_CHOKEPOINTS.length;
+
+            // Populate LEFT RAIL: conflict theaters (from WAR module data)
+            const theatersEl = document.getElementById('command-theaters');
+            if (theatersEl && typeof CONFLICTS !== 'undefined') {
+                theatersEl.innerHTML = CONFLICTS.map(c => `
+                    <div class="theater-card status-${c.status}" data-lat="${c.lat}" data-lng="${c.lng}" data-name="${c.name}">
+                        <div class="tc-name">${c.name}</div>
+                        <div class="tc-status">${(c.status||'').toUpperCase()} · ${(c.assets||[]).join(' ')}</div>
+                    </div>`).join('');
+                theatersEl.querySelectorAll('.theater-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const c = CONFLICTS.find(x => x.name === card.dataset.name);
+                        if (!c) return;
+                        renderGlobeDetail({
+                            name: c.name, country:'THEATER', role:'CHOKEPOINT',
+                            cmdty: c.assets, lat: c.lat, lng: c.lng, ticker: null,
+                            thesis: c.description + ' ' + c.implications
+                        });
+                    });
+                });
+            }
+
+            // Populate LEFT RAIL: positions
+            const positionsEl = document.getElementById('command-positions');
+            if (positionsEl) {
+                positionsEl.innerHTML = COMMAND_POSITIONS.map(p => `
+                    <div class="position-card pnl-${p.dayPnl >= 0 ? 'pos' : 'neg'}" data-ticker="${p.ticker}">
+                        <span class="pc-tkr">${p.ticker}</span>
+                        <span class="pc-pnl">${p.dayPnl >= 0 ? '+' : ''}${p.dayPnl.toFixed(2)}%</span>
+                    </div>`).join('');
+                positionsEl.querySelectorAll('.position-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const p = COMMAND_POSITIONS.find(x => x.ticker === card.dataset.ticker);
+                        if (!p) return;
+                        renderGlobeDetail({
+                            name: p.ticker + ' · ' + (p.contract || 'Stock'),
+                            country:'USA', role:'POSITION',
+                            cmdty:['POSITION'], lat:p.lat, lng:p.lng, ticker:p.ticker,
+                            thesis: p.thesis + ' — Last $' + p.last.toFixed(2) + ' · ' + (p.dayPnl>=0?'+':'') + p.dayPnl.toFixed(2) + '%'
+                        });
+                    });
+                });
+            }
+
+            // Populate RIGHT RAIL: live feed
+            const feedEl = document.getElementById('command-live-feed');
+            if (feedEl) {
+                feedEl.innerHTML = COMMAND_FEED.map(f => `
+                    <div class="feed-item">
+                        <div class="fi-ticker">${f.ticker}</div>
+                        <div class="fi-headline">${f.headline}</div>
+                        <div class="fi-time">${f.time} ago</div>
+                    </div>`).join('');
+            }
+
+            // Filter wiring
+            document.querySelectorAll('.globe-filter').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.globe-filter').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    globeActiveCmdty = btn.dataset.cmdty;
+                    applyGlobeFilter();
+                });
+            });
+
+            // Resize handling
+            window.addEventListener('resize', () => {
+                if (!globeInstance) return;
+                globeInstance.width(container.clientWidth);
+                globeInstance.height(container.clientHeight);
+            });
+        }
+
+        function applyGlobeFilter() {
+            if (!globeInstance) return;
+            const c = globeActiveCmdty;
+            const nodeMatch = n => c === 'ALL' || (n.cmdty || []).includes(c) || n.isChoke;
+            const arcMatch  = a => c === 'ALL' || a.cmdty === c;
+
+            const nodeById = Object.fromEntries(GLOBE_NODES.map(n => [n.id, n]));
+
+            const positionPoints = COMMAND_POSITIONS.map(p => ({
+                id:'POS_'+p.ticker, name:p.ticker + ' · ' + (p.contract || ''), ticker:p.ticker,
+                country:'USA', role:'POSITION', cmdty:['POSITION'],
+                lat:p.lat, lng:p.lng, size:1.2,
+                ptColor: p.dayPnl >= 0 ? '#ffd700' : '#ff6677',
+                ptAlt: 0.025, ptRadius: 0.7, isChoke:false, isPosition:true,
+                thesis: p.thesis + ' — Last $' + p.last.toFixed(2) + ' · ' + (p.dayPnl>=0?'+':'') + p.dayPnl.toFixed(2) + '%'
+            }));
+
+            const points = [
+                ...GLOBE_NODES.filter(nodeMatch).map(n => ({
+                    ...n, ptColor: GLOBE_ROLE_COLORS[n.role] || GLOBE_ROLE_COLORS.NEUTRAL,
+                    ptAlt: 0.01 + n.size * 0.012, ptRadius: 0.35 + n.size * 0.25, isChoke:false
+                })),
+                ...GLOBE_CHOKEPOINTS.map(c2 => ({
+                    ...c2, role:'CHOKEPOINT', cmdty:['CHOKEPOINT'],
+                    ptColor: GLOBE_ROLE_COLORS.CHOKEPOINT, ptAlt:0.015, ptRadius:0.55, size:1.0, isChoke:true, thesis:c2.note
+                })),
+                ...positionPoints // positions always visible regardless of commodity filter
+            ];
+
+            const arcsFiltered = GLOBE_ARCS.filter(arcMatch).map(a => {
+                const s = nodeById[a.from], e = nodeById[a.to]; if (!s || !e) return null;
+                return { ...a, startLat:s.lat, startLng:s.lng, endLat:e.lat, endLng:e.lng, color: FLOW_COLORS[a.flow] };
+            }).filter(Boolean);
+
+            globeInstance.pointsData(points).arcsData(arcsFiltered);
+        }
+
+        function renderGlobeDetail(node) {
+            const el = document.getElementById('globe-detail'); if (!el) return;
+            const color = GLOBE_ROLE_COLORS[node.role] || '#4fc3f7';
+            const tickerLine = node.ticker
+                ? `<div class="d-ticker" style="color:${color}">${node.ticker}</div>`
+                : `<div class="d-ticker" style="color:${color};font-size:12px;">${node.role || 'NODE'}</div>`;
+            el.innerHTML = `
+                ${tickerLine}
+                <div class="d-name">${node.name}</div>
+                <div class="d-row"><span>COUNTRY</span><span>${node.country || '—'}</span></div>
+                <div class="d-row"><span>COMMODITY</span><span>${(node.cmdty || []).join(', ') || '—'}</span></div>
+                <div class="d-row"><span>ROLE</span><span>${node.role || '—'}</span></div>
+                <div class="d-row"><span>COORDS</span><span>${node.lat.toFixed(2)}, ${node.lng.toFixed(2)}</span></div>
+                <div class="d-thesis">${node.thesis || ''}</div>
+            `;
+            // No camera fly-in — user retains manual control of the globe.
         }
 
     </script>
