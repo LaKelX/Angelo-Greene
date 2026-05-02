@@ -14846,26 +14846,26 @@
         let globeInitialized = false;
         let globeActiveCmdty = 'ALL';
 
-        // ── Portfolio positions (Apr 17, 2026 Webull snapshot) ──────────────
+        // ── Active book (May 1, 2026) ────────────────────────────────────────
         const COMMAND_POSITIONS = [
-            { ticker:'CEG',  contract:'$300C May15 \'26',  last:18.50, avg:17.10, dayPnl:16.06, lat:41.43, lng:-81.85, thesis:'+16% day — 29 days to expiry. Decision NOW.' },
-            { ticker:'PPTA', contract:'Stock',             last:31.51, avg:null,  dayPnl:2.3,   lat:44.97, lng:-115.32, thesis:'S+ crown jewel. $2.7B EXIM loan. FID imminent Spring 2026.' },
-            { ticker:'UAMY', contract:'$10C Aug21 \'26',   last:2.98,  avg:2.80,  dayPnl:-0.83, lat:47.50, lng:-111.30, thesis:'Strong hold. $245M DLA contract.' },
-            { ticker:'NB',   contract:'$5C Jan15 \'27',    last:2.33,  avg:2.33,  dayPnl:-0.21, lat:40.30, lng:-95.78, thesis:'LEAP. Only US niobium.' },
-            { ticker:'BLDR', contract:'$85C Jun18 \'26',   last:9.45,  avg:10.80, dayPnl:7.39,  lat:38.63, lng:-90.20, thesis:'Hold. Stop at $80.' },
-            { ticker:'SO',   contract:'$95C Sep18 \'26',   last:4.60,  avg:5.70,  dayPnl:-11.54,lat:33.75, lng:-84.39, thesis:'Hold through Apr 30 earnings.' }
+            { ticker:'LNG',  contract:'Stock',  last:null, avg:null, dayPnl:0,    lat:29.69, lng:-93.94, thesis:'Cheniere LNG export. May 7 earnings. The gun TRGP feeds.' },
+            { ticker:'UAMY', contract:'Stock',  last:null, avg:null, dayPnl:0,    lat:47.50, lng:-111.30,thesis:'US Antimony · $245M DLA contract · rev +163% YoY · catalysts compounding.' },
+            { ticker:'NB',   contract:'Stock',  last:null, avg:null, dayPnl:0,    lat:40.30, lng:-95.78, thesis:'NioCorp · only US niobium + scandium · Strategic Reserve eligible.' },
+            { ticker:'AAPL', contract:'Stock',  last:null, avg:null, dayPnl:5.0,  lat:37.33, lng:-121.97,thesis:'Q2 26 BLOWOUT (May 1) · rev $111B +17% · iPhone +22% · China +28% · forced buyer of MU/ENTG/ASML.' }
         ];
 
-        // Live intel headlines — pulled from recent Eudaimon state (Apr 2026)
+        // Live intel — May 1, 2026 close
         const COMMAND_FEED = [
-            { ticker:'HORMUZ',   headline:'Strait blockade holds. Brent $103, Iran escalation ongoing.', time:'1h' },
-            { ticker:'PPTA',     headline:'Analyst target raised to $41. FID expected Spring 2026.',     time:'2h' },
-            { ticker:'CEG',      headline:'$300C +16% — 29 days to expiry. Roll/sell decision pending.', time:'3h' },
-            { ticker:'ROP',      headline:'Earnings Apr 23 — Deltek guidance = cyclical vs structural test.', time:'5h' },
-            { ticker:'TARIFFS',  headline:'Sec 232: 50% steel, 25% derivatives, 15% grid equipment live.',time:'6h' },
-            { ticker:'CHINA',    headline:'50% retaliation threat over Iran air defense shipment.',      time:'8h' },
-            { ticker:'VRSN',     headline:'40/40 bottleneck score. .com registry monopoly. Forever hold.',time:'12h'},
-            { ticker:'PROJECT VAULT', headline:'$12B critical minerals strategic reserve confirmed.',   time:'1d' }
+            { ticker:'AAPL',     headline:'Q2 BLOWOUT · rev $111.2B (+17%) · EPS $2.01 · stock +5%. Cook cites memory shortage from AI demand.',    time:'Today' },
+            { ticker:'LIN',      headline:'Q1 today. Helium thesis stage 1 catalyst. Watch supplier names Monday.', time:'Today' },
+            { ticker:'MEMORY',   headline:'Apple supply-constrained = MU / ENTG / HBM thesis confirmed by forced buyer.', time:'Today' },
+            { ticker:'AAPL→SUPPLIERS', headline:'CNBC: Apple results boost MU, AVGO, MRVL, ASML, TSMC into Monday open.', time:'Today' },
+            { ticker:'ANET',     headline:'Earnings Mon May 5 (with ETN). AI networking binary. Half-size only.',  time:'4d' },
+            { ticker:'LNG · TRGP', headline:'Earnings Wed May 7. Mid-stream + LNG export complex.',                time:'6d' },
+            { ticker:'NVDA',     headline:'May 20 — sets tone for ALL AI infra. The big tape-mover.',              time:'19d' },
+            { ticker:'CHINA',    headline:'Antimony / gallium / germanium export ban suspended through Nov 27, 2026 — fragile.', time:'2d' },
+            { ticker:'IRAN',     headline:'Vance trip paused — ceasefire fragile. Defense -12% YTD = mispriced.',  time:'3d' },
+            { ticker:'VIX',      headline:'16.89 with oil at $125 = cleanest mispricing on the tape.',             time:'now' }
         ];
 
         function initGlobeModule() {
